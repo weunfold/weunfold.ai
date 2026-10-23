@@ -48,7 +48,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -am "Release v$v"
           git tag "v$v"
-          git push origin dev --follow-tags
+          git push origin dev "v$v"
 
       - name: Generated files are current
         run: node tools/build.mjs --check
