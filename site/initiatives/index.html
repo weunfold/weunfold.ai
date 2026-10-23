@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Initiatives — we unfold</title>
+<meta name="description" content="Initiatives of the Open Intelligence movement: concrete projects you can explore, follow and help build. The first is a proposed shared B300 compute cluster.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap">
+<link rel="stylesheet" href="../assets/sub.css">
+<script data-build="head">
+// Runs first, in <head>: a page opened at #section must not smooth-scroll through everything above it.
+if (location.hash) document.documentElement.style.scrollBehavior = "auto";
+</script>
+<style data-build="header">
+/* The site shell (top bar, footer, page transitions), stamped into every page by tools/build.mjs.
+   Edit content/partials/header.css. */
+/* moving between pages: the top bar and its indicator stay in place, the rest crossfades, and the
+   capacity canvas carries over when it's on screen (see capacity.js) */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+::view-transition-group(capacity) { animation-duration: 650ms; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+::view-transition-group(nav-ind) { animation-duration: 450ms; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+
+/* the top bar: transparent over the first screen, a quiet ground once you scroll, out of the way while you read down */
+.topbar { position: sticky; top: 0; z-index: 20; margin-inline: calc(50% - 50vw); view-transition-name: topbar; transition: transform 350ms ease, background-color 300ms ease, border-color 300ms ease; border-bottom: 1px solid transparent; }
+.topbar.is-scrolled { background: rgba(11, 13, 18, 0.8); -webkit-backdrop-filter: blur(14px) saturate(120%); backdrop-filter: blur(14px) saturate(120%); border-bottom-color: var(--line); }
+.topbar.is-hidden { transform: translateY(-100%); }
+.topbar-in { max-width: 1280px; margin: 0 auto; padding: 13px max(21px, env(safe-area-inset-right, 0px)) 13px max(21px, env(safe-area-inset-left, 0px)); min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 21px; }
+.brand { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
+.brand-mark { width: 36px; height: 36px; display: block; flex: none; }
+.wm { font-family: var(--font-display); font-size: 24px; letter-spacing: -0.02em; color: var(--text); line-height: 1; white-space: nowrap; }
+.wm i { font-style: italic; }
+.nav-links { position: relative; display: flex; align-items: center; gap: 26px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; }
+.nav-links > a:not(.pill), .nav-drop-btn { color: var(--text-muted); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; transition: color 200ms ease; }
+.nav-links > a:not(.pill):hover, .nav-drop-btn:hover, .nav-links [data-nav].is-current, .nav-links [data-nav].is-current .nav-drop-btn { color: var(--text); }
+.pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ground) !important; background: var(--ivory); border: 0; border-radius: 9999px; padding: 12px 21px; min-height: 44px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.nav-links .pill { padding: 10px 18px; min-height: 40px; }
+/* where you are: one short gold line that slides between items */
+.nav-ind { position: absolute; left: 0; bottom: 4px; height: 2px; width: 0; border-radius: 2px; background: #d9b45a; opacity: 0; pointer-events: none; view-transition-name: nav-ind; transition: transform 450ms cubic-bezier(0.65, 0, 0.35, 1), width 450ms cubic-bezier(0.65, 0, 0.35, 1), opacity 250ms ease; }
+.nav-ind.on { opacity: 1; }
+.nav-drop { position: relative; }
+.nav-drop-btn { gap: 8px; padding: 0; background: none; border: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.nav-drop-btn[aria-expanded="true"] { color: var(--text); }
+.nav-drop-btn svg { transition: transform 200ms ease; }
+.nav-drop-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.nav-menu { position: absolute; top: calc(100% + 8px); left: -13px; min-width: 290px; display: flex; flex-direction: column; padding: 6px; background: var(--surface-raised); border: 1px solid var(--line); box-shadow: 0 13px 34px rgba(0, 0, 0, 0.45); }
+.nav-menu[hidden] { display: none; }
+.nav-menu a { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 11px 13px 11px 16px; color: var(--text-muted); text-decoration: none; text-transform: none; letter-spacing: 0; }
+.nav-menu a:hover, .nav-menu a:focus-visible { background: var(--line); }
+.nav-menu a[aria-current="page"]::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 2px; background: #d9b45a; }
+.nm-t { font-family: var(--font-display); font-size: 17px; color: var(--text); }
+.nm-s { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+
+/* the footer, the same on every page */
+.site-foot { position: relative; z-index: 1; border-top: 1px solid var(--line); padding-block: 34px calc(55px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 13px 34px; align-items: center; }
+.foot-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 26px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+.foot-links a { color: var(--text-muted); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.foot-links a:hover { color: var(--text); }
+.foot-note { grid-column: 1 / -1; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin: 0; }
+.foot-note a { color: inherit; }
+
+@media (max-width: 820px) {
+  .topbar-in { min-height: 60px; padding-block: 8px; gap: 13px; }
+  .brand-mark { width: 32px; height: 32px; }
+  .brand .wm { font-size: 21px; }
+  .nav-links { gap: 16px; letter-spacing: 0.1em; }
+  .nav-links > a:not(.pill) { display: none; }
+  .nav-links .pill { padding: 9px 14px; letter-spacing: 0.1em; }
+  .nav-menu { left: auto; right: -110px; min-width: min(300px, calc(100vw - 42px)); }
+  .site-foot { grid-template-columns: minmax(0, 1fr); }
+  .foot-links { justify-content: flex-start; }
+}
+@media (max-width: 400px) { .brand .wm { display: none; } }
+@media (prefers-reduced-motion: reduce) { .topbar, .nav-ind { transition: none; } }
+</style>
+</head>
+<body data-section="initiatives">
+<canvas class="ground" aria-hidden="true"></canvas>
+<div class="wrap">
+  <!-- build:header -->
+  <header class="topbar" data-topbar>
+    <nav class="topbar-in" aria-label="Main">
+      <a class="brand" href="../" aria-label="we unfold, home of Open Intelligence"><img class="brand-mark" src="../assets/mark.svg" width="36" height="36" alt=""><span class="wm">we <i>unfold</i></span></a>
+      <div class="nav-links">
+        <a href="../#read" data-nav="manifesto">Manifesto</a>
+        <a href="../#econ" data-nav="econ">Open Economy</a>
+        <div class="nav-drop" data-nav="initiatives">
+          <button type="button" class="nav-drop-btn" aria-expanded="false" aria-controls="navInitiatives">Initiatives<svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
+          <div class="nav-menu" id="navInitiatives" hidden>
+            <a href="../initiatives/b300/"><span class="nm-t">Compute we can build together</span><span class="nm-s">Shared B300 cluster · Proposal</span></a>
+            <a href="../initiatives/" aria-current="page"><span class="nm-t">All initiatives</span><span class="nm-s">One so far</span></a>
+          </div>
+        </div>
+        <a href="../#people" data-nav="people">Participants</a>
+        <a href="../#progress" data-nav="progress">Progress</a>
+        <a class="pill" href="../#invite">Stay close</a>
+        <span class="nav-ind" aria-hidden="true"></span>
+      </div>
+    </nav>
+  </header>
+  <!-- /build:header -->
+  <main>
+    <section class="hero" aria-labelledby="initTitle">
+      <ol class="crumbs" aria-label="You are here"><li><a href="../">we unfold</a></li><li aria-current="page">Initiatives</li></ol>
+      <div class="sec-head" style="margin-top: 34px;">
+        <div class="eyebrow">Open Intelligence · Initiatives</div>
+        <h1 id="initTitle">A place to put our principles <i>to work.</i></h1>
+        <p class="lead">Good ideas need somewhere to run. Research needs resources. Builders need tools. Shared ambition needs infrastructure.</p>
+        <p>Initiatives are concrete projects you can explore, follow and help build. Each one has its own page, its own terms and its own evidence. There is one so far.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="stage"><span class="k">Shared compute</span><span class="state proposal">Proposal</span></div>
+          <h2 style="font-size: clamp(28px, 3vw, 36px);">Compute we can build together.</h2>
+          <p>A shared B300 cluster. Transparent costs. More people able to build.</p>
+          <p class="small">Details in development. Nothing has been bought, and fundraising is not open.</p>
+          <a class="more" href="b300/">Explore the initiative →</a>
+        </article>
+      </div>
+      <p class="small" style="margin-top: 21px; max-width: 680px;">Being a member or signatory of the movement is not the same as backing an initiative. Each initiative lists its own participants once they agree to be shown.</p>
+    </section>
+  </main>
+  <!-- build:footer -->
+  <footer class="site-foot">
+    <a class="brand" href="../" aria-label="we unfold, home of Open Intelligence"><img class="brand-mark" src="../assets/mark.svg" width="36" height="36" alt=""><span class="wm">we <i>unfold</i></span></a>
+    <nav class="foot-links" aria-label="More">
+      <a href="../#read">Manifesto</a>
+      <a href="../initiatives/">Initiatives</a>
+      <a href="../#invite">Stay close</a>
+      <a href="../manifesto.html">Plain-text manifesto</a>
+    </nav>
+    <p class="foot-note">Open intelligence · Open economy · weunfold.ai · Manifesto <span data-build="version">Draft 0.4</span> · Preview, not launched: proposals and examples are labelled as such</p>
+  </footer>
+  <!-- /build:footer -->
+</div>
+<script data-build="header">
+// The site shell's behaviour, stamped into every page by tools/build.mjs. Edit content/partials/header.js.
+(function () {
+  var bar = document.querySelector("[data-topbar]"); if (!bar) return;
+  var btn = bar.querySelector(".nav-drop-btn"), menu = btn && document.getElementById(btn.getAttribute("aria-controls"));
+  var links = bar.querySelector(".nav-links"), ind = bar.querySelector(".nav-ind"), items = Array.prototype.slice.call(bar.querySelectorAll("[data-nav]"));
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // the Initiatives menu: a click/keyboard disclosure, never hover
+  function setMenu(open) { btn.setAttribute("aria-expanded", open ? "true" : "false"); menu.hidden = !open; if (open) show(); }
+  if (menu) {
+    btn.addEventListener("click", function () { setMenu(menu.hidden); if (!menu.hidden) menu.querySelector("a").focus(); });
+    document.addEventListener("click", function (e) { if (!menu.hidden && !e.target.closest(".nav-drop")) setMenu(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !menu.hidden) { setMenu(false); btn.focus(); } });
+    menu.addEventListener("focusout", function (e) { if (!e.relatedTarget || !e.relatedTarget.closest(".nav-drop")) setMenu(false); });
+  }
+
+  // where you are: a subpage names its section on <body data-section>; the landing follows the section on screen
+  var SECTIONS = { manifesto: ["top", "today", "oi"], econ: ["econ", "tactu"], initiatives: ["initiatives"], people: ["people"], progress: ["progress"] };
+  var fixed = document.body.getAttribute("data-section"), current = null;
+  function place() {
+    var el = current && items.filter(function (i) { return i.getAttribute("data-nav") === current; })[0], t = el && (el.querySelector(".nav-drop-btn") || el);
+    if (!t || !t.offsetWidth) { ind.classList.remove("on"); return; }
+    var a = links.getBoundingClientRect(), r = t.getBoundingClientRect(), w = t.querySelector("svg") ? r.width - 18 : r.width;
+    ind.style.width = w + "px"; ind.style.transform = "translateX(" + (r.left - a.left) + "px)"; ind.classList.add("on");
+  }
+  function setCurrent(k) {
+    if (k === current) return; current = k;
+    items.forEach(function (i) { var on = i.getAttribute("data-nav") === k; i.classList.toggle("is-current", on); if (i.tagName === "A") { if (on) i.setAttribute("aria-current", fixed ? "page" : "location"); else i.removeAttribute("aria-current"); } });
+    place();
+  }
+  function spy() {
+    if (fixed) return setCurrent(fixed);
+    var mid = window.innerHeight * 0.4, found = null;
+    Object.keys(SECTIONS).forEach(function (k) { SECTIONS[k].forEach(function (id) { var s = document.getElementById(id); if (!s) return; var r = s.getBoundingClientRect(); if (r.top <= mid && r.bottom > mid) found = k; }); });
+    setCurrent(found);
+  }
+
+  // the bar: transparent at the top, a quiet ground once you scroll, tucked away while you read down, back as soon as you scroll up
+  // direction is measured from where the scroll last turned, so slow trackpad and smooth scrolling count too
+  var lastY = window.scrollY, turnY = lastY, dir = 0;
+  function show() { bar.classList.remove("is-hidden"); }
+  function onScroll() {
+    var y = window.scrollY, open = menu && !menu.hidden, d = y > lastY ? 1 : y < lastY ? -1 : 0;
+    if (d && d !== dir) { dir = d; turnY = lastY; }
+    bar.classList.toggle("is-scrolled", y > 24);
+    if (y <= 160 || (dir < 0 && turnY - y > 8)) show();
+    else if (!reduce && !open && !bar.contains(document.activeElement) && dir > 0 && y - turnY > 8) bar.classList.add("is-hidden");
+    lastY = y; spy();
+  }
+  bar.addEventListener("focusin", show);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", function () { place(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+  onScroll();
+})();
+
+// A link that lands on #section (e.g. back to #initiatives) jumps there at once instead of smooth-scrolling
+// through everything above it, and again after fonts and media settle the layout.
+(function () {
+  var id = location.hash.slice(1), el = id && document.getElementById(id);
+  if (!el) return;
+  var root = document.documentElement; // head.js already set scroll-behavior to auto for this load
+  function jump() { el.scrollIntoView({ block: "start" }); }
+  function done() { jump(); requestAnimationFrame(function () { root.style.scrollBehavior = ""; }); }
+  jump(); if (document.readyState === "complete") done(); else window.addEventListener("load", done, { once: true });
+})();
+
+// Subpages: the same fine, dim particle ground the landing's field settles into, drawn once.
+(function () {
+  var c = document.querySelector("canvas.ground"); if (!c) return;
+  function draw() {
+    var d = Math.min(window.devicePixelRatio || 1, 2), w = window.innerWidth, h = window.innerHeight, g = c.getContext("2d"), seed = 11;
+    c.width = Math.round(w * d); c.height = Math.round(h * d); g.setTransform(d, 0, 0, d, 0, 0); g.clearRect(0, 0, w, h);
+    function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+    for (var i = 0, n = Math.round(w * h / 1400); i < n; i++) { var b = 0.25 + rnd() * 0.35; g.globalAlpha = b * b; g.fillStyle = "#ebe6da"; g.beginPath(); g.arc(rnd() * w, rnd() * h, 0.4 + rnd() * 0.6, 0, 6.283); g.fill(); }
+  }
+  draw(); window.addEventListener("resize", draw);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!--
+The footer, stamped into every page by `node tools/build.mjs` between the build:footer markers.
+{ROOT} is the path back to site/, {HOME} is "" on the landing, {READ} opens the reader in place there.
+-->
+  <footer class="site-foot">
+    <a class="brand" href="{BRAND_HREF}" aria-label="we unfold, home of Open Intelligence"><img class="brand-mark" src="{ROOT}assets/mark.svg" width="36" height="36" alt=""><span class="wm">we <i>unfold</i></span></a>
+    <nav class="foot-links" aria-label="More">
+      <a href="{HOME}#read"{READ}>Manifesto</a>
+      <a href="{ROOT}initiatives/">Initiatives</a>
+      <a href="{HOME}#invite">Stay close</a>
+      <a href="{ROOT}manifesto.html">Plain-text manifesto</a>
+    </nav>
+    <p class="foot-note">Open intelligence · Open economy · weunfold.ai · Manifesto <span data-build="version">{VERSION}</span> · Preview, not launched: proposals and examples are labelled as such</p>
+  </footer>

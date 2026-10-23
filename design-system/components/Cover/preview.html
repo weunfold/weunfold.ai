@@ -1,0 +1,32 @@
+<!-- @dsCard height=300 -->
+<div class="cv">
+<!--
+blocks: spectrum-violet 233, spectrum-coral 144, spectrum-blue 89, spectrum-sea 55, surface-raised 34 (space-89 x space-55 multiples: Fibonacci squares)
+arrangement: the golden-rectangle tiling, each square half the turn of the last, bleeding off the right edge
+pattern: literal motif, the quarter arcs of the Fibonacci spiral cut in the ground colour through the squares, because the mark is made of these circles
+steps and radii: squares 233, 144, 89, 55, 34 = space steps and their sums; radius-none on blocks, arcs only curve
+-->
+<svg class="art" viewBox="0 0 960 300" width="960" height="300" aria-hidden="true">
+<rect class="b-violet" x="583" y="34" width="233" height="233"></rect>
+<rect class="b-coral" x="816" y="34" width="144" height="144"></rect>
+<rect class="b-blue" x="871" y="178" width="89" height="89"></rect>
+<rect class="b-sea" x="816" y="212" width="55" height="55"></rect>
+<rect class="b-tint" x="816" y="178" width="55" height="34"></rect>
+<path class="arc" d="M583 267 A233 233 0 0 1 816 34"></path>
+<path class="arc" d="M816 34 A144 144 0 0 1 960 178"></path>
+<path class="arc" d="M960 178 A89 89 0 0 1 871 267"></path>
+<path class="arc" d="M871 267 A55 55 0 0 1 816 212"></path>
+<path class="arc" d="M816 212 A34 34 0 0 1 850 178"></path>
+</svg>
+<div class="txt"><div class="name">we <i>unfold</i></div><div class="tagline">Open intelligence. Built together, for everyone.</div></div>
+</div>
+<style>
+html,body{margin:0;background:var(--ground,#0b0d12)}
+.cv{position:relative;width:960px;height:300px;background:var(--ground,#0b0d12);overflow:hidden}
+.art{position:absolute;inset:0}
+.b-violet{fill:var(--spectrum-violet,#9a85ff)} .b-coral{fill:var(--spectrum-coral,#ff6f61)} .b-blue{fill:var(--spectrum-blue,#5aa8ff)} .b-sea{fill:var(--spectrum-sea,#33d6a8)} .b-tint{fill:var(--spectrum-orchid,#d07cff)}
+.arc{fill:none;stroke:var(--ground,#0b0d12);stroke-width:5}
+.txt{position:absolute;left:34px;bottom:34px;max-width:440px;display:flex;flex-direction:column;gap:13px}
+.name{font-family:var(--font-display,Spectral,Georgia,serif);font-size:88px;line-height:.92;letter-spacing:-0.02em;color:var(--text,#ebe6da)}
+.tagline{font-family:var(--font-display,Spectral,Georgia,serif);font-style:italic;font-size:14px;color:var(--text-muted,#a7abb9)}
+</style>

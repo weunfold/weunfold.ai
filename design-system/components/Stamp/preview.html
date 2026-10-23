@@ -1,0 +1,12 @@
+<!-- @dsCard group="Open Intelligence" height=360 subtitle="The round seal, night, day and one ink" -->
+<div id="root"></div>
+<style>html,body{margin:0;background:var(--ground,#0b0d12);color:var(--text,#ebe6da)} .row{display:flex;flex-wrap:wrap;gap:var(--space-21,21px);align-items:center;justify-content:center;padding:var(--space-21,21px)} .cap{font-family:var(--font-mono,"IBM Plex Mono",monospace);font-size:11px;letter-spacing:.18em;color:var(--text-faint,#8a8f9e);text-align:center;margin-top:8px}</style>
+<script>
+(function () {
+  var h = React.createElement, W = window.WeUnfold;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { className: 'row' },
+    h(W.Stamp, { size: 280 }),
+    h(W.Stamp, { size: 280, ground: '#ffffff', color: '#11141c', subColor: '#4a4f5e' }),
+    h(W.Stamp, { size: 280, ground: '#ffffff', color: '#11141c', subColor: '#11141c', ink: '#11141c' })));
+})();
+</script>

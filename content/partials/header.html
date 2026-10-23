@@ -1,0 +1,28 @@
+<!--
+The site top bar, stamped into every page by `node tools/build.mjs` between the
+build:header markers. Edit here, never in the pages.
+{ROOT} is the path back to site/ ("" on the landing, "../" one level down).
+{HOME} is "" on the landing (its anchors scroll in place) and {ROOT} elsewhere.
+{BRAND_HREF} is "#top" on the landing and {ROOT} elsewhere.
+Each item carries data-nav; header.js slides the indicator under the one you're in.
+-->
+  <header class="topbar" data-topbar>
+    <nav class="topbar-in" aria-label="Main">
+      <a class="brand" href="{BRAND_HREF}" aria-label="we unfold, home of Open Intelligence"><img class="brand-mark" src="{ROOT}assets/mark.svg" width="36" height="36" alt=""><span class="wm">we <i>unfold</i></span></a>
+      <div class="nav-links">
+        <a href="{HOME}#read"{READ} data-nav="manifesto">Manifesto</a>
+        <a href="{HOME}#econ" data-nav="econ">Open Economy</a>
+        <div class="nav-drop" data-nav="initiatives">
+          <button type="button" class="nav-drop-btn" aria-expanded="false" aria-controls="navInitiatives">Initiatives<svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
+          <div class="nav-menu" id="navInitiatives" hidden>
+            <a href="{ROOT}initiatives/b300/"{CUR_B300}><span class="nm-t">Compute we can build together</span><span class="nm-s">Shared B300 cluster · Proposal</span></a>
+            <a href="{ROOT}initiatives/"{CUR_INDEX}><span class="nm-t">All initiatives</span><span class="nm-s">One so far</span></a>
+          </div>
+        </div>
+        <a href="{HOME}#people" data-nav="people">Participants</a>
+        <a href="{HOME}#progress" data-nav="progress">Progress</a>
+        <a class="pill" href="{HOME}#invite">Stay close</a>
+        <span class="nav-ind" aria-hidden="true"></span>
+      </div>
+    </nav>
+  </header>

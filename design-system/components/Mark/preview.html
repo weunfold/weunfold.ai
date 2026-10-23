@@ -1,0 +1,14 @@
+<!-- @dsCard group="Brand" height=420 subtitle="The three hypotheses, colour and one ink, and the small cut" -->
+<div id="root"></div>
+<style>html,body{margin:0;background:var(--ground,#0b0d12);color:var(--text,#ebe6da)} .row{display:flex;flex-wrap:wrap;gap:var(--space-21,21px);align-items:center;justify-content:center;padding:var(--space-21,21px)} .cap{font-family:var(--font-mono,"IBM Plex Mono",monospace);font-size:11px;letter-spacing:.18em;color:var(--text-faint,#8a8f9e);text-align:center;margin-top:8px}</style>
+<script>
+(function () {
+  var h = React.createElement, W = window.WeUnfold;
+  function cell(v, size, ink, cap) { return h('div', { key: v + size + (ink || '') }, h(W.Mark, { variant: v, size: size, ink: ink }), cap ? h('div', { className: 'cap' }, cap) : null); }
+  var ids = W.HYPOTHESES.map(function (x) { return x.id; });
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', null,
+    h('div', { className: 'row' }, W.HYPOTHESES.map(function (x) { return cell(x.id, 180, null, x.letter + ' · ' + x.name.toUpperCase()); })),
+    h('div', { className: 'row' }, ids.map(function (v) { return cell(v, 72, 'var(--text, #ebe6da)'); }).concat(ids.map(function (v) { return cell(v, 32); })).concat(ids.map(function (v) { return cell(v, 20); })))
+  ));
+})();
+</script>

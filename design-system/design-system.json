@@ -1,0 +1,108 @@
+{
+ "v": 3,
+ "layout": "files",
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-23T03:27:56Z"
+ },
+ "title": "we unfold",
+ "namespace": "WeUnfold",
+ "libraries": [
+  {
+   "name": "react",
+   "version": "18"
+  },
+  {
+   "name": "react-dom",
+   "version": "18"
+  }
+ ],
+ "sections": {},
+ "groups": [
+  "Marks"
+ ],
+ "assetGroups": {
+  "Marks": {
+   "name": "Marks",
+   "tile": "m",
+   "order": [
+    "golden-seeds.svg",
+    "golden-seeds-ink.svg",
+    "golden-seeds-ivory.svg",
+    "golden-circles-fade.svg",
+    "golden-circles-fade-ink.svg",
+    "golden-circles-fade-ivory.svg",
+    "fibonacci-swirl.svg",
+    "fibonacci-swirl-ink.svg",
+    "fibonacci-swirl-ivory.svg"
+   ],
+   "files": {
+    "golden-seeds.svg": {
+     "name": "golden-seeds.svg",
+     "blob": "a3519f85b77cd6167c1c96d92c6903c5",
+     "size": 15469,
+     "type": "image/svg+xml"
+    },
+    "golden-seeds-ink.svg": {
+     "name": "golden-seeds-ink.svg",
+     "blob": "775b0db10e4894a768769c24a7f8aa75",
+     "size": 15469,
+     "type": "image/svg+xml"
+    },
+    "golden-seeds-ivory.svg": {
+     "name": "golden-seeds-ivory.svg",
+     "blob": "b6593c2d8477022dfb9d9f6690cf1c70",
+     "size": 15469,
+     "type": "image/svg+xml"
+    },
+    "golden-circles-fade.svg": {
+     "name": "golden-circles-fade.svg",
+     "blob": "a174903079276d1a51b8163584b53e2a",
+     "size": 37966,
+     "type": "image/svg+xml"
+    },
+    "golden-circles-fade-ink.svg": {
+     "name": "golden-circles-fade-ink.svg",
+     "blob": "2a5ad5f8779e5d3c9b4033b9da115104",
+     "size": 37966,
+     "type": "image/svg+xml"
+    },
+    "golden-circles-fade-ivory.svg": {
+     "name": "golden-circles-fade-ivory.svg",
+     "blob": "6c7e85930e4fb6f763cf1ac0b5aea20f",
+     "size": 37966,
+     "type": "image/svg+xml"
+    },
+    "fibonacci-swirl.svg": {
+     "name": "fibonacci-swirl.svg",
+     "blob": "3f6b3048e505cfc5d6ba7de9c0ac9027",
+     "size": 11796,
+     "type": "image/svg+xml"
+    },
+    "fibonacci-swirl-ink.svg": {
+     "name": "fibonacci-swirl-ink.svg",
+     "blob": "5a4ee9bd2c9ca857ce6b5d5c655bb13e",
+     "size": 11796,
+     "type": "image/svg+xml"
+    },
+    "fibonacci-swirl-ivory.svg": {
+     "name": "fibonacci-swirl-ivory.svg",
+     "blob": "f456855071d4eadad6e891dd4ee7d618",
+     "size": 11796,
+     "type": "image/svg+xml"
+    }
+   }
+  }
+ },
+ "blobs": {},
+ "docs": {
+  "readme": "project/README.md",
+  "sections": []
+ },
+ "lastChange": {
+  "by": "Felipe",
+  "at": "2026-10-23T03:27:56Z",
+  "via": "Claude",
+  "note": "First version: three mark hypotheses with a live sweep, tokens, type, stamp and badge."
+ }
+}
