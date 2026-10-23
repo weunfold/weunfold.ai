@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New Alexandria — a free gateway to open models — we unfold</title>
+<meta name="description" content="A proposed free gateway to open models, and a library of open data that can't burn: conversations people choose to share are cleaned, refined into open datasets, and used to train new open models.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap">
+<link rel="stylesheet" href="../../assets/sub.css">
+<script data-build="head">
+// Runs first, in <head>: a page opened at #section must not smooth-scroll through everything above it.
+if (location.hash) document.documentElement.style.scrollBehavior = "auto";
+</script>
+<style data-build="header">
+/* The site shell (top bar, footer, page transitions), stamped into every page by tools/build.mjs.
+   Edit content/partials/header.css. */
+/* moving between pages: the top bar and its indicator stay in place, the rest crossfades, and the
+   capacity canvas carries over when it's on screen (see capacity.js) */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+::view-transition-group(capacity) { animation-duration: 650ms; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+::view-transition-group(nav-ind) { animation-duration: 450ms; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+
+/* the top bar: transparent over the first screen, a quiet ground once you scroll, out of the way while you read down */
+.topbar { position: sticky; top: 0; z-index: 20; margin-inline: calc(50% - 50vw); view-transition-name: topbar; transition: transform 350ms ease, background-color 300ms ease, border-color 300ms ease; border-bottom: 1px solid transparent; }
+.topbar.is-scrolled { background: rgba(11, 13, 18, 0.8); -webkit-backdrop-filter: blur(14px) saturate(120%); backdrop-filter: blur(14px) saturate(120%); border-bottom-color: var(--line); }
+.topbar.is-hidden { transform: translateY(-100%); }
+.topbar-in { max-width: 1280px; margin: 0 auto; padding: 13px max(21px, env(safe-area-inset-right, 0px)) 13px max(21px, env(safe-area-inset-left, 0px)); min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 21px; }
+.brand { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
+.brand-mark { width: 36px; height: 36px; display: block; flex: none; }
+.wm { font-family: var(--font-display); font-size: 24px; letter-spacing: -0.02em; color: var(--text); line-height: 1; white-space: nowrap; }
+.wm i { font-style: italic; }
+.nav-links { position: relative; display: flex; align-items: center; gap: 26px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; }
+.nav-links > a:not(.pill), .nav-drop-btn { color: var(--text-muted); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; transition: color 200ms ease; }
+.nav-links > a:not(.pill):hover, .nav-drop-btn:hover, .nav-links [data-nav].is-current, .nav-links [data-nav].is-current .nav-drop-btn { color: var(--text); }
+.pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ground) !important; background: var(--ivory); border: 0; border-radius: 9999px; padding: 12px 21px; min-height: 44px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.nav-links .pill { padding: 10px 18px; min-height: 40px; }
+/* where you are: one short gold line that slides between items */
+.nav-ind { position: absolute; left: 0; bottom: 4px; height: 2px; width: 0; border-radius: 2px; background: #d9b45a; opacity: 0; pointer-events: none; view-transition-name: nav-ind; transition: transform 450ms cubic-bezier(0.65, 0, 0.35, 1), width 450ms cubic-bezier(0.65, 0, 0.35, 1), opacity 250ms ease; }
+.nav-ind.on { opacity: 1; }
+.nav-drop { position: relative; }
+.nav-drop-btn { gap: 8px; padding: 0; background: none; border: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.nav-drop-btn[aria-expanded="true"] { color: var(--text); }
+.nav-drop-btn svg { transition: transform 200ms ease; }
+.nav-drop-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.nav-menu { position: absolute; top: calc(100% + 8px); left: -13px; min-width: 290px; display: flex; flex-direction: column; padding: 6px; background: var(--surface-raised); border: 1px solid var(--line); box-shadow: 0 13px 34px rgba(0, 0, 0, 0.45); }
+.nav-menu[hidden] { display: none; }
+.nav-menu a { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 11px 13px 11px 16px; color: var(--text-muted); text-decoration: none; text-transform: none; letter-spacing: 0; }
+.nav-menu a:hover, .nav-menu a:focus-visible { background: var(--line); }
+.nav-menu a[aria-current="page"]::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 2px; background: #d9b45a; }
+.nm-t { font-family: var(--font-display); font-size: 17px; color: var(--text); }
+.nm-s { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+
+/* the footer, the same on every page */
+.site-foot { position: relative; z-index: 1; border-top: 1px solid var(--line); padding-block: 34px calc(55px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 13px 34px; align-items: center; }
+.foot-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 26px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+.foot-links a { color: var(--text-muted); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.foot-links a:hover { color: var(--text); }
+.foot-note { grid-column: 1 / -1; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin: 0; }
+.foot-note a { color: inherit; }
+
+@media (max-width: 820px) {
+  .topbar-in { min-height: 60px; padding-block: 8px; gap: 13px; }
+  .brand-mark { width: 32px; height: 32px; }
+  .brand .wm { font-size: 21px; }
+  .nav-links { gap: 16px; letter-spacing: 0.1em; }
+  .nav-links > a:not(.pill) { display: none; }
+  .nav-links .pill { padding: 9px 14px; letter-spacing: 0.1em; }
+  .nav-menu { left: auto; right: -110px; min-width: min(300px, calc(100vw - 42px)); }
+  .site-foot { grid-template-columns: minmax(0, 1fr); }
+  .foot-links { justify-content: flex-start; }
+}
+@media (max-width: 400px) { .brand .wm { display: none; } }
+@media (prefers-reduced-motion: reduce) { .topbar, .nav-ind { transition: none; } }
+</style>
+</head>
+<body data-section="initiatives">
+<canvas class="ground" aria-hidden="true"></canvas>
+<div class="wrap">
+  <!-- build:header -->
+  <header class="topbar" data-topbar>
+    <nav class="topbar-in" aria-label="Main">
+      <a class="brand" href="../../" aria-label="we unfold, home of Open Intelligence"><img class="brand-mark" src="../../assets/mark.svg" width="36" height="36" alt=""><span class="wm">we <i>unfold</i></span></a>
+      <div class="nav-links">
+        <a href="../../#read" data-nav="manifesto">Manifesto</a>
+        <a href="../../#econ" data-nav="econ">Open Economy</a>
+        <div class="nav-drop" data-nav="initiatives">
+          <button type="button" class="nav-drop-btn" aria-expanded="false" aria-controls="navInitiatives">Initiatives<svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
+          <div class="nav-menu" id="navInitiatives" hidden>
+            <a href="../../initiatives/b300/"><span class="nm-t">Compute we can build together</span><span class="nm-s">Shared B300 cluster · Proposal</span></a>
+            <a href="../../initiatives/alexandria/" aria-current="page"><span class="nm-t">New Alexandria</span><span class="nm-s">Free open models, open data · Proposal</span></a>
+            <a href="../../initiatives/"><span class="nm-t">All initiatives</span><span class="nm-s">Two so far</span></a>
+          </div>
+        </div>
+        <a href="../../#people" data-nav="people">Participants</a>
+        <a href="../../#progress" data-nav="progress">Progress</a>
+        <a class="pill" href="../../#invite">Stay close</a>
+        <span class="nav-ind" aria-hidden="true"></span>
+      </div>
+    </nav>
+  </header>
+  <!-- /build:header -->
+  <main>
+
+    <!-- arrive: the name and the promise -->
+    <section class="hero hero-split" id="arrive" aria-labelledby="alexTitle">
+      <canvas class="capacity" id="alexLibrary" aria-hidden="true"></canvas>
+      <ol class="crumbs" aria-label="You are here"><li><a href="../../">we unfold</a></li><li><a href="../">Initiatives</a></li><li aria-current="page">New Alexandria</li></ol>
+      <div class="sec-head" style="margin-top: 34px;">
+        <div class="eyebrow">Initiative · Free access and open data</div>
+        <h1 id="alexTitle">New <i>Alexandria.</i></h1>
+        <p class="lead">A free gateway to open models, and a library of open data that can't burn.</p>
+        <div class="stage"><span class="state proposal">Proposal</span><span class="state">Not open yet</span></div>
+      </div>
+      <div class="prose">
+        <p>Use open-weight models for free. If you choose to, give a conversation to the commons: personal data is removed, the result is refined into open datasets, and those datasets train the next open models, which come back to everyone, free.</p>
+        <div class="actions"><a class="pill" href="#interest">Register interest</a><a class="pill ghost" href="#loop">How it works</a></div>
+      </div>
+    </section>
+
+    <!-- the old library -->
+    <section id="story" aria-labelledby="storyTitle">
+      <div class="sec-head">
+        <div class="eyebrow">The old library</div>
+        <h2 id="storyTitle">Every library begins <i>with a first scroll.</i></h2>
+      </div>
+      <div class="prose">
+        <p>Ancient accounts say that in Alexandria, books arriving on ships in the harbour were copied for the library. For a few centuries, a large share of what people knew was gathered in one place. Then, over time, it was lost.</p>
+        <p>Today, what people learn by talking to machines is gathering again, in a few private places. Each question, correction and answer teaches the next model, and almost none of it comes back to the people who gave it.</p>
+        <p class="lead">New Alexandria is a library of the conversations people choose to share, cleaned of what is personal, copied everywhere so it can't burn, and open to anyone who wants to learn from it.</p>
+      </div>
+    </section>
+
+    <!-- the loop -->
+    <section id="loop" aria-labelledby="loopTitle">
+      <div class="sec-head">
+        <div class="eyebrow">How it works</div>
+        <h2 id="loopTitle">Ask. Share. Clean. Refine. <i>Publish. Train.</i></h2>
+        <p>One loop. What people choose to give back becomes the material for the next open models, which are served free again.</p>
+      </div>
+      <ol class="steps">
+        <li><b>Ask, for free</b><p>Open-weight models through one gateway, at no cost, running on donated and sponsored compute.</p></li>
+        <li><b>Choose to share</b><p>Nothing you say is used unless you give that conversation to the commons. You decide, one conversation at a time.</p></li>
+        <li><b>Clean</b><p>Names, contacts, identifiers and other personal details are removed before anything is stored, and every removal is logged so it can be checked.</p></li>
+        <li><b>Refine</b><p>Shared conversations are sorted, deduplicated and labelled into datasets, each with a datasheet and a manifest of exactly what went in.</p></li>
+        <li><b>Publish</b><p>Datasets are released openly and mirrored in many places, so no single server or company can take them away.</p></li>
+        <li><b>Train</b><p>Anyone can train new open models on them, and the gateway serves the best ones back to everyone, free.</p></li>
+      </ol>
+    </section>
+
+    <!-- two lanes -->
+    <section id="lanes" aria-labelledby="lanesTitle">
+      <div class="sec-head">
+        <div class="eyebrow">Two lanes</div>
+        <h2 id="lanesTitle">Private when you want it. <i>Shared when you choose.</i></h2>
+        <div class="stage"><span class="state proposal">Proposal</span></div>
+      </div>
+      <div class="grid two">
+        <article class="card"><span class="k">Private lane</span><h3>Just use it</h3><p>Free access to the same models. Your conversations are not kept for datasets or training.</p></article>
+        <article class="card"><span class="k">Contribute lane</span><h3>Give it to the commons</h3><p>Choose a conversation to share. It's cleaned, reviewed and, if it passes, refined into an open dataset. You can withdraw it at any point before it's published.</p></article>
+      </div>
+    </section>
+
+    <!-- what cleaning can and can't do -->
+    <section id="cleaning" aria-labelledby="cleanTitle">
+      <div class="sec-head">
+        <div class="eyebrow">Honest about privacy</div>
+        <h2 id="cleanTitle">What cleaning can do, <i>and what it can't.</i></h2>
+      </div>
+      <dl class="panels">
+        <div><dt>Removal is logged</dt><dd>Every dataset ships with a manifest: which records went in, what was removed from each, and the consent each one carries. Anyone can check it.</dd></div>
+        <div><dt>Unclear means excluded</dt><dd>A record whose consent is unclear is left out, not "cleaned" and kept.</dd></div>
+        <div><dt>Other people stay out</dt><dd>Details about people who didn't consent, the friend you mention, the colleague in a screenshot, are excluded by default.</dd></div>
+        <div><dt>Not a promise of anonymity</dt><dd>Removing personal details is necessary, but it doesn't prove nobody could ever be recognised. That's why sharing is a choice, review comes before publishing, and you can withdraw until then.</dd></div>
+        <div><dt>Published means copied</dt><dd>Once a dataset is public, copies exist everywhere. Nothing is published until it passes review.</dd></div>
+      </dl>
+    </section>
+
+    <!-- what it will train -->
+    <section id="models" aria-labelledby="modelsTitle">
+      <div class="sec-head">
+        <div class="eyebrow">What it will train</div>
+        <h2 id="modelsTitle">Not one model. <i>Many small ones that work together.</i></h2>
+        <p>Intelligence that helps people is rarely one giant model. It's many parts: some quick and simple, some slow and careful. The datasets are meant for all of them.</p>
+      </div>
+      <div class="grid">
+        <article class="card"><span class="k">Language, large and small</span><p>Small, fast models for the everyday basics, which run on modest machines and phones, and larger ones called in for a moment of real thinking.</p></article>
+        <article class="card"><span class="k">Decisions and actions</span><p>Models that decide the next step: wait, respond, or hand it to someone better suited. Small, checkable choices before any big ones.</p></article>
+        <article class="card"><span class="k">Audio and speech</span><p>Hearing when it's your turn to speak, transcribing, answering out loud, in more languages and accents than today's models handle well. Voices are only ever cloned with consent.</p></article>
+        <article class="card"><span class="k">Images and vision</span><p>Reading a screen, noticing what changed, describing what's there. Often the right answer is "nothing to do", and that's worth learning too.</p></article>
+      </div>
+    </section>
+
+    <!-- who makes it possible -->
+    <section id="ways" aria-labelledby="waysTitle">
+      <div class="sec-head">
+        <div class="eyebrow">Who makes it possible</div>
+        <h2 id="waysTitle">Free to use, <i>because people give.</i></h2>
+        <p>The gateway runs on donated and sponsored compute. The library grows from conversations people choose to share, and from the people who review, label and train on them.</p>
+      </div>
+      <ol class="steps">
+        <li><b>Donate or sponsor compute</b><p>GPUs, hosting or credits that keep access free.</p></li>
+        <li><b>Share conversations</b><p>Through the contribute lane, one at a time.</p></li>
+        <li><b>Review and label</b><p>Check what cleaning missed, sort and label the datasets.</p></li>
+        <li><b>Train and evaluate</b><p>Train open models on the datasets and publish the results, including what didn't work.</p></li>
+      </ol>
+      <dl class="panels">
+        <div><dt>Compute pledged</dt><dd><b>None yet.</b></dd></div>
+        <div><dt>Datasets published</dt><dd><b>None yet.</b></dd></div>
+        <div><dt>Next update</dt><dd><b>Not scheduled.</b></dd></div>
+      </dl>
+    </section>
+
+    <!-- register interest -->
+    <section id="interest" aria-labelledby="interestTitle">
+      <div class="sec-head">
+        <div class="eyebrow">Register interest</div>
+        <h2 id="interestTitle">Help write <i>the first scroll.</i></h2>
+        <p>This is the very beginning. Tell us how you'd take part. It's a prototype form: nothing is sent or stored yet.</p>
+      </div>
+      <form class="interest" id="interestForm" novalidate>
+        <label>Name<input id="interestName" type="text" autocomplete="name"></label>
+        <label>Organisation (optional)<input id="interestOrg" type="text" autocomplete="organization"></label>
+        <label>Email<input id="interestEmail" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+        <label>How you'd like to take part
+          <select id="interestPath">
+            <option value="use">Use it, free</option>
+            <option value="compute">Donate or sponsor compute</option>
+            <option value="share">Share conversations</option>
+            <option value="review">Review and label data</option>
+            <option value="train">Train and evaluate models</option>
+            <option value="follow">Just keep me updated</option>
+          </select>
+        </label>
+        <label>Anything we should know (optional)<textarea id="interestNote" maxlength="1000"></textarea></label>
+        <div><button class="pill" type="submit">Register interest</button></div>
+        <p class="form-msg" id="interestMsg" aria-live="polite"></p>
+      </form>
+      <div class="actions">
+        <a class="pill ghost" href="https://chat.whatsapp.com/Ee5K3okGmHDEc2JAi2ooas?mode=gi_t" target="_blank" rel="noopener">Follow the conversation on WhatsApp</a>
+        <a class="pill ghost" href="../">All initiatives</a>
+        <a class="pill ghost" href="../../#initiatives">Back to we unfold</a>
+      </div>
+    </section>
+  </main>
+  <!-- build:footer -->
+  <footer class="site-foot">
+    <a class="brand" href="../../" aria-label="we unfold, home of Open Intelligence"><img class="brand-mark" src="../../assets/mark.svg" width="36" height="36" alt=""><span class="wm">we <i>unfold</i></span></a>
+    <nav class="foot-links" aria-label="More">
+      <a href="../../#read">Manifesto</a>
+      <a href="../../initiatives/">Initiatives</a>
+      <a href="../../#invite">Stay close</a>
+      <a href="../../manifesto.html">Plain-text manifesto</a>
+    </nav>
+    <p class="foot-note">Open intelligence · Open economy · weunfold.ai · Manifesto <span data-build="version">Draft 0.5</span> · Preview, not launched: proposals and examples are labelled as such</p>
+  </footer>
+  <!-- /build:footer -->
+</div>
+<script>
+  // register interest: a prototype, nothing is sent or stored
+  (function () {
+    var form = document.getElementById("interestForm"), msg = document.getElementById("interestMsg"), email = document.getElementById("interestEmail");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { msg.textContent = "That email doesn't look complete."; email.focus(); return; }
+      msg.textContent = "Thank you. This is a prototype, so nothing was sent or stored yet.";
+    });
+  })();
+</script>
+<script data-build="capacity">
+// The capacity expression: contributions gather into a region of shared compute. Stamped by tools/build.mjs
+// into pages that carry <script data-build="capacity">. weCapacity(canvas, progress) draws the state for
+// progress() in [0, 1] (0 = the open network, 1 = gathered); the story only moves with that number, ambient
+// drift does not. Under reduced motion it draws one still frame of the gathered state.
+window.weCapacity = function (canvas, progress) {
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) progress = function () { return 1; };
+  var cx = canvas.getContext("2d"), W = 0, H = 0, D = 1, on = false, raf = 0, P = [], SRC = [], CELLS = 8;
+  // six contributions around the edge, in the site's colours: capital, demand, access, infrastructure, work, investment
+  var COL = ["#d9b45a", "#5aa8ff", "#33d6a8", "#9a85ff", "#f08a5d", "#e05aa0"];
+  function rnd(seed) { return function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function build() {
+    var r = canvas.getBoundingClientRect(); D = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height; canvas.width = Math.round(W * D); canvas.height = Math.round(H * D);
+    var R = rnd(7), n = W < 420 ? 260 : 460, m = Math.min(W, H), core = m * 0.34, x0 = W / 2 - core / 2, y0 = H / 2 - core / 2;
+    SRC = COL.map(function (c, k) { var a = -Math.PI / 2 + k * Math.PI / 3 + 0.35; return { x: W / 2 + Math.cos(a) * m * 0.43, y: H / 2 + Math.sin(a) * m * 0.41, c: c }; });
+    P = [];
+    for (var i = 0; i < n; i++) {
+      var s = SRC[i % 6], a = R() * Math.PI * 2, d = Math.sqrt(R()) * m * 0.11;
+      var cell = Math.floor(R() * CELLS * CELLS), gx = cell % CELLS, gy = Math.floor(cell / CELLS);
+      P.push({ hx: s.x + Math.cos(a) * d, hy: s.y + Math.sin(a) * d, tx: x0 + (gx + 0.5) * core / CELLS + (R() - 0.5) * core / CELLS * 0.5, ty: y0 + (gy + 0.5) * core / CELLS + (R() - 0.5) * core / CELLS * 0.5,
+        bx: W / 2 + (R() - 0.5) * m * 0.3, by: H / 2 + (R() - 0.5) * m * 0.3, lag: R() * 0.35, ph: R() * 6.28, sz: 0.6 + R() * 1.1, c: s.c });
+    }
+    P.core = { x: x0, y: y0, s: core };
+  }
+  function draw(time) {
+    var t = Math.max(0, Math.min(1, progress())), amb = reduce ? 0 : 1;
+    cx.setTransform(D, 0, 0, D, 0, 0); cx.clearRect(0, 0, W, H);
+    // the paths from each contribution into the shared region
+    SRC.forEach(function (s) {
+      cx.globalAlpha = 0.12 + 0.28 * t; cx.strokeStyle = s.c; cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(s.x, s.y); cx.quadraticCurveTo((s.x + W / 2) / 2 + (H / 2 - s.y) * 0.18, (s.y + H / 2) / 2 + (s.x - W / 2) * 0.18, W / 2, H / 2); cx.stroke();
+      cx.globalAlpha = 0.9; cx.fillStyle = s.c; cx.beginPath(); cx.arc(s.x, s.y, 3, 0, 6.283); cx.fill();
+    });
+    // the region itself: a faint grid of compute units that fills as contributions arrive
+    var k = P.core; cx.globalAlpha = 0.08 + 0.32 * t; cx.strokeStyle = "#ebe6da"; cx.lineWidth = 1;
+    cx.beginPath(); cx.roundRect ? cx.roundRect(k.x - 10, k.y - 10, k.s + 20, k.s + 20, 10) : cx.rect(k.x - 10, k.y - 10, k.s + 20, k.s + 20); cx.stroke();
+    cx.globalCompositeOperation = "lighter";
+    for (var i = 0; i < P.length; i++) {
+      var p = P[i], q = ease(Math.max(0, Math.min(1, (t - p.lag * (1 - t)) / (1 - p.lag * 0.5))));
+      var mx = p.bx + (p.hx - p.bx) * 0.3, my = p.by + (p.hy - p.by) * 0.3, u = 1 - q;
+      var x = u * u * p.hx + 2 * u * q * mx + q * q * p.tx, y = u * u * p.hy + 2 * u * q * my + q * q * p.ty;
+      var wob = amb * (1 - q * 0.8) * 2.2; x += Math.sin(time * 0.0007 + p.ph) * wob; y += Math.cos(time * 0.0006 + p.ph * 1.3) * wob;
+      cx.globalAlpha = 0.35 + 0.5 * q; cx.fillStyle = p.c; cx.beginPath(); cx.arc(x, y, p.sz, 0, 6.283); cx.fill();
+    }
+    cx.globalCompositeOperation = "source-over"; cx.globalAlpha = 1;
+  }
+  function loop(time) { draw(time); raf = on && !reduce ? requestAnimationFrame(loop) : 0; }
+  function start() { if (!on) { on = true; if (!raf) raf = requestAnimationFrame(loop); } }
+  build(); draw(0);
+  window.addEventListener("resize", function () { build(); draw(performance.now()); });
+  // cross-page continuity: the canvas is the shared element of the view transition, but only when it is on
+  // screen as the page leaves or arrives, so an off-screen canvas never flies in from nowhere
+  function visible() { var r = canvas.getBoundingClientRect(); return r.bottom > 0 && r.top < window.innerHeight; }
+  function name(v) { canvas.style.viewTransitionName = v ? "capacity" : ""; }
+  window.addEventListener("pageswap", function (e) { if (e.viewTransition) name(visible()); });
+  window.addEventListener("pagereveal", function (e) { if (!e.viewTransition) return; name(visible()); var clear = function () { name(false); }; e.viewTransition.finished.then(clear, clear); });
+  if (reduce) return;
+  // only animate while on screen, so several pages and canvases never pile up loops
+  new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) start(); else on = false; }); }).observe(canvas);
+};
+</script>
+<script>
+  // contributions gather into the library's shelves; it arrives gathered and loosens as you read on
+  (function () { var c = document.getElementById("alexLibrary"), hero = document.getElementById("arrive"); if (!c || !window.weCapacity) return;
+    window.weCapacity(c, function () { return 1 - 0.45 * Math.min(1, Math.max(0, window.scrollY / hero.offsetHeight)); }); })();
+</script>
+<script data-build="header">
+// The site shell's behaviour, stamped into every page by tools/build.mjs. Edit content/partials/header.js.
+(function () {
+  var bar = document.querySelector("[data-topbar]"); if (!bar) return;
+  var btn = bar.querySelector(".nav-drop-btn"), menu = btn && document.getElementById(btn.getAttribute("aria-controls"));
+  var links = bar.querySelector(".nav-links"), ind = bar.querySelector(".nav-ind"), items = Array.prototype.slice.call(bar.querySelectorAll("[data-nav]"));
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // the Initiatives menu: a click/keyboard disclosure, never hover
+  function setMenu(open) { btn.setAttribute("aria-expanded", open ? "true" : "false"); menu.hidden = !open; if (open) show(); }
+  if (menu) {
+    btn.addEventListener("click", function () { setMenu(menu.hidden); if (!menu.hidden) menu.querySelector("a").focus(); });
+    document.addEventListener("click", function (e) { if (!menu.hidden && !e.target.closest(".nav-drop")) setMenu(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !menu.hidden) { setMenu(false); btn.focus(); } });
+    menu.addEventListener("focusout", function (e) { if (!e.relatedTarget || !e.relatedTarget.closest(".nav-drop")) setMenu(false); });
+  }
+
+  // where you are: a subpage names its section on <body data-section>; the landing follows the section on screen
+  var SECTIONS = { manifesto: ["top", "today", "oi"], econ: ["econ", "tactu"], initiatives: ["initiatives"], people: ["people"], progress: ["progress"] };
+  var fixed = document.body.getAttribute("data-section"), current = null;
+  function place() {
+    var el = current && items.filter(function (i) { return i.getAttribute("data-nav") === current; })[0], t = el && (el.querySelector(".nav-drop-btn") || el);
+    if (!t || !t.offsetWidth) { ind.classList.remove("on"); return; }
+    var a = links.getBoundingClientRect(), r = t.getBoundingClientRect(), w = t.querySelector("svg") ? r.width - 18 : r.width;
+    ind.style.width = w + "px"; ind.style.transform = "translateX(" + (r.left - a.left) + "px)"; ind.classList.add("on");
+  }
+  function setCurrent(k) {
+    if (k === current) return; current = k;
+    items.forEach(function (i) { var on = i.getAttribute("data-nav") === k; i.classList.toggle("is-current", on); if (i.tagName === "A") { if (on) i.setAttribute("aria-current", fixed ? "page" : "location"); else i.removeAttribute("aria-current"); } });
+    place();
+  }
+  function spy() {
+    if (fixed) return setCurrent(fixed);
+    var mid = window.innerHeight * 0.4, found = null;
+    Object.keys(SECTIONS).forEach(function (k) { SECTIONS[k].forEach(function (id) { var s = document.getElementById(id); if (!s) return; var r = s.getBoundingClientRect(); if (r.top <= mid && r.bottom > mid) found = k; }); });
+    setCurrent(found);
+  }
+
+  // the bar: transparent at the top, a quiet ground once you scroll, tucked away while you read down, back as soon as you scroll up
+  // direction is measured from where the scroll last turned, so slow trackpad and smooth scrolling count too
+  var lastY = window.scrollY, turnY = lastY, dir = 0;
+  function show() { bar.classList.remove("is-hidden"); }
+  function onScroll() {
+    var y = window.scrollY, open = menu && !menu.hidden, d = y > lastY ? 1 : y < lastY ? -1 : 0;
+    if (d && d !== dir) { dir = d; turnY = lastY; }
+    bar.classList.toggle("is-scrolled", y > 24);
+    if (y <= 160 || (dir < 0 && turnY - y > 8)) show();
+    else if (!reduce && !open && !bar.contains(document.activeElement) && dir > 0 && y - turnY > 8) bar.classList.add("is-hidden");
+    lastY = y; spy();
+  }
+  bar.addEventListener("focusin", show);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", function () { place(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+  onScroll();
+})();
+
+// A link that lands on #section (e.g. back to #initiatives) jumps there at once instead of smooth-scrolling
+// through everything above it, and again after fonts and media settle the layout.
+(function () {
+  var id = location.hash.slice(1), el = id && document.getElementById(id);
+  if (!el) return;
+  var root = document.documentElement; // head.js already set scroll-behavior to auto for this load
+  function jump() { el.scrollIntoView({ block: "start" }); }
+  function done() { jump(); requestAnimationFrame(function () { root.style.scrollBehavior = ""; }); }
+  jump(); if (document.readyState === "complete") done(); else window.addEventListener("load", done, { once: true });
+})();
+
+// Subpages: the same fine, dim particle ground the landing's field settles into, drawn once.
+(function () {
+  var c = document.querySelector("canvas.ground"); if (!c) return;
+  function draw() {
+    var d = Math.min(window.devicePixelRatio || 1, 2), w = window.innerWidth, h = window.innerHeight, g = c.getContext("2d"), seed = 11;
+    c.width = Math.round(w * d); c.height = Math.round(h * d); g.setTransform(d, 0, 0, d, 0, 0); g.clearRect(0, 0, w, h);
+    function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+    for (var i = 0, n = Math.round(w * h / 1400); i < n; i++) { var b = 0.25 + rnd() * 0.35; g.globalAlpha = b * b; g.fillStyle = "#ebe6da"; g.beginPath(); g.arc(rnd() * w, rnd() * h, 0.4 + rnd() * 0.6, 0, 6.283); g.fill(); }
+  }
+  draw(); window.addEventListener("resize", draw);
+})();
+</script>
+</body>
+</html>

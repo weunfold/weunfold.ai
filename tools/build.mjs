@@ -233,13 +233,14 @@ const SHELL = {
   "private/artifact-version.html": { root: "", landing: true },
   "site/initiatives/index.html": { root: "../", current: "index" },
   "site/initiatives/b300/index.html": { root: "../../", current: "b300" },
+  "site/initiatives/alexandria/index.html": { root: "../../", current: "alexandria" },
 };
 const partial = (name) => readFileSync(join(ROOT, "content/partials", name), "utf8").replace(/^<!--[\s\S]*?-->\n/, "");
 const HEADER = { html: partial("header.html"), css: partial("header.css"), head: partial("head.js"), js: partial("header.js"), footer: partial("footer.html"), capacity: partial("capacity.js") };
 function stampShell(html, rel) {
   const p = SHELL[rel], home = p.landing ? "" : p.root, cur = (k) => (p.current === k ? ' aria-current="page"' : "");
   const fill = (s) => s.replace(/\{BRAND_HREF\}/g, p.landing ? "#top" : p.root).replace(/\{HOME\}/g, home).replace(/\{ROOT\}/g, p.root)
-    .replace(/\{READ\}/g, p.landing ? " data-read" : "").replace(/\{CUR_B300\}/g, cur("b300")).replace(/\{CUR_INDEX\}/g, cur("index")).replace(/\{VERSION\}/g, esc(meta.version));
+    .replace(/\{READ\}/g, p.landing ? " data-read" : "").replace(/\{CUR_B300\}/g, cur("b300")).replace(/\{CUR_INDEX\}/g, cur("index")).replace(/\{CUR_ALEXANDRIA\}/g, cur("alexandria")).replace(/\{VERSION\}/g, esc(meta.version));
   const swap = (re, repl, what) => { if (!re.test(html)) throw new Error(`${rel}: missing ${what} marker`); html = html.replace(re, () => repl); };
   swap(/<!-- build:header -->[\s\S]*?<!-- \/build:header -->/, `<!-- build:header -->\n${fill(HEADER.html)}  <!-- /build:header -->`, "build:header");
   swap(/<style data-build="header">[\s\S]*?<\/style>/, `<style data-build="header">\n${HEADER.css}</style>`, 'style data-build="header"');
