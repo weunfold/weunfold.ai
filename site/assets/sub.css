@@ -84,3 +84,32 @@ form.interest textarea { min-height: 96px; resize: vertical; }
   .hero-split > .crumbs { order: 1; } .hero-split > .sec-head { order: 2; } .hero-split > .prose { order: 4; }
   .hero-split > .capacity { order: 3; max-width: 320px; align-self: center; margin-bottom: 21px; }
 }
+/* the B300 page: the target bar, where the money goes, and the cost tiles */
+.raise { display: flex; flex-direction: column; gap: 10px; max-width: 620px; margin-top: 8px; padding: 21px; border: 1px solid var(--line); background: rgba(14, 16, 23, 0.86); }
+.raise-top { display: flex; align-items: baseline; justify-content: space-between; gap: 13px; }
+.raise-k { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
+.raise-top b { font-family: var(--font-display); font-weight: 300; font-size: clamp(30px, 3.4vw, 44px); letter-spacing: -0.02em; color: var(--text); }
+.raise-bar { position: relative; display: flex; height: 10px; background: var(--surface); overflow: hidden; }
+.raise-bar .seg { display: block; height: 100%; opacity: 0.28; }
+.raise-bar .seg + .seg { border-left: 2px solid var(--ground); }
+.raise-bar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--gold); }
+.s-machine, .a-machine .a-pct { background: #d9b45a; } .s-ops, .a-ops .a-pct { background: #5aa8ff; } .s-train, .a-train .a-pct { background: #33d6a8; }
+.raise-meta { display: flex; align-items: center; justify-content: space-between; gap: 13px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+.raise-meta b { font-weight: 500; color: var(--text); }
+.raise .actions { margin-top: 8px; }
+ol.alloc { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+ol.alloc li { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 21px; padding: 18px 0; border-top: 1px solid var(--line); align-items: start; }
+ol.alloc b { font-weight: 400; color: var(--text); font-size: 20px; }
+ol.alloc p { font-size: 16px; margin-top: 4px; max-width: 680px; }
+.a-pct { font-family: var(--font-mono); font-size: 13px; color: var(--ground); padding: 4px 0; text-align: center; }
+.note-dated { margin-top: 13px; }
+.grid.two { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.card .stat { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.04em; line-height: 1.7; color: var(--text-muted); margin-top: 6px; }
+.card .stat b { font-weight: 500; color: var(--text); }
+.card .state { align-self: flex-start; }
+dl.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 13px; margin: 0; }
+dl.stats > div { border: 1px solid var(--line); background: rgba(14, 16, 23, 0.86); padding: 18px 21px; display: flex; flex-direction: column; gap: 6px; }
+dl.stats dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
+dl.stats dd { margin: 0; display: flex; flex-direction: column; gap: 4px; }
+dl.stats dd b { font-family: var(--font-display); font-weight: 300; font-size: clamp(28px, 3vw, 38px); letter-spacing: -0.02em; color: var(--text); }
+dl.stats dd span { font-size: 15px; color: var(--text-muted); }

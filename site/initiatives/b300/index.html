@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Compute we can build together — B300 initiative — we unfold</title>
-<meta name="description" content="A proposal to acquire and operate a shared B300 compute cluster with transparent costs and shared participation. Details in development; fundraising is not open.">
+<meta name="description" content="One shared NVIDIA B300 cluster for open-weight models: inference and open training. US$ 1M to build and run it for 18 months. Not open yet; register interest.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap">
 <link rel="stylesheet" href="../../assets/sub.css">
@@ -102,163 +102,143 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
   <!-- /build:header -->
   <main>
 
-    <!-- 1 · Arrive: what we want to build -->
+    <!-- the target, up front: what it takes, and that it isn't open -->
     <section class="hero hero-split" id="arrive" aria-labelledby="b300Title">
       <canvas class="capacity" id="b300Capacity" aria-hidden="true"></canvas>
       <ol class="crumbs" aria-label="You are here"><li><a href="../../">we unfold</a></li><li><a href="../">Initiatives</a></li><li aria-current="page">B300</li></ol>
       <div class="sec-head" style="margin-top: 34px;">
         <div class="eyebrow">Initiative · Shared compute</div>
         <h1 id="b300Title">Compute we can build <i>together.</i></h1>
-        <p class="lead">A proposal to bring together the resources to acquire and operate a shared B300 cluster, with transparent costs, shared participation, and a commitment to widening access.</p>
-        <div class="stage"><span class="state proposal">Stage: proposal</span><span class="state">Details in development</span></div>
+        <p class="lead">One shared NVIDIA B300 cluster for open-weight models: running them for everyone who needs them, and training new ones in the open.</p>
       </div>
-      <div class="prose">
-        <p>Most people who could build something useful with AI can't buy the machines it runs on. Shared compute lets researchers, maintainers, small teams and communities run real work on capacity whose costs and rules they can see and help shape.</p>
-        <p>B300 is NVIDIA's Blackwell Ultra generation of data-centre GPU. The configuration, size and site are not decided: they depend on the demand and the quote described below.</p>
-        <p><b style="font-weight: 400; color: var(--text);">Nothing has been bought. Fundraising is not open, and this page collects no money.</b></p>
-        <p class="small">This initiative is part of <a href="../../">we unfold</a>, the home of the Open Intelligence movement: more people with the means to understand, build, influence and benefit from intelligence. <a href="../../#read">Read the manifesto</a>.</p>
+      <div class="raise" aria-labelledby="raiseTitle">
+        <div class="raise-top"><span id="raiseTitle" class="raise-k">What it takes</span><b>US$ 1,000,000</b></div>
+        <div class="raise-bar" role="img" aria-label="US$ 0 of US$ 1,000,000 committed. Not open yet.">
+          <span class="seg s-machine" style="width: 55%"></span><span class="seg s-ops" style="width: 36%"></span><span class="seg s-train" style="width: 9%"></span>
+          <span class="fill" style="width: 0%"></span>
+        </div>
+        <div class="raise-meta"><span><b>US$ 0</b> committed</span><span class="state proposal">Not open yet</span></div>
+        <p class="small">No money is accepted on this page. Tell us you're interested and we'll come back with the proposal.</p>
+        <div class="actions"><a class="pill" href="#interest">Register interest</a><a class="pill ghost" href="#funds">Where it goes</a></div>
       </div>
     </section>
 
-    <!-- 2 · Gather: different contributions, one initiative -->
-    <section id="gather" aria-labelledby="gatherTitle">
+    <!-- in one minute -->
+    <section id="minute" aria-labelledby="minuteTitle">
       <div class="sec-head">
-        <div class="eyebrow">Ways in</div>
-        <h2 id="gatherTitle">Different contributions. <i>One initiative.</i></h2>
-        <p>These paths can run at the same time. They are not the same thing, and they don't carry the same rights. Each one has terms that must be defined before it opens.</p>
+        <div class="eyebrow">In one minute</div>
+        <h2 id="minuteTitle">Open models need somewhere <i>to run.</i></h2>
       </div>
       <div class="grid">
-        <article class="card"><span class="k">01 · Capital</span><h3>Back shared capacity</h3><p>Contribute capital toward the cluster itself.</p><p class="small">To define first: which usage and governance rights it carries, the conditions, ongoing costs, and what happens if you leave.</p><a class="more" href="#participate" data-path="capacity">I'm interested →</a></article>
-        <article class="card"><span class="k">02 · Demand</span><h3>Commit your demand</h3><p>Tell us the work you'd run, so the cluster is sized to real use.</p><p class="small">To define first: reserved versus best-effort service, pricing, how long a commitment lasts, and delivery conditions.</p><a class="more" href="#participate" data-path="demand">I'm interested →</a></article>
-        <article class="card"><span class="k">03 · Access</span><h3>Sponsor access</h3><p>Pay for capacity that someone else gets to use.</p><p class="small">To define first: who can receive it, how it's allocated, how it's reported, and any recognition for sponsors.</p><a class="more" href="#participate" data-path="sponsor">I'm interested →</a></article>
-        <article class="card"><span class="k">04 · In kind</span><h3>Contribute infrastructure</h3><p>Equipment, hosting, networking, energy or services.</p><p class="small">To define first: how it's valued and accepted, who is responsible for what, and any rights agreed separately.</p><a class="more" href="#participate" data-path="infrastructure">I'm interested →</a></article>
-        <article class="card"><span class="k">05 · Work</span><h3>Build with us</h3><p>Research, engineering, operations and maintenance.</p><p class="small">To define first: whether it's paid work, a grant or recognised contribution, as each program sets out.</p><a class="more" href="#participate" data-path="build">I'm interested →</a></article>
-        <article class="card"><span class="k">06 · Investment</span><h3>Invest in the initiative</h3><p>Capital with explicit economic terms, kept separate from the paths above.</p><p class="small">To define first: the entity, the instrument, the risks, the rights, and where any return would come from.</p><a class="more" href="#participate" data-path="invest">I'm interested →</a></article>
+        <article class="card"><span class="k">The gap</span><p>Open-weight models are free to download, but the machines to run and train them are scarce and rented on terms few people see.</p></article>
+        <article class="card"><span class="k">What we build</span><p>One 8× B300 node, installed in Brazil and run for 18 months, with its costs published.</p></article>
+        <article class="card"><span class="k">What it does</span><p>Serves open-weight models through one API, and trains and fine-tunes open models whose weights and results are published.</p></article>
+        <article class="card"><span class="k">Who shares it</span><p>The people and organisations who put it together share its compute, in proportion to what they contribute.</p></article>
       </div>
     </section>
 
-    <!-- 3 · Understand: what participation means -->
-    <section id="understand" aria-labelledby="rightsTitle">
+    <!-- where the money goes -->
+    <section id="funds" aria-labelledby="fundsTitle">
       <div class="sec-head">
-        <div class="eyebrow">What participation means</div>
-        <h2 id="rightsTitle">Three different <i>rights.</i></h2>
-        <p>Using the cluster, deciding about it, and sharing in its economics are separate. None of them is settled yet.</p>
+        <div class="eyebrow">Where it goes</div>
+        <h2 id="fundsTitle">US$ 1M, <i>three parts.</i></h2>
       </div>
-      <dl class="panels">
-        <div><dt>Use</dt><dd><b>A defined, proportional share of an eligible pool of compute.</b></dd><dd>Still to define: the allocation period, what's in the pool, reservations, concurrency, priority, operating charges, downtime, and whether unused capacity expires, carries forward or can be reassigned. A share is not unlimited access and not a fixed number of tokens.</dd></div>
-        <div><dt>Governance</dt><dd><b>A recorded vote on specified decisions about this initiative.</b></dd><dd>Still to define: voting weight, quorum, delegation, limits on concentration, conflicts of interest, and the matters a simple capital majority can never override. It governs the compute initiative, not the Open Intelligence movement.</dd></div>
-        <div><dt>Economic participation</dt><dd><b>Any equity, revenue share, distribution or repayment.</b></dd><dd>Only under explicit terms, separate from use and votes. No promise of appreciation, liquidity, tradability or yield.</dd></div>
-      </dl>
-      <div class="table-wrap">
-        <table>
-          <caption>Which path may carry which right. Every cell is a proposal or still open; none is a settled term.</caption>
-          <thead><tr><th scope="col">Path</th><th scope="col">Use</th><th scope="col">Governance</th><th scope="col">Economic</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Back shared capacity</th><td class="yes">Proposed</td><td class="yes">Proposed</td><td>Not proposed</td></tr>
-            <tr><th scope="row">Commit your demand</th><td class="yes">Proposed, as service</td><td>Terms pending</td><td>Not proposed</td></tr>
-            <tr><th scope="row">Sponsor access</th><td class="yes">For the recipients</td><td>Not proposed</td><td>Not proposed</td></tr>
-            <tr><th scope="row">Contribute infrastructure</th><td>Agreed separately</td><td>Agreed separately</td><td>Agreed separately</td></tr>
-            <tr><th scope="row">Build with us</th><td>Terms pending</td><td>Terms pending</td><td>Not proposed</td></tr>
-            <tr><th scope="row">Invest in the initiative</th><td>Terms pending</td><td>Terms pending</td><td class="yes">Proposed, under its own terms</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <dl class="panels">
-        <div><dt>Inference tokens</dt><dd>The units a model reads and writes. A measure of work done, not something you own.</dd></div>
-        <div><dt>Usage credits</dt><dd>Your entitlement to a share of the cluster's capacity in a period. Not a currency.</dd></div>
-        <div><dt>Voting tokens</dt><dd>A record of your vote on initiative decisions. Not an investment. Nothing here requires a blockchain, trading or an exchange listing.</dd></div>
-      </dl>
-      <div class="prose" style="margin-top: 34px;">
-        <p><b style="font-weight: 400; color: var(--text);">Money in an initiative never buys the movement.</b> The charter proposes that an initiative's operating entity can give its participants rights in that initiative, and that those rights never carry a vote in the movement or a say over its charter. That line is a proposal, not settled. <a href="../../#read">Read the charter</a>.</p>
-      </div>
-    </section>
-
-    <!-- 4 · See the operation: what makes capacity possible -->
-    <section id="operation" aria-labelledby="opTitle">
-      <div class="sec-head">
-        <div class="eyebrow">The operation</div>
-        <h2 id="opTitle">Know what keeps it <i>running.</i></h2>
-        <p>A shared operation deserves understandable accounts.</p>
-      </div>
-      <ol class="steps" aria-label="The layers behind usable capacity">
-        <li><b>Equipment</b><p>GPUs, servers, storage and spare parts.</p></li>
-        <li><b>Installation</b><p>Racks, power distribution, setup and testing.</p></li>
-        <li><b>Electricity</b><p>For the GPUs, the servers around them, and the facility.</p></li>
-        <li><b>Cooling</b><p>Removing the heat all of that produces.</p></li>
-        <li><b>Connectivity</b><p>Getting work in and results out.</p></li>
-        <li><b>Maintenance and operations</b><p>The people, repairs and replacements that keep it working.</p></li>
-        <li><b>Usable capacity</b><p>What's left for real work after downtime, reservations and overhead.</p></li>
+      <ol class="alloc">
+        <li class="a-machine"><span class="a-pct">55%</span><div><b>The machine · US$ 550k</b><p>One 8× NVIDIA B300 node (2.3 TB of GPU memory), delivered, installed and acceptance-tested. Lowest public price found for the node: US$ 518,139.</p></div></li>
+        <li class="a-ops"><span class="a-pct">36%</span><div><b>Running it for 18 months · US$ 360k</b><p>About US$ 20k a month: engineers on call, colocation and power in São Paulo, vendor support, bandwidth and spares. People, not electricity, are the largest cost.</p></div></li>
+        <li class="a-train"><span class="a-pct">9%</span><div><b>Open training · US$ 90k</b><p>People and time for fine-tuning and training open-weight models, published with their weights and results.</p></div></li>
       </ol>
-      <div class="prose" style="margin-top: 34px;">
-        <p class="eyebrow">Illustration, not a measurement</p>
-        <p>Follow one workload. A research group sends a batch of evaluation requests. They arrive over the network, the GPUs and servers do the work and draw electricity, cooling removes the heat, and the results go back. The cost of that task is a share of every layer above, including the hours the cluster sits idle: idle and reserved capacity still cost money. Unit costs will be counted on work actually delivered within the agreed quality and latency.</p>
+      <p class="small note-dated">Proposed allocation. Prices from our August 2026 research; everything is re-quoted before anything is bought.</p>
+    </section>
+
+    <!-- what it does -->
+    <section id="does" aria-labelledby="doesTitle">
+      <div class="sec-head">
+        <div class="eyebrow">What it does</div>
+        <h2 id="doesTitle">Run open models. <i>Train new ones.</i></h2>
       </div>
-      <dl class="panels">
-        <div><dt>Acquisition costs</dt><dd><b>Not available yet.</b> Published with a complete system quote (gate 3 below).</dd></div>
-        <div><dt>Operating costs</dt><dd><b>Not available yet.</b> Needs the operating budget from the same gate.</dd></div>
-        <div><dt>Utilization</dt><dd><b>Not measured yet.</b> No cluster is running.</dd></div>
-        <div><dt>Cost assumptions</dt><dd>Each estimate will state its electricity price, utilization, maintenance, financing and replacement, with replacement counted once. Resale value won't be used to make the base case work.</dd></div>
-        <div><dt>Energy</dt><dd><b>Not measured yet.</b> Will show GPU, server and facility consumption separately, each with its measurement boundary and period.</dd></div>
-        <div><dt>CO₂e</dt><dd><b>Not estimated yet.</b> It will be an estimate, never a meter reading: a named emission factor, location and period. Embodied hardware impact shown separately when credible data exists.</dd></div>
-      </dl>
-      <div class="prose" style="margin-top: 34px;">
-        <p>The aim is to make capacity more accessible and more affordable as the operation improves. It isn't a promise to always be cheaper: electricity, utilization, service quality and maintenance all move the price. If owning it, keeping it private or controlling it costs more than a comparable external service, this page will say so.</p>
+      <div class="grid two">
+        <article class="card"><span class="k">Inference</span><h3>Open-weight models, one API</h3><p>DeepSeek-class and other open-weight models, served to participants first and then to anyone who needs them.</p><p class="stat"><b>~35,000</b> output tokens a second<br><b>~47–54 billion</b> a month at 60% use</p><span class="state">Estimate</span></article>
+        <article class="card"><span class="k">Training</span><h3>Open models, improved in the open</h3><p>Fine-tuning and training runs on the same machine between serving peaks, with the weights, data notes and results published.</p><p class="stat"><b>US$ 90k</b> set aside for it</p><span class="state proposal">Proposal</span></article>
       </div>
     </section>
 
-    <!-- 5 · Establish trust: progress and evidence -->
+    <!-- why it can be affordable -->
+    <section id="cost" aria-labelledby="costTitle">
+      <div class="sec-head">
+        <div class="eyebrow">Why it can be affordable</div>
+        <h2 id="costTitle">Cheaper to make <i>than to rent.</i></h2>
+      </div>
+      <dl class="stats">
+        <div><dt>To produce</dt><dd><b>US$ 0.69–0.87</b><span>per million output tokens on one 8-GPU Blackwell node, estimated from measured speed</span></dd></div>
+        <div><dt>The market charges</dt><dd><b>US$ 1.98–3.96</b><span>per million output tokens for the same class of model</span></dd></div>
+        <div><dt>Energy</dt><dd><b>~US$ 0.02</b><span>per million tokens: staff, not power, dominate the cost</span></dd></div>
+      </dl>
+      <div class="prose" style="margin-top: 21px;">
+        <p>The gap is room to make access cheaper and to keep the operation running. It holds only while the machine is busy: idle capacity still costs money.</p>
+        <p class="small note-dated">Research, August 2026. Prices and benchmarks move fast; they're re-checked before anything is bought.</p>
+      </div>
+    </section>
+
+    <!-- how sharing works -->
+    <section id="sharing" aria-labelledby="shareTitle">
+      <div class="sec-head">
+        <div class="eyebrow">How sharing works</div>
+        <h2 id="shareTitle">Put it together. <i>Share what it makes.</i></h2>
+        <div class="stage"><span class="state proposal">Proposal · terms in development</span></div>
+      </div>
+      <ol class="steps">
+        <li><b>Compute, in proportion</b><p>Each participant's share of the cluster's capacity matches what they contribute.</p></li>
+        <li><b>Unused capacity goes to others</b><p>What participants don't use is offered to other people and projects who need it.</p></li>
+        <li><b>Proceeds are shared too</b><p>Proceeds from capacity sold to others are shared among participants in the same proportion.</p></li>
+        <li><b>Participants decide about the cluster</b><p>Decisions about this cluster stay with its participants. The Open Intelligence movement itself is not for sale.</p></li>
+      </ol>
+    </section>
+
+    <!-- before anything is bought -->
     <section id="progress" aria-labelledby="popTitle">
       <div class="sec-head">
         <div class="eyebrow">Proof of Progress</div>
-        <h2 id="popTitle">Proceed, resize, <i>or wait.</i></h2>
-        <p>The cluster is bought only if it passes these gates, in order. Each one will show dated evidence when there is some.</p>
+        <h2 id="popTitle">Nothing is bought <i>until it checks out.</i></h2>
       </div>
-      <ol class="steps" aria-label="Acquisition gates">
-        <li><b>Understand demand</b><span class="state">No evidence yet</span><p>About 30 days of participant demand: workloads, concurrency, latency needs, cache behaviour and spend.</p></li>
-        <li><b>Test on rented capacity</b><span class="state">No evidence yet</span><p>Compare task quality and service performance with realistic workloads before owning anything.</p></li>
-        <li><b>Get a complete quote</b><span class="state">No evidence yet</span><p>The full system and an operating budget, including site power and cooling.</p></li>
-        <li><b>Validate</b><span class="state">No evidence yet</span><p>Committed demand checked against a conservative operating scenario.</p></li>
-        <li><b>Decide in public</b><span class="state">No evidence yet</span><p>Publish the conditions to proceed, resize, delay or return funds.</p></li>
+      <ol class="steps" aria-label="Before anything is bought">
+        <li><b>Real demand</b><span class="state">No evidence yet</span><p>About 30 days of the workloads participants would actually run.</p></li>
+        <li><b>Tested on rented capacity</b><span class="state">No evidence yet</span><p>Quality and speed checked with those workloads before owning anything.</p></li>
+        <li><b>A complete quote</b><span class="state">No evidence yet</span><p>The full system and an operating budget, including site power and cooling.</p></li>
+        <li><b>Go, resize or wait</b><span class="state">No evidence yet</span><p>The decision and its conditions published, including what happens if it doesn't go ahead.</p></li>
       </ol>
-      <dl class="panels">
-        <div><dt>Funding</dt><dd><b>Not open.</b> Received: none. Binding commitments: none recorded. Expressions of interest: the form below is a prototype and records nothing.</dd></div>
-        <div><dt>Technical readiness</dt><dd><b>No workload tests published.</b></dd></div>
-        <div><dt>Participation</dt><dd><b>No participants announced for this initiative.</b> Being a member of the movement is not the same as backing this cluster.</dd></div>
-        <div><dt>Next update</dt><dd><b>Not scheduled.</b></dd></div>
-      </dl>
+      <p class="small" style="margin-top: 13px;">Next update: not scheduled.</p>
     </section>
 
-    <!-- 6 · Participate: a concrete next step -->
-    <section id="participate" aria-labelledby="partTitle">
+    <!-- register interest -->
+    <section id="interest" aria-labelledby="interestTitle">
       <div class="sec-head">
-        <div class="eyebrow">Participate</div>
-        <h2 id="partTitle">Choose a way <i>in.</i></h2>
-        <p>Funding arrangements aren't ready, so for now this only asks what you'd bring. It's a prototype: nothing is sent or stored.</p>
+        <div class="eyebrow">Register interest</div>
+        <h2 id="interestTitle">Want in? <i>Tell us how.</i></h2>
+        <p>This is early. We're gathering the people and organisations who'd use it, back it or help run it. It's a prototype form: nothing is sent or stored yet.</p>
       </div>
       <form class="interest" id="interestForm" novalidate>
-        <label>The path you're interested in
+        <label>Name<input id="interestName" type="text" autocomplete="name"></label>
+        <label>Organisation (optional)<input id="interestOrg" type="text" autocomplete="organization"></label>
+        <label>Email<input id="interestEmail" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+        <label>How you'd like to take part
           <select id="interestPath">
-            <option value="updates">Just keep me updated on this initiative</option>
-            <option value="capacity">Back shared capacity</option>
-            <option value="demand">Commit your demand</option>
-            <option value="sponsor">Sponsor access</option>
-            <option value="infrastructure">Contribute infrastructure</option>
-            <option value="build">Build with us</option>
-            <option value="invest">Invest in the initiative</option>
+            <option value="use">Use the compute</option>
+            <option value="capital">Put in capital</option>
+            <option value="sponsor">Sponsor access for others</option>
+            <option value="infrastructure">Contribute hardware, hosting or energy</option>
+            <option value="build">Research, engineering or operations</option>
+            <option value="follow">Just keep me updated</option>
           </select>
         </label>
-        <label>Email<input id="interestEmail" type="email" autocomplete="email" placeholder="you@example.com" required></label>
         <label>Anything we should know (optional)<textarea id="interestNote" maxlength="1000"></textarea></label>
         <div><button class="pill" type="submit">Register interest</button></div>
         <p class="form-msg" id="interestMsg" aria-live="polite"></p>
       </form>
       <div class="actions">
         <a class="pill ghost" href="https://chat.whatsapp.com/Ee5K3okGmHDEc2JAi2ooas?mode=gi_t" target="_blank" rel="noopener">Follow the conversation on WhatsApp</a>
-      </div>
-      <div class="actions">
         <a class="pill ghost" href="../">All initiatives</a>
         <a class="pill ghost" href="../../#initiatives">Back to we unfold</a>
-        <a class="pill ghost" href="../../#read">Read the manifesto</a>
       </div>
     </section>
   </main>
@@ -276,14 +256,13 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
   <!-- /build:footer -->
 </div>
 <script>
-  // the "I'm interested" links preselect their path; the form is a prototype and sends nothing
+  // register interest: a prototype, nothing is sent or stored
   (function () {
-    var sel = document.getElementById("interestPath"), form = document.getElementById("interestForm"), msg = document.getElementById("interestMsg"), email = document.getElementById("interestEmail");
-    document.querySelectorAll("[data-path]").forEach(function (a) { a.addEventListener("click", function () { sel.value = a.getAttribute("data-path"); }); });
+    var form = document.getElementById("interestForm"), msg = document.getElementById("interestMsg"), email = document.getElementById("interestEmail");
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { msg.textContent = "That email doesn't look complete."; email.focus(); return; }
-      msg.textContent = "Thank you. This is a prototype, so nothing was sent or stored.";
+      msg.textContent = "Thank you. This is a prototype, so nothing was sent or stored yet.";
     });
   })();
 </script>
@@ -352,7 +331,7 @@ window.weCapacity = function (canvas, progress) {
 };
 </script>
 <script>
-  // arrive gathered; as the hero scrolls away the region loosens toward the ways in below
+  // arrive gathered; as the hero scrolls away the region loosens toward the sections below
   (function () { var c = document.getElementById("b300Capacity"), hero = document.getElementById("arrive"); if (!c || !window.weCapacity) return;
     window.weCapacity(c, function () { return 1 - 0.45 * Math.min(1, Math.max(0, window.scrollY / hero.offsetHeight)); }); })();
 </script>
