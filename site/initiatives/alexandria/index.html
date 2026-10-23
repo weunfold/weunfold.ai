@@ -26,7 +26,7 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
 :root { --topbar-h: 73px; }
 /* the top bar: transparent over the first screen, a quiet ground once you scroll, out of the way while you read down */
 .topbar { position: sticky; top: 0; z-index: 20; margin-inline: calc(50% - 50vw); view-transition-name: topbar; transition: transform 350ms ease, background-color 300ms ease, border-color 300ms ease; border-bottom: 1px solid transparent; }
-.topbar.is-scrolled { background: rgba(11, 13, 18, 0.8); -webkit-backdrop-filter: blur(14px) saturate(120%); backdrop-filter: blur(14px) saturate(120%); border-bottom-color: var(--line); }
+.topbar.is-scrolled { background: color-mix(in oklab, var(--ground) 82%, transparent); -webkit-backdrop-filter: blur(14px) saturate(120%); backdrop-filter: blur(14px) saturate(120%); border-bottom-color: var(--line); }
 .topbar.is-hidden { transform: translateY(-100%); }
 .topbar-in { max-width: 1280px; margin: 0 auto; padding: 13px max(21px, env(safe-area-inset-right, 0px)) 13px max(21px, env(safe-area-inset-left, 0px)); min-height: calc(var(--topbar-h) - 1px); display: flex; align-items: center; justify-content: space-between; gap: 21px; }
 .brand { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
@@ -54,6 +54,15 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
 .nm-t { font-family: var(--font-display); font-size: 17px; color: var(--text); }
 .nm-s { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
 
+/* night / day: shown on the landing once the sun is up; switching runs a brief "being generated" diffusion */
+.theme-sw { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 13px; background: none; border: 1px solid var(--line); border-radius: 9999px; color: var(--text-muted); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; opacity: 0; transform: translateY(-4px); transition: opacity 500ms ease, transform 500ms ease, color 200ms ease, border-color 200ms ease; }
+.theme-sw.is-shown { opacity: 1; transform: none; }
+.theme-sw:hover { color: var(--text); border-color: var(--text-faint); }
+.ts-ico { width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe2a8, #d9a35a 70%); box-shadow: 0 0 8px rgba(255, 190, 110, 0.6); }
+.theme-sw[data-mode-now="day"] .ts-ico { background: radial-gradient(circle at 70% 30%, transparent 40%, #cfd6e6 42%); box-shadow: none; }
+.diffuse { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .theme-sw { transition: none; } }
+
 /* the footer, the same on every page */
 .site-foot { position: relative; z-index: 1; border-top: 1px solid var(--line); padding-block: 34px calc(55px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 13px 34px; align-items: center; }
 .foot-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 26px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
@@ -70,12 +79,18 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
   .nav-links { gap: 16px; letter-spacing: 0.1em; }
   .nav-links > a:not(.pill) { display: none; }
   .nav-links .pill { padding: 9px 14px; letter-spacing: 0.1em; }
+  .theme-sw { padding: 0 11px; } .theme-sw .ts-t { display: none; }
   .nav-menu { left: auto; right: -110px; min-width: min(300px, calc(100vw - 42px)); }
   .site-foot { grid-template-columns: minmax(0, 1fr); }
   .foot-links { justify-content: flex-start; }
 }
 @media (max-width: 400px) { .brand .wm { display: none; } }
 @media (prefers-reduced-motion: reduce) { .topbar, .nav-ind { transition: none; } }
+/* between tablet and wide desktop the bar keeps the essentials so nothing is pushed off the edge */
+@media (min-width: 821px) and (max-width: 1180px) {
+  .nav-links { gap: 18px; letter-spacing: 0.12em; }
+  .nav-links > a[data-nav="people"], .nav-links > a[data-nav="progress"] { display: none; }
+}
 </style>
 </head>
 <body data-section="initiatives">
@@ -98,6 +113,7 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
         </div>
         <a href="../../#people" data-nav="people">Participants</a>
         <a href="../../#progress" data-nav="progress">Progress</a>
+        <button type="button" class="theme-sw" data-theme-switch hidden aria-label="Switch between night and day"><span class="ts-ico" aria-hidden="true"></span><span class="ts-t">Day</span></button>
         <a class="pill" href="../../#invite">Stay close</a>
         <span class="nav-ind" aria-hidden="true"></span>
       </div>
@@ -299,7 +315,7 @@ window.weCapacity = function (canvas, progress) {
     P.core = { x: x0, y: y0, s: core };
   }
   function draw(time) {
-    var t = Math.max(0, Math.min(1, progress())), amb = reduce ? 0 : 1;
+    var t = Math.max(0, Math.min(1, progress())), amb = reduce ? 0 : 1, day = window.__wuSky ? window.__wuSky.day : 0; // the landing turns to day; ink on sand then
     cx.setTransform(D, 0, 0, D, 0, 0); cx.clearRect(0, 0, W, H);
     // the paths from each contribution into the shared region
     SRC.forEach(function (s) {
@@ -308,9 +324,9 @@ window.weCapacity = function (canvas, progress) {
       cx.globalAlpha = 0.9; cx.fillStyle = s.c; cx.beginPath(); cx.arc(s.x, s.y, 3, 0, 6.283); cx.fill();
     });
     // the region itself: a faint grid of compute units that fills as contributions arrive
-    var k = P.core; cx.globalAlpha = 0.08 + 0.32 * t; cx.strokeStyle = "#ebe6da"; cx.lineWidth = 1;
+    var k = P.core; cx.globalAlpha = 0.08 + 0.32 * t; cx.strokeStyle = day > 0.3 ? "#2a1d12" : "#ebe6da"; cx.lineWidth = 1;
     cx.beginPath(); cx.roundRect ? cx.roundRect(k.x - 10, k.y - 10, k.s + 20, k.s + 20, 10) : cx.rect(k.x - 10, k.y - 10, k.s + 20, k.s + 20); cx.stroke();
-    cx.globalCompositeOperation = "lighter";
+    cx.globalCompositeOperation = day > 0.3 ? "source-over" : "lighter";
     for (var i = 0; i < P.length; i++) {
       var p = P[i], q = ease(Math.max(0, Math.min(1, (t - p.lag * (1 - t)) / (1 - p.lag * 0.5))));
       var mx = p.bx + (p.hx - p.bx) * 0.3, my = p.by + (p.hy - p.by) * 0.3, u = 1 - q;

@@ -25,7 +25,7 @@ window.weCapacity = function (canvas, progress) {
     P.core = { x: x0, y: y0, s: core };
   }
   function draw(time) {
-    var t = Math.max(0, Math.min(1, progress())), amb = reduce ? 0 : 1;
+    var t = Math.max(0, Math.min(1, progress())), amb = reduce ? 0 : 1, day = window.__wuSky ? window.__wuSky.day : 0; // the landing turns to day; ink on sand then
     cx.setTransform(D, 0, 0, D, 0, 0); cx.clearRect(0, 0, W, H);
     // the paths from each contribution into the shared region
     SRC.forEach(function (s) {
@@ -34,9 +34,9 @@ window.weCapacity = function (canvas, progress) {
       cx.globalAlpha = 0.9; cx.fillStyle = s.c; cx.beginPath(); cx.arc(s.x, s.y, 3, 0, 6.283); cx.fill();
     });
     // the region itself: a faint grid of compute units that fills as contributions arrive
-    var k = P.core; cx.globalAlpha = 0.08 + 0.32 * t; cx.strokeStyle = "#ebe6da"; cx.lineWidth = 1;
+    var k = P.core; cx.globalAlpha = 0.08 + 0.32 * t; cx.strokeStyle = day > 0.3 ? "#2a1d12" : "#ebe6da"; cx.lineWidth = 1;
     cx.beginPath(); cx.roundRect ? cx.roundRect(k.x - 10, k.y - 10, k.s + 20, k.s + 20, 10) : cx.rect(k.x - 10, k.y - 10, k.s + 20, k.s + 20); cx.stroke();
-    cx.globalCompositeOperation = "lighter";
+    cx.globalCompositeOperation = day > 0.3 ? "source-over" : "lighter";
     for (var i = 0; i < P.length; i++) {
       var p = P[i], q = ease(Math.max(0, Math.min(1, (t - p.lag * (1 - t)) / (1 - p.lag * 0.5))));
       var mx = p.bx + (p.hx - p.bx) * 0.3, my = p.by + (p.hy - p.by) * 0.3, u = 1 - q;
