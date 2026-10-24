@@ -1,0 +1,765 @@
+{
+ "version": 1,
+ "placeholder": false,
+ "generated": "2026-10-24",
+ "model": {
+  "voice": "eleven_v4 (Text to Dialogue, Voice Design voices)",
+  "music": "music_v2_5",
+  "format": "mp3_44100_192"
+ },
+ "voices": 10,
+ "files": {
+  "voice": "voice.mp3",
+  "bed": "bed.mp3",
+  "bang": "sfx-bang.mp3",
+  "doors": "sfx-doors.mp3"
+ },
+ "bedVolume": 0.45,
+ "film": 90,
+ "choiceSeconds": 10,
+ "cues": [
+  {
+   "kind": "hold",
+   "name": "singularity",
+   "dur": 3,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0
+   ],
+   "to": [
+    "top",
+    0
+   ],
+   "cam": [
+    0,
+    0,
+    -0.2
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "burst",
+   "dur": 6.75,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0
+   ],
+   "to": [
+    "top",
+    0.13
+   ],
+   "cam": [
+    0.1,
+    0.03,
+    -0.45
+   ],
+   "sfx": "bang",
+   "sfxAt": 0
+  },
+  {
+   "kind": "line",
+   "key": "top@0",
+   "voice": "lagos",
+   "text": "Intelligence never began with one of us.",
+   "start": 0,
+   "end": 2.981,
+   "dur": 2.981,
+   "from": [
+    "top",
+    0.13
+   ],
+   "to": [
+    "top",
+    0.17
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "galaxy",
+   "dur": 8.12,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0.17
+   ],
+   "to": [
+    "top",
+    0.308
+   ],
+   "cam": [
+    -0.12,
+    0.05,
+    -0.5
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.3",
+   "voice": "kyoto",
+   "text": "A question.",
+   "start": 2.981,
+   "end": 4.41,
+   "dur": 1.429,
+   "from": [
+    "top",
+    0.308
+   ],
+   "to": [
+    "top",
+    0.332
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.332
+   ],
+   "to": [
+    "top",
+    0.368
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.36",
+   "voice": "saopaulo",
+   "text": "A discovery.",
+   "start": 4.41,
+   "end": 5.95,
+   "dur": 1.54,
+   "from": [
+    "top",
+    0.368
+   ],
+   "to": [
+    "top",
+    0.392
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.392
+   ],
+   "to": [
+    "top",
+    0.428
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.42",
+   "voice": "mumbai",
+   "text": "Something taught.",
+   "start": 5.95,
+   "end": 7.458,
+   "dur": 1.508,
+   "from": [
+    "top",
+    0.428
+   ],
+   "to": [
+    "top",
+    0.452
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.452
+   ],
+   "to": [
+    "top",
+    0.488
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.48",
+   "voice": "mexico",
+   "text": "Something passed on.",
+   "start": 7.458,
+   "end": 9.216,
+   "dur": 1.758,
+   "from": [
+    "top",
+    0.488
+   ],
+   "to": [
+    "top",
+    0.528
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "web",
+   "dur": 5.75,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0.528
+   ],
+   "to": [
+    "top",
+    0.628
+   ],
+   "cam": [
+    0.1,
+    -0.04,
+    -0.35
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.62",
+   "voice": "galway",
+   "text": "Everything we know arrived through someone.",
+   "start": 9.216,
+   "end": 13.296,
+   "dur": 4.08,
+   "from": [
+    "top",
+    0.628
+   ],
+   "to": [
+    "top",
+    0.66
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.66
+   ],
+   "to": [
+    "top",
+    0.708
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.7",
+   "voice": "cairo",
+   "text": "Across generations.",
+   "start": 13.296,
+   "end": 15.163,
+   "dur": 1.867,
+   "from": [
+    "top",
+    0.708
+   ],
+   "to": [
+    "top",
+    0.736
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.736
+   ],
+   "to": [
+    "top",
+    0.778
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.77",
+   "voice": "seoul",
+   "text": "Across languages.",
+   "start": 15.163,
+   "end": 17.157,
+   "dur": 1.994,
+   "from": [
+    "top",
+    0.778
+   ],
+   "to": [
+    "top",
+    0.806
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.806
+   ],
+   "to": [
+    "top",
+    0.848
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.84",
+   "voice": "nairobi",
+   "text": "Across lives we will never know.",
+   "start": 17.157,
+   "end": 19.851,
+   "dur": 2.694,
+   "from": [
+    "top",
+    0.848
+   ],
+   "to": [
+    "top",
+    0.848
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "into capture",
+   "dur": 5.06,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0.848
+   ],
+   "to": [
+    "today",
+    0.008
+   ],
+   "cam": [
+    0,
+    0.04,
+    -0.3
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0",
+   "voice": "jakarta",
+   "text": "No single mind wrote it.",
+   "start": 19.851,
+   "end": 22.088,
+   "dur": 2.237,
+   "from": [
+    "today",
+    0.008
+   ],
+   "to": [
+    "today",
+    0.048
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.048
+   ],
+   "to": [
+    "today",
+    0.148
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.14",
+   "voice": "lagos",
+   "text": "Yet contributing to intelligence does not give us a say in its future.",
+   "start": 22.088,
+   "end": 27.005,
+   "dur": 4.917,
+   "from": [
+    "today",
+    0.148
+   ],
+   "to": [
+    "today",
+    0.188
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "wells",
+   "dur": 4.56,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.188
+   ],
+   "to": [
+    "today",
+    0.308
+   ],
+   "cam": [
+    -0.08,
+    0,
+    -0.4
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.3",
+   "voice": "kyoto",
+   "text": "Who can build with it?",
+   "start": 27.005,
+   "end": 28.811,
+   "dur": 1.806,
+   "from": [
+    "today",
+    0.308
+   ],
+   "to": [
+    "today",
+    0.336
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.336
+   ],
+   "to": [
+    "today",
+    0.378
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.37",
+   "voice": "mexico",
+   "text": "Who can examine it?",
+   "start": 28.811,
+   "end": 30.252,
+   "dur": 1.441,
+   "from": [
+    "today",
+    0.378
+   ],
+   "to": [
+    "today",
+    0.406
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.406
+   ],
+   "to": [
+    "today",
+    0.448
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.44",
+   "voice": "seoul",
+   "text": "Who gets to decide?",
+   "start": 30.252,
+   "end": 32.107,
+   "dur": 1.855,
+   "from": [
+    "today",
+    0.448
+   ],
+   "to": [
+    "today",
+    0.48
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "doors",
+   "dur": 6.25,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.48
+   ],
+   "to": [
+    "today",
+    0.528
+   ],
+   "cam": [
+    0.06,
+    -0.03,
+    -0.25
+   ],
+   "sfx": "doors",
+   "sfxAt": 0.7
+  },
+  {
+   "kind": "line",
+   "key": "today@0.52",
+   "voice": "galway",
+   "text": "Built from all of us. Held by a few.",
+   "start": 32.107,
+   "end": 35.935,
+   "dur": 3.828,
+   "from": [
+    "today",
+    0.528
+   ],
+   "to": [
+    "today",
+    0.568
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "dawn",
+   "dur": 5.06,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.568
+   ],
+   "to": [
+    "today",
+    0.688
+   ],
+   "cam": [
+    0,
+    0.06,
+    -0.35
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.68",
+   "voice": "saopaulo",
+   "text": "What if we could help shape what comes next?",
+   "start": 35.935,
+   "end": 39.146,
+   "dur": 3.211,
+   "from": [
+    "today",
+    0.688
+   ],
+   "to": [
+    "today",
+    0.688
+   ]
+  },
+  {
+   "kind": "choice",
+   "dur": 10,
+   "from": [
+    "today",
+    0.688
+   ],
+   "to": [
+    "today",
+    0.688
+   ],
+   "cam": [
+    0,
+    0.03,
+    -0.3
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "the choice made",
+   "dur": 2,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.688
+   ],
+   "to": [
+    "today",
+    0.848
+   ],
+   "cam": [
+    0,
+    0,
+    -0.2
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.84",
+   "voice": "cairo",
+   "text": "The freedom to understand.",
+   "start": 39.146,
+   "end": 41.059,
+   "dur": 1.913,
+   "from": [
+    "today",
+    0.848
+   ],
+   "to": [
+    "today",
+    0.864
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.864
+   ],
+   "to": [
+    "today",
+    0.888
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.88",
+   "voice": "nairobi",
+   "text": "The means to build.",
+   "start": 41.059,
+   "end": 42.981,
+   "dur": 1.922,
+   "from": [
+    "today",
+    0.888
+   ],
+   "to": [
+    "today",
+    0.904
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.904
+   ],
+   "to": [
+    "today",
+    0.928
+   ],
+   "cam": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.92",
+   "voice": "mumbai",
+   "text": "A meaningful choice.",
+   "start": 42.981,
+   "end": 44.57,
+   "dur": 1.589,
+   "from": [
+    "today",
+    0.928
+   ],
+   "to": [
+    "today",
+    0.928
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "open intelligence",
+   "dur": 4,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.928
+   ],
+   "to": [
+    "oi",
+    0.03
+   ],
+   "cam": [
+    0,
+    0,
+    -0.4
+   ]
+  }
+ ]
+}
