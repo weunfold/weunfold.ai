@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(ROOT, "site");
 const PORT = +(process.argv[2] || 3000);
-const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".mjs": "text/javascript", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".mp4": "video/mp4", ".md": "text/markdown; charset=utf-8", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".mjs": "text/javascript", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".mp4": "video/mp4", ".mp3": "audio/mpeg", ".md": "text/markdown; charset=utf-8", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
 // injected into every HTML page: reload on change, and come back to the same scroll position
 const CLIENT = `<script src="/__tune.js" defer></script><script>(function(){var k="dev-scroll:"+location.pathname;try{var y=sessionStorage.getItem(k);if(y!==null){sessionStorage.removeItem(k);addEventListener("load",function(){scrollTo(0,+y)})}}catch(e){}new EventSource("/__dev").onmessage=function(){try{sessionStorage.setItem(k,scrollY)}catch(e){}location.reload()}})();</script>`;
 
@@ -49,7 +49,15 @@ createServer(async (req, res) => {
     let body = await readFile(file);
     const type = TYPES[extname(file)] || "application/octet-stream";
     if (type.startsWith("text/html")) body = Buffer.from(body.toString().replace(/<\/body>|$/, (m) => CLIENT + m));
-    res.writeHead(200, { "content-type": type, "cache-control": "no-store" }).end(body);
+    // byte ranges, as GitHub Pages serves them: media can only seek (the auto story's voice, the Tactu video) with these
+    const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || "");
+    if (range && !type.startsWith("text/html")) {
+      const size = body.length, a = range[1] ? +range[1] : size - +range[2], b = range[1] && range[2] ? Math.min(+range[2], size - 1) : size - 1;
+      if (!(a >= 0 && a <= b)) { res.writeHead(416, { "content-range": `bytes */${size}` }).end(); return; }
+      res.writeHead(206, { "content-type": type, "cache-control": "no-store", "accept-ranges": "bytes", "content-range": `bytes ${a}-${b}/${size}`, "content-length": b - a + 1 }).end(body.subarray(a, b + 1));
+      return;
+    }
+    res.writeHead(200, { "content-type": type, "cache-control": "no-store", "accept-ranges": "bytes" }).end(body);
   } catch { res.writeHead(404, { "content-type": "text/plain" }).end("not found"); }
 }).listen(PORT, () => console.log(`we unfold dev · http://localhost:${PORT}/ · watching site/, content/, tools/build.mjs`));
 
