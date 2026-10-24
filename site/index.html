@@ -2481,7 +2481,7 @@ function makeGeometry() {
   // ---- control ----
   function styles(on) { root.style.scrollBehavior = on ? "auto" : ""; root.style.overflowAnchor = on ? "none" : ""; } // back to "", so the CSS (and reduced motion) wins again
   function run() {
-    styles(true); st.playing = true; st.k = -1; lastY = null; stall = 0;
+    styles(true); st.playing = true; st.k = -1; lastY = null; stall = 0; slow = 1 / 60; // a hitch before Play must not shrink the opening's moves
     cancelFade(); A.bed.volume = D.bedVolume || 0.45; safePlay(A.bed); ui();
   }
   function start() { // "Play the story": from the singularity

@@ -131,7 +131,15 @@ async function narrate(script, cred) {
   const r = await (await call("/text-to-dialogue/with-timestamps", { model_id: "eleven_v3", inputs }, cred)).json();
   const speech = script.map(() => ({ start: Infinity, end: -Infinity }));
   for (const s of r.voice_segments) { const x = speech[s.dialogue_input_index]; x.start = Math.min(x.start, s.start_time_seconds); x.end = Math.max(x.end, s.end_time_seconds); }
-  speech.forEach((s, i) => { if (!isFinite(s.start)) throw new Error(`no timing for line ${i + 1}: ${script[i].text}`); s.start = +s.start.toFixed(3); s.end = +s.end.toFixed(3); s.dur = s.end - s.start; });
+  // a line with no voice segment: find its words in the character alignment instead (the request is paid either way)
+  const al = r.alignment, said = al ? al.characters.join("") : "";
+  let from = 0;
+  speech.forEach((s, i) => {
+    const at = said.indexOf(script[i].text, from);
+    if (at >= 0) { from = at + script[i].text.length; if (!isFinite(s.start)) { s.start = al.character_start_times_seconds[at]; s.end = al.character_end_times_seconds[from - 1]; } }
+    if (!isFinite(s.start)) throw new Error(`no timing for line ${i + 1}: ${script[i].text}`);
+    s.start = +s.start.toFixed(3); s.end = +s.end.toFixed(3); s.dur = s.end - s.start;
+  });
   return { audio: Buffer.from(r.audio_base64, "base64"), speech };
 }
 
