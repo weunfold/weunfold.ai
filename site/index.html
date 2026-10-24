@@ -255,7 +255,7 @@ body.reading { overflow: hidden; }
 .r-tools { display: flex; gap: 5px; }
 .r-where { min-width: 0; text-align: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--r-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .r-title { color: var(--r-muted); margin-left: 10px; }
-.r-stage { position: relative; flex: 1; min-height: 0; display: flex; justify-content: center; }
+.r-stage { position: relative; flex: 1; min-height: 0; display: flex; justify-content: center; touch-action: pan-y pinch-zoom; } /* sideways swipes are ours, so the browser never takes them */
 .r-view { position: relative; overflow: hidden; height: 100%; }
 .r-flow { height: 100%; column-fill: auto; font-family: var(--font-display); font-size: var(--r-size); line-height: 1.62; color: var(--r-text); hyphens: auto; -webkit-hyphens: auto; text-align: justify; transition: transform 420ms cubic-bezier(.2, .7, .2, 1); will-change: transform; }
 .reader[data-align="left"] .r-flow { text-align: left; hyphens: manual; }
@@ -287,9 +287,14 @@ body.reading { overflow: hidden; }
 .reader .pill { background: var(--r-text); color: var(--r-bg) !important; }
 .reader .pill.ghost { background: transparent; color: var(--r-text) !important; border-color: var(--r-line); }
 .r-zone { pointer-events: none; position: absolute; top: 0; bottom: 0; width: 26%; background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.r-mid { flex: 1; display: flex; justify-content: space-between; gap: 13px; }
+.r-turn { color: var(--r-text); border-color: var(--r-line); } .r-turn:disabled { opacity: 0.3; cursor: default; }
+/* a quiet chevron at each edge on wide screens, where the margins are: a click there turns the page */
+@media (min-width: 1000px) { .r-zone::after { content: ""; position: absolute; top: 50%; width: 12px; height: 12px; border: solid var(--r-faint); border-width: 0 1.5px 1.5px 0; opacity: 0.6; }
+  .r-prev::after { left: 28px; transform: translateY(-50%) rotate(135deg); } .r-next::after { right: 28px; transform: translateY(-50%) rotate(-45deg); } .r-zone:disabled::after { opacity: 0; } }
 .r-zone:focus-visible { outline: 2px solid var(--blue); outline-offset: -6px; }
 .r-prev { left: 0; cursor: w-resize; } .r-next { right: 0; cursor: e-resize; }
-.r-meta { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--r-faint); }
+.r-meta { display: flex; align-items: center; gap: 8px; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--r-faint); }
 .r-bar { height: 2px; background: var(--r-line); position: relative; overflow: hidden; }
 .r-bar i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--r-muted); transition: width 420ms ease; }
 .r-panel { position: absolute; top: calc(70px + env(safe-area-inset-top, 0px)); right: max(13px, env(safe-area-inset-right, 0px)); width: min(360px, calc(100vw - 26px)); max-height: calc(100% - 160px); overflow: auto; background: var(--r-panel); border: 1px solid var(--r-line); padding: 13px; z-index: 3; }
@@ -844,7 +849,7 @@ section.plain { min-height: 0; padding-block: 144px 89px; }
       <div class="genesis" id="genesis">
         <div class="eyebrow">The manifesto's fingerprint</div>
         <code class="hash" id="genesisHash" aria-label="SHA-256 fingerprint of this draft of the manifesto">computing…</code>
-        <p class="small"><span id="genesisVer">Draft 0.8</span> · not anchored yet. When version 1.0 is final, its fingerprint will be written into Bitcoin, so anyone can check it word for word.</p>
+        <p class="small"><span id="genesisVer">Draft 0.9</span> · not anchored yet. When version 1.0 is final, its fingerprint will be written into Bitcoin, so anyone can check it word for word.</p>
       </div>
     </div>
   </section>
@@ -931,7 +936,7 @@ section.plain { min-height: 0; padding-block: 144px 89px; }
       <a href="#invite">Stay close</a>
       <a href="manifesto.html">Plain-text manifesto</a>
     </nav>
-    <p class="foot-note">Open intelligence · Open economy · weunfold.ai · Manifesto <span data-build="version">Draft 0.8</span> · Preview, not launched: proposals and examples are labelled as such</p>
+    <p class="foot-note">Open intelligence · Open economy · weunfold.ai · Manifesto <span data-build="version">Draft 0.9</span> · Preview, not launched: proposals and examples are labelled as such</p>
   </footer>
   <!-- /build:footer -->
 </div>
@@ -1036,7 +1041,7 @@ section.plain { min-height: 0; padding-block: 144px 89px; }
     <button type="button" class="r-zone r-next" id="rNext" aria-label="Next page"></button>
   </div>
   <footer class="r-bot">
-    <div class="r-meta"><span id="rPage" aria-live="polite"></span><span id="rLeft"></span></div>
+    <div class="r-meta"><button type="button" class="r-btn r-turn" id="rBack" aria-label="Previous page"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><span class="r-mid"><span id="rPage" aria-live="polite"></span><span id="rLeft"></span></span><button type="button" class="r-btn r-turn" id="rFwd" aria-label="Next page"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></div>
     <div class="r-bar" aria-hidden="true"><i id="rBar"></i></div>
   </footer>
   <nav class="r-panel" id="rToc" aria-label="Contents" hidden></nav>
@@ -2354,7 +2359,8 @@ function makeGeometry() {
     document.getElementById("rPage").textContent = "Page " + (page + 1) + " of " + pages;
     document.getElementById("rLeft").textContent = left > 0 ? left + " min left in chapter" : (st.ch < CH.length - 1 ? "Next: " + CH[st.ch + 1].title : "The end");
     document.getElementById("rPart").textContent = CH[st.ch].part; document.getElementById("rTitle").textContent = CH[st.ch].title;
-    document.getElementById("rPrev").disabled = st.ch === 0 && page === 0; document.getElementById("rNext").disabled = st.ch === CH.length - 1 && page === pages - 1;
+    var first = st.ch === 0 && page === 0, last = st.ch === CH.length - 1 && page === pages - 1;
+    document.getElementById("rPrev").disabled = document.getElementById("rBack").disabled = first; document.getElementById("rNext").disabled = document.getElementById("rFwd").disabled = last;
     toc.querySelectorAll(".r-toc-item").forEach(function (b, k) { b.setAttribute("aria-current", k === st.ch ? "true" : "false"); });
   }
   function go(i, frac) { if (i < 0 || i >= CH.length) return; st.ch = i; st.frac = frac; render(i); layout(); }
@@ -2384,8 +2390,18 @@ function makeGeometry() {
 
   // turning pages: taps on the edges, swipes, keys; a tap in the middle hides the chrome
   document.getElementById("rNext").addEventListener("click", next); document.getElementById("rPrev").addEventListener("click", prev);
+  document.getElementById("rFwd").addEventListener("click", next); document.getElementById("rBack").addEventListener("click", prev);
+  // a mouse wheel or trackpad turns one page per gesture: the gesture ends after a short pause, so inertia never flips several pages
+  var acc = 0, locked = false, wt = 0;
+  reader.addEventListener("wheel", function (e) {
+    if (e.target.closest && e.target.closest(".r-panel")) return; // the contents list scrolls normally
+    e.preventDefault(); clearTimeout(wt); wt = setTimeout(function () { locked = false; acc = 0; }, 200);
+    if (locked) return; acc += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (acc > 40) { locked = true; next(); } else if (acc < -40) { locked = true; prev(); }
+  }, { passive: false });
   var sx = 0, sy = 0, down = false;
   stage.addEventListener("pointerdown", function (e) { down = true; sx = e.clientX; sy = e.clientY; });
+  stage.addEventListener("pointercancel", function () { down = false; });
   stage.addEventListener("pointerup", function (e) {
     if (!down) return; down = false; var dx = e.clientX - sx, dy = e.clientY - sy;
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) next(); else prev(); return; }
@@ -2397,8 +2413,8 @@ function makeGeometry() {
     if (reader.hidden) return;
     if (e.key === "Escape") { if (!toc.hidden || !aa.hidden) panel(null); else close(); return; }
     if (e.target.closest && e.target.closest(".r-panel")) return;
-    if (e.key === "ArrowRight" || e.key === "PageDown" || (e.key === " " && !e.shiftKey)) { e.preventDefault(); next(); }
-    else if (e.key === "ArrowLeft" || e.key === "PageUp" || (e.key === " " && e.shiftKey)) { e.preventDefault(); prev(); }
+    if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "PageDown" || (e.key === " " && !e.shiftKey)) { e.preventDefault(); next(); }
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "PageUp" || (e.key === " " && e.shiftKey)) { e.preventDefault(); prev(); }
     else if (e.key === "Home") { e.preventDefault(); go(0, 0); } else if (e.key === "End") { e.preventDefault(); go(CH.length - 1, 1); }
   });
   var ro = new ResizeObserver(function () { if (!reader.hidden) layout(); }); ro.observe(stage);
