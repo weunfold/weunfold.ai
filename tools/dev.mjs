@@ -8,7 +8,7 @@ import { watch } from "node:fs";
 import { execFile } from "node:child_process";
 import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { ROLES, LINES, TAGS, SPEECH, PREVIEW_TEXT, DESIGN_MODEL, parseCast, lines } from "./story-cast.mjs";
+import { ROLES, LINES, SPEECH, PREVIEW_TEXT, DESIGN_MODEL, parseCast, lines, spoken } from "./story-cast.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(ROOT, "site");
@@ -39,7 +39,7 @@ button.main{background:#ebe6da;color:#0b0d12;border-color:transparent}button:dis
 .pv{display:flex;align-items:center;gap:8px}.pv audio{flex:1;height:34px}.pv label{font:11px "IBM Plex Mono",monospace;display:flex;gap:6px;align-items:center;cursor:pointer}
 .msg{font:12px "IBM Plex Mono",monospace;color:#d9b45a;min-height:1.4em}.foot{position:fixed;left:0;right:0;bottom:0;padding:13px 16px;background:#0b0d12ee;border-top:1px solid #2a2f3a;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}</style></head>
 <body><main><h1>The voices of the story</h1>
-<p>Ten voices from ten places, one per line, so the film is spoken by many of us, never one. Each is designed by ElevenLabs Voice Design from the description (no real person's voice is copied). Edit a description if you like, generate three previews, listen, pick one; or design it in the ElevenLabs app and paste its voice ID. Previews here are Voice Design's own (the API designs with eleven_ttv_v3); once saved, <b>Hear its lines in v4</b> speaks that voice's own lines of the film, with their directions, exactly as the film will. Saving creates the picked voices in your ElevenLabs account and writes their ids to .env.</p>
+<p>Ten voices from ten places, one per line, so the film is spoken by many of us, never one. Each is designed by ElevenLabs Voice Design from the description (no real person's voice is copied). Edit a description if you like, generate three previews, listen, pick one; or design it in the ElevenLabs app and paste its voice ID. Previews here are Voice Design's own (the API designs with eleven_ttv_v3); once saved, the <b>v4</b>, <b>v4 + accent tag</b> and <b>v3</b> buttons speak that voice's own lines of the film with their directions, so you can compare by ear. Saving creates the picked voices in your ElevenLabs account and writes their ids to .env.</p>
 <div style="display:flex;gap:10px;margin-bottom:21px"><button id="all">Generate all previews</button></div>
 <div class="grid" id="grid"></div></main>
 <div class="foot"><span class="msg" id="count"></span><button class="main" id="save" disabled>Save the cast</button><span class="msg" id="smsg"></span></div>
@@ -48,13 +48,13 @@ var g=document.getElementById("grid");
 R.forEach(function(r){var c=document.createElement("div");c.className="card";c.id="c-"+r.id;
 c.innerHTML='<h2>'+r.name+'</h2><div class="says">'+r.lines.join(" · ")+'</div><textarea>'+r.prompt+'</textarea><button>Generate 3 previews</button><div class="pvs"></div>'+
 '<div class="pv"><input class="paste" placeholder="or paste a voice ID from ElevenLabs" spellcheck="false" style="flex:1;font:12px IBM Plex Mono,monospace;padding:9px;border-radius:8px;border:1px solid #2a2f3a;background:#0b0d12;color:#ebe6da"></div>'+
-'<div class="pv"><button class="hear"'+(r.saved?'':' disabled')+'>Hear its lines in v4</button><span class="saved msg">'+(r.saved?'saved: '+r.saved:'')+'</span></div><div class="v4"></div><div class="msg"></div>';
+'<div class="pv"><button class="hear" data-m="eleven_v4"'+(r.saved?'':' disabled')+'>v4</button><button class="hear" data-m="eleven_v4" data-a="1"'+(r.saved?'':' disabled')+'>v4 + accent tag</button><button class="hear" data-m="eleven_v3"'+(r.saved?'':' disabled')+'>v3</button></div><div class="saved msg">'+(r.saved?'saved: '+r.saved:'')+'</div><div class="v4"></div><div class="msg"></div>';
 c.querySelector("button").onclick=function(){design(r)};
 c.querySelector(".paste").oninput=function(){var v=this.value.trim();if(v){picks[r.id]={voice:v};c.classList.add("done");}else{delete picks[r.id];c.classList.toggle("done",!!r.saved);}upd();};
-c.querySelector(".hear").onclick=function(){hear(r)};if(r.saved)c.classList.add("done");g.appendChild(c);});
-async function hear(r){var c=document.getElementById("c-"+r.id),m=c.querySelectorAll(".msg"),b=c.querySelector(".hear");m=m[m.length-1];b.disabled=true;m.textContent="Speaking in v4…";
-try{var res=await fetch("/__voices/speak",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({role:r.id})});if(!res.ok)throw new Error(await res.text());
-var a=await res.json();c.querySelector(".v4").innerHTML='<audio controls autoplay src="'+a.audio+'" style="width:100%;height:34px"></audio>';m.textContent="";}catch(e){m.textContent=e.message;}b.disabled=false;}
+c.querySelectorAll(".hear").forEach(function(b){b.onclick=function(){hear(r,b)};});if(r.saved)c.classList.add("done");g.appendChild(c);});
+async function hear(r,b){var c=document.getElementById("c-"+r.id),m=c.querySelectorAll(".msg");m=m[m.length-1];b.disabled=true;m.textContent="Speaking: "+b.textContent+"…";
+try{var res=await fetch("/__voices/speak",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({role:r.id,model:b.getAttribute("data-m"),accent:!!b.getAttribute("data-a")})});if(!res.ok)throw new Error(await res.text());
+var a=await res.json();c.querySelector(".v4").innerHTML='<div class="msg">'+b.textContent+'</div><audio controls autoplay src="'+a.audio+'" style="width:100%;height:34px"></audio>';m.textContent="";}catch(e){m.textContent=e.message;}b.disabled=false;}
 async function design(r){var c=document.getElementById("c-"+r.id),m=c.querySelector(".msg"),b=c.querySelector("button");b.disabled=true;m.textContent="Designing…";
 try{var res=await fetch("/__voices/design",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({role:r.id,prompt:c.querySelector("textarea").value})});
 if(!res.ok)throw new Error(await res.text());var pv=await res.json(),box=c.querySelector(".pvs");c.querySelector(".paste").value="";box.innerHTML="";delete picks[r.id];c.classList.remove("done");
@@ -65,7 +65,7 @@ document.getElementById("all").onclick=async function(){this.disabled=true;for(v
 function upd(){var n=Object.keys(picks).length;document.getElementById("count").textContent=n+" of "+R.length+" picked";document.getElementById("save").disabled=n===0;}
 document.getElementById("save").onclick=async function(){var m=document.getElementById("smsg");this.disabled=true;m.textContent="Creating voices…";
 var res=await fetch("/__voices/save",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({picks:picks})});
-if(res.ok){var d=await res.json();m.textContent="Saved: "+d.saved.join(", ");R.forEach(function(r){if(d.cast[r.id]){r.saved=d.cast[r.id];var c=document.getElementById("c-"+r.id);c.querySelector(".hear").disabled=false;c.querySelector(".saved").textContent="saved: "+r.saved;}});picks={};upd();}
+if(res.ok){var d=await res.json();m.textContent="Saved: "+d.saved.join(", ");R.forEach(function(r){if(d.cast[r.id]){r.saved=d.cast[r.id];var c=document.getElementById("c-"+r.id);c.querySelectorAll(".hear").forEach(function(x){x.disabled=false});c.querySelector(".saved").textContent="saved: "+r.saved;}});picks={};upd();}
 else m.textContent=await res.text();this.disabled=false;};upd();</script></body></html>`;
 }
 
@@ -154,10 +154,12 @@ createServer(async (req, res) => {
         if (!voice) throw new Error("Save this voice first.");
         const html = await readFile(join(SITE, "index.html"), "utf8");
         const mine = [...lines(html, "top"), ...lines(html, "today")].filter((l) => LINES[`${l.sec}@${+l.in}`] === body.role);
-        const inputs = mine.map((l) => { const k = `${l.sec}@${+l.in}`; return { text: `${TAGS[k] ? TAGS[k] + " " : ""}${l.text}`, voice_id: voice }; });
-        const r = await fetch(`https://api.elevenlabs.io/v1/text-to-dialogue?output_format=mp3_44100_128`, { method: "POST", headers: { "xi-api-key": key, "content-type": "application/json" }, body: JSON.stringify({ model_id: SPEECH, inputs }) });
+        // the A/B: the film's model with or without the accent tag, or eleven_v3
+        const model = body.model === "eleven_v3" ? "eleven_v3" : SPEECH, accent = !!body.accent;
+        const inputs = mine.map((l) => ({ text: spoken(body.role, `${l.sec}@${+l.in}`, l.text, { accent }), voice_id: voice }));
+        const r = await fetch(`https://api.elevenlabs.io/v1/text-to-dialogue?output_format=mp3_44100_128`, { method: "POST", headers: { "xi-api-key": key, "content-type": "application/json" }, body: JSON.stringify({ model_id: model, inputs }) });
         if (!r.ok) throw new Error(`ElevenLabs /text-to-dialogue: ${r.status} ${(await r.text()).slice(0, 300)}`);
-        console.log(`voices · ${body.role} speaks its lines in ${SPEECH}`);
+        console.log(`voices · ${body.role} speaks its lines in ${model}${accent ? " + accent tag" : ""}`);
         res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ audio: `data:audio/mpeg;base64,${Buffer.from(await r.arrayBuffer()).toString("base64")}` }));
         return;
       }

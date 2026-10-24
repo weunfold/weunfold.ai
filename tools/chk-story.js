@@ -1,5 +1,6 @@
 // The auto story's ten success criteria (private design, "Success Criteria"), checked in a real browser. Exits 1 if any fails.
-// Three runs: 1440×900 in real time (length, takeover, choice → Shape it → end card, captions, sound, network, camera),
+// Three runs: 1440×900 in real time (length, takeover, choice → Shape it → the name → end card, letters in sync with the
+// voice, sound, network, camera),
 // 375×812 with touch (takeover by tap, choice → Read the charter first), and reduced motion. Then tools/chk2.js (criterion 8).
 // Usage: R=$(npm root -g) [URL=http://localhost:3000/] [CHROME=/path/to/chrome-headless-shell] node tools/chk-story.js
 // Takes about four minutes: the first run plays the film at its own speed.
@@ -12,25 +13,25 @@ const results = [];
 function check(id, ok, what) { results.push({ id, ok: !!ok, what }); console.log(`${ok ? 'pass' : 'FAIL'}  ${id}  ${what}`); }
 const ARGS = ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'];
 
-// in-page recorder: per frame the largest camera step and the wall time spent playing; every caption change with the
-// voice's clock at that moment; in reduced motion, the cue and scrollY of every frame
+// in-page recorder: per frame the largest camera step and the wall time spent playing; the most letters each line has shown
+// (and, for reduced motion, every count it showed); in reduced motion, the cue and scrollY of every frame
 const RECORDER = () => {
-  const S = window.__wuStory, cap = document.getElementById('storyCap');
-  const rec = window.__rec = { maxCamStep: 0, camStepAt: null, playWall: 0, caps: [], frames: [], keepFrames: false };
+  const S = window.__wuStory;
+  const rec = window.__rec = { maxCamStep: 0, camStepAt: null, playWall: 0, shown: [], counts: [], frames: [], keepFrames: false };
   let prev = null, lastNow = null;
   (function f(now) {
     const s = S.state();
     if (prev) {
       const d = Math.hypot(s.cam[0] - prev.cam[0], s.cam[1] - prev.cam[1], s.cam[2] - prev.cam[2]);
       if (d > rec.maxCamStep) { rec.maxCamStep = d; rec.camStepAt = s.t; }
-      if (prev.playing && s.playing) rec.playWall += (now - lastNow) / 1000;
+      if (prev.playing && s.playing) rec.playWall += Math.min(250, now - lastNow) / 1000; // as the player counts it: a frame is at most 0.25 s (a longer stall is the browser's)
       if (rec.keepFrames && s.playing) rec.frames.push([s.k, Math.round(scrollY), Math.hypot(s.cam[0], s.cam[1], s.cam[2])]);
     }
+    if (s.playing && s.kind === 'line') rec.vLine = Math.max(rec.vLine || 0, S.voice());
+    if (s.playing) S.shown().forEach((n, i) => { rec.shown[i] = Math.max(rec.shown[i] || 0, n); (rec.counts[i] = rec.counts[i] || {})[n] = 1; });
     prev = s; lastNow = now; requestAnimationFrame(f);
   })(performance.now());
   ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach((t) => window.addEventListener(t, () => { rec.inputY = scrollY; }, { capture: true, passive: true }));
-  new MutationObserver(() => { const s = S.state(); rec.caps.push({ text: cap.hidden ? '' : cap.textContent, vt: s.voice && s.voice.t, from: s.voice && s.voice.from, k: s.k }); })
-    .observe(cap, { childList: true, characterData: true, subtree: true, attributes: true });
 };
 const frames = (p, n) => p.evaluate((n) => new Promise((r) => { let i = 0; (function f() { if (++i > n) r(); else requestAnimationFrame(f); })(); }), n);
 const state = (p) => p.evaluate(() => window.__wuStory.state());
@@ -67,9 +68,11 @@ async function takeover(p, label, kind, send, minT) { // kind: take over during 
   const c = (await state(p)).cam;
   check('10 camera', c.every((x) => x === 0), `${label}: camera offset is zero 500 ms after the pause (${c.map((x) => x.toFixed(4))})`);
   // resume from here: the page must not jump back to where the film paused
+  // measured in film time, so a slow machine's long frames do not count against it
+  const tAt = await p.evaluate((y) => window.__wuStory.timeAt(y), ys[4]), w0 = Date.now();
   await p.click('#sbPlay'); await frames(p, 2);
-  const s2 = await state(p), y2 = await p.evaluate(() => scrollY);
-  check('2 resume', s2.playing && y2 >= ys[4] - 3 && y2 - ys[4] < 60, `${label}: the bar's play resumes from the current position (${ys[4]} → ${y2})`);
+  const s2 = await state(p), y2 = await p.evaluate(() => scrollY), wall = (Date.now() - w0) / 1000, ahead = s2.t - tAt;
+  check('2 resume', s2.playing && y2 >= ys[4] - 3 && (ahead >= -0.05 || Math.abs(y2 - ys[4]) <= 3) && ahead <= wall + 0.3, `${label}: the bar's play resumes from the current position (${ys[4]} → ${y2}; film ${ahead.toFixed(2)} s on after ${wall.toFixed(2)} s)`);
 }
 
 (async () => {
@@ -83,21 +86,44 @@ async function takeover(p, label, kind, send, minT) { // kind: take over during 
     p.on('request', (r) => { if (!net) return; const u = r.url(); if (/^(data|blob):/.test(u)) return; const o = new URL(u); if (o.origin !== origin && !/^fonts\.(gstatic|googleapis)\.com$/.test(o.hostname)) foreign.push(u); });
     net = false;
     await playButton(p, '1440×900');
-    // criterion 6 of the design's honesty: every line the narrator says is still on the page
-    const missing = await p.evaluate(() => { const bare = (s) => s.replace(/\s+/g, ''), txt = bare(document.getElementById('top').textContent + document.getElementById('today').textContent); return window.__wuStory.cues().filter((c) => c.kind === 'line' && !txt.includes(bare(c.text))).map((c) => c.text); }); // <br> leaves no space in textContent
-    check('8 script', missing.length === 0, `every narrated line is on the page${missing.length ? ': missing ' + missing.join(' | ') : ''}`);
+    // the design's honesty: every line the voices say is the page's own text, in the element whose letters show it
+    const missing = await p.evaluate(() => { const bare = (s) => s.replace(/\s+/g, '').toLowerCase(); return window.__wuStory.cues().filter((c) => c.kind === 'line').filter((c) => { const el = c.sel && document.querySelector(c.sel); return !el || bare(el.textContent) !== bare(c.text) || c.letters !== bare(c.text).length; }).map((c) => c.text); }); // <br> leaves no space in textContent
+    check('8 script', missing.length === 0, `every spoken line is its element's own text, with a time for each letter${missing.length ? ': not so for ' + missing.join(' | ') : ''}`);
+    const noCC = await p.evaluate(() => !document.getElementById('storyCap') && !document.getElementById('sbCap'));
+    check('4 no CC', noCC, 'no separate caption box or CC button: the page text is the caption');
     const before = await p.evaluate(() => ({ media: [...document.querySelectorAll('audio,video')].every((m) => m.paused || m.muted), s: window.__wuStory.state() }));
     check('5 no sound', before.media && before.s.voice === null && !before.s.bed && before.s.cam.every((x) => x === 0), 'nothing plays before Play, and the camera offset is zero');
     await p.evaluate(RECORDER);
     net = true; await p.click('#storyPlay'); await frames(p, 3);
-    const ui = await p.evaluate(() => { const v = (id) => { const e = document.getElementById(id), r = e.getBoundingClientRect(); return !e.hidden && r.width > 0 && r.bottom <= innerHeight; }; return { bar: v('storyBar'), mute: v('sbMute'), credit: v('sbCredit'), text: document.getElementById('sbCredit').textContent }; });
-    const creditOk = pilot.placeholder ? /placeholder/i.test(ui.text) : ui.text === (pilot.voices > 1 ? 'AI-generated voices' : 'AI-generated voice');
-    check('5 bar', ui.bar && ui.mute && ui.credit && creditOk, `player bar, mute and credit visible: "${ui.text}"${pilot.placeholder ? ' (placeholder audio: the real credit appears once the voice is generated)' : ''}`);
+    const ui = await p.evaluate(() => { const v = (id) => { const e = document.getElementById(id), r = e.getBoundingClientRect(); return !e.hidden && r.width > 0 && r.bottom <= innerHeight; }; return { bar: v('storyBar'), mute: v('sbMute'), track: v('sbTrack'), text: document.getElementById('storyBar').textContent }; });
+    check('5 bar', ui.bar && ui.mute && ui.track && !/AI-generated/i.test(ui.text), `player bar with play, mute and the timeline; no AI-voice claim (Felipe, 24 Oct)`);
     // the bar's own controls never count as a takeover
     await waitFor(p, () => window.__wuStory.state().t > 5, null, 30000);
+    // out of sight while it plays; moving the pointer brings it back, and the film keeps playing. (Keyboard focus in the bar
+    // keeps it shown; this check focused Play from a script, which counts as keyboard focus, so it lets go of it first)
+    await p.evaluate(() => document.activeElement.blur()); await p.waitForTimeout(1500);
+    const q0 = await p.evaluate(() => ({ quiet: getComputedStyle(document.getElementById('storyBar')).opacity, line: !document.getElementById('storyLine').hidden }));
+    await p.mouse.move(600, 500); await p.mouse.move(640, 520); await p.waitForTimeout(500);
+    const q1 = await p.evaluate(() => ({ op: getComputedStyle(document.getElementById('storyBar')).opacity, playing: window.__wuStory.state().playing }));
+    check('5 quiet bar', +q0.quiet < 0.05 && q0.line && +q1.op > 0.95 && q1.playing, `while playing the bar is hidden (opacity ${(+q0.quiet).toFixed(2)}) with a hairline of progress (${q0.line}); moving the pointer shows it (${(+q1.op).toFixed(2)}) without pausing (${q1.playing})`);
     await p.click('#sbMute'); await frames(p, 3); const m1 = await state(p);
-    await p.click('#sbCap'); await p.click('#sbCap'); await p.click('#sbMute'); await frames(p, 3); const m2 = await state(p);
-    check('2 bar', m1.playing && m2.playing, 'mute and captions keep it playing');
+    await p.click('#sbMute'); await frames(p, 3); const m2 = await state(p);
+    check('2 bar', m1.playing && m2.playing, 'mute and unmute keep it playing');
+    // Space plays and pauses, with focus on the page or on the bar, and never scrolls
+    const sp1 = [];
+    for (const where of ['page', 'bar']) {
+      await p.evaluate((w) => { if (w === 'bar') document.getElementById('sbPlay').focus(); else document.activeElement.blur(); }, where);
+      await p.keyboard.press('Space'); await frames(p, 3); const y0 = await p.evaluate(() => scrollY), a = await state(p);
+      await p.waitForTimeout(400); const y1 = await p.evaluate(() => scrollY);
+      await p.keyboard.press('Space'); await frames(p, 3); const b2 = await state(p);
+      sp1.push({ where, ok: !a.playing && y0 === y1 && b2.playing && a.on });
+    }
+    // ← and → step through chapters (a phrase, or a movement of the scene) and keep playing
+    await p.evaluate(() => document.activeElement.blur());
+    const a0 = await state(p); await p.keyboard.press('ArrowRight'); await frames(p, 3); const a1 = await state(p);
+    await p.waitForTimeout(300); await p.keyboard.press('ArrowLeft'); await frames(p, 2); await p.keyboard.press('ArrowLeft'); await frames(p, 3); const a2 = await state(p);
+    check('2 arrows', a1.playing && a1.t > a0.t + 0.3 && a2.playing && a2.t < a1.t - 0.1, `→ jumps to the next chapter (${a0.t.toFixed(1)} → ${a1.t.toFixed(1)} s), ← ← goes back (${a2.t.toFixed(1)} s), playing throughout`);
+    check('2 space', sp1.every((x) => x.ok), `Space pauses and plays again without moving the page (${sp1.map((x) => x.where + ': ' + x.ok).join(', ')})`);
     await takeover(p, 'wheel', 'line', async () => { await p.mouse.move(700, 450); await p.mouse.wheel(0, 2); }); // a wheel lands where the mouse is
     await takeover(p, 'key', 'hold', async () => { await p.evaluate(() => document.activeElement.blur()); await p.keyboard.press('KeyA'); }); // keys inside the bar are the bar's
     await takeover(p, 'pointer', 'line', async () => { await p.mouse.move(700, 300); await p.mouse.down(); await p.mouse.up(); });
@@ -117,23 +143,24 @@ async function takeover(p, label, kind, send, minT) { // kind: take over during 
     await p.click('#sbPlay');
     await waitFor(p, () => { const s = window.__wuStory.state(); return s.picked === 'shape'; }, null, 15000);
     const sp = await p.evaluate(() => ({ s: window.__wuStory.state(), choice: document.getElementById('storyChoice').hidden }));
+    // the name: every voice at once, its letters shown as they say it, then a held breath before the end card
+    await waitFor(p, () => { const s = window.__wuStory.state(), c = window.__wuStory.cues()[s.k]; return s.k === window.__wuStory.cues().length - 1 && c.kind === 'hold'; }, null, 120000);
+    const name = await p.evaluate(() => { const C = window.__wuStory.cues(), sh = window.__wuStory.shown(), lead = getComputedStyle(document.querySelector('#oi .oi-head .lead')).opacity; return { chorus: C.filter((c) => c.kind === 'line' && /^#oi /.test(c.sel || '')).map((c) => [c.text, sh[C.indexOf(c)], c.letters]), lead: lead, hold: C[C.length - 1].dur }; });
+    const tEnd0 = Date.now();
     await waitFor(p, () => !document.getElementById('storyEnd').hidden, null, 60000);
+    const held = (Date.now() - tEnd0) / 1000;
+    check('3 the name', name.chorus.length === 2 && name.chorus.every((c) => c[1] === c[2] && c[2] > 0) && name.hold >= 4 && held >= name.hold * 0.6, `all voices say ${name.chorus.map((c) => '"' + c[0] + '" (' + c[1] + '/' + c[2] + ' letters)').join(' then ')}; the name holds ${held.toFixed(1)} s before the end card`);
     net = false;
     const end = await p.evaluate(() => ({ href: document.getElementById('seInvite').getAttribute('href'), keep: !!document.getElementById('seKeep'), bar: document.getElementById('storyBar').hidden, oi: document.getElementById('oi').getBoundingClientRect().top }));
     check('3 Shape it', sp.choice && end.href === '#invite' && end.keep && end.bar && Math.abs(end.oi) < 120, `no pick plays Shape it, then the end card (keep scrolling · ${end.href}); the film ends at #oi (top ${end.oi.toFixed(0)})`);
     await p.waitForTimeout(600);
-    const rec = await p.evaluate(() => ({ max: window.__rec.maxCamStep, at: window.__rec.camStepAt, caps: window.__rec.caps, cam: window.__wuStory.state().cam }));
+    const vl = await p.evaluate(() => ({ line: window.__rec.vLine || 0, after: window.__wuStory.voice(), env: !!(window.__wuStory && true) }));
+    check('5 field listens', vl.line > 0.3 && vl.after === 0, `the field's voice level reaches ${vl.line.toFixed(2)} while lines are spoken and is 0 after the film`);
+    const rec = await p.evaluate(() => ({ max: window.__rec.maxCamStep, at: window.__rec.camStepAt, shown: window.__rec.shown, sync: window.__wuStory.sync(), cam: window.__wuStory.state().cam }));
     check('10 camera', rec.max <= 0.02 + 1e-9 && rec.cam.every((x) => x === 0), `largest camera change in one frame ${rec.max.toFixed(4)} (≤ 0.02, at t ${rec.at && rec.at.toFixed(1)}); zero after the film`);
-    // captions: each line's caption appears while its own audio plays, within 150 ms of the line's start
-    const lines = pilot.cues.filter((c) => c.kind === 'line'), late = [], seen = new Set();
-    for (const c of rec.caps) {
-      if (!c.text || seen.has(c.text)) continue; seen.add(c.text);
-      const l = lines.find((x) => x.text === c.text); if (!l) { late.push(`unknown caption "${c.text}"`); continue; }
-      // measured from where the voice started this line: its start, or mid-line after a takeover resumed there
-      const from = c.from >= l.start - 0.01 && c.from < l.end ? c.from : l.start, d = c.vt - from;
-      if (!(d >= -0.15 && d <= 0.15)) late.push(`"${l.text}" ${(d * 1000).toFixed(0)} ms`);
-    }
-    check('4 captions', late.length === 0 && seen.size >= lines.length - 1, `${seen.size} of ${lines.length} lines captioned, all within 150 ms of their audio${late.length ? ': ' + late.join(', ') : ''}`);
+    // the letters: each one appears when the voice reaches it (measured against the voice's own clock), every line in full
+    const C = pilot.cues, full = C.map((c, i) => c.kind === 'line' ? (rec.shown[i] === c.t.length ? 1 : 0) : null).filter((x) => x !== null), letters = C.reduce((a, c) => a + (c.t ? c.t.length : 0), 0);
+    check('4 in sync', rec.sync.n + rec.sync.stalled >= letters * 0.8 && rec.sync.late <= 0.15 && rec.sync.early <= 0.05 && full.every(Boolean), `${rec.sync.n} of ${letters} letters timed while spoken: at most ${(rec.sync.late * 1000).toFixed(0)} ms after and ${(rec.sync.early * 1000).toFixed(0)} ms before their voice (≤150 / ≤50; worst: cue, letter, s into the line, ms since the previous frame ${JSON.stringify(rec.sync.at)}; ${rec.sync.stalled} shown after the browser drew no frame for over 120 ms, not counted); ${full.filter(Boolean).length} of ${full.length} lines shown in full`);
     check('7 network', foreign.length === 0, `no request beyond the site's own files while playing${foreign.length ? ': ' + foreign.slice(0, 3).join(' ') : ''}`);
     check('errors', errs.length === 0, `no page errors at 1440×900${errs.length ? ': ' + errs.slice(0, 2).join(' | ') : ''}`);
     await ctx.close();
@@ -148,6 +175,15 @@ async function takeover(p, label, kind, send, minT) { // kind: take over during 
     const w = await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
     check('9 375', w, 'no sideways scroll at 375 px while playing');
     await takeover(p, 'touch', 'hold', () => p.touchscreen.tap(180, 300), 12);
+    // the timeline: paused, the bar says so and its clock follows the visitor's scroll; a tap on the track plays from there
+    await p.touchscreen.tap(180, 300); await frames(p, 2);
+    const pz = await p.evaluate(() => ({ label: !document.getElementById('sbState').hidden && document.getElementById('storyBar').classList.contains('paused'), c0: document.getElementById('sbClock').textContent }));
+    await p.evaluate(() => window.scrollBy(0, 400)); await frames(p, 3);
+    const c1 = await p.evaluate(() => document.getElementById('sbClock').textContent);
+    const tr = await p.evaluate(() => { const r = document.getElementById('sbTrack').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; });
+    await p.touchscreen.tap(tr.x, tr.y); await frames(p, 3);
+    const sk = await state(p);
+    check('2 timeline', pz.label && c1 !== pz.c0 && sk.playing && Math.abs(sk.t - sk.total / 2) < 3 && tr.w >= 60, `paused is shown (${pz.label}); the clock follows the scroll (${pz.c0} → ${c1}); a tap mid-track plays from ${sk.t.toFixed(1)} of ${sk.total.toFixed(1)} s (track ${tr.w.toFixed(0)} px)`);
     await p.evaluate(() => { const s = window.__wuStory; s.seek(s.state().film - 4); });
     await waitFor(p, () => window.__wuStory.state().kind === 'choice', null, 30000);
     const fit = await p.evaluate(() => { const r = document.getElementById('storyChoice').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0; });
@@ -168,10 +204,13 @@ async function takeover(p, label, kind, send, minT) { // kind: take over during 
     await p.evaluate(RECORDER); await p.evaluate(() => { window.__rec.keepFrames = true; });
     await p.click('#storyPlay'); await p.evaluate(() => window.__wuStory.rate(4));
     await waitFor(p, () => window.__wuStory.state().kind === 'choice', null, 90000);
-    const f = await p.evaluate(() => window.__rec.frames), caps = await p.evaluate(() => window.__rec.caps.filter((c) => c.text).length);
+    const f = await p.evaluate(() => window.__rec.frames), counts = await p.evaluate(() => window.__rec.counts);
+    // still text: a line appears whole when its voice starts, never letter by letter
+    const lineCounts = pilot.cues.map((c, i) => c.kind === 'line' && counts[i] ? Object.keys(counts[i]).map(Number) : null).filter(Boolean);
+    const caps = lineCounts.filter((ks) => ks.some((n) => n > 0)).length, partial = lineCounts.filter((ks, j) => ks.some((n) => n > 0 && n !== Math.max(...ks))).length;
     let moves = 0, bad = 0, cam = 0;
     for (let i = 1; i < f.length; i++) { cam = Math.max(cam, f[i][2]); if (f[i][1] !== f[i - 1][1]) { moves++; if (f[i][0] === f[i - 1][0]) bad++; } }
-    check('6 reduced', cam === 0 && bad === 0 && moves > 5 && caps > 5, `reduced motion: camera offset stays 0 (${cam}), scrollY changes only at cue starts (${moves} jumps, ${bad} mid-cue), ${caps} captions`);
+    check('6 reduced', cam === 0 && bad === 0 && moves > 5 && caps > 5 && partial === 0, `reduced motion: camera offset stays 0 (${cam}), scrollY changes only at cue starts (${moves} jumps, ${bad} mid-cue), ${caps} lines shown whole (${partial} letter by letter)`);
     check('errors', errs.length === 0, `no page errors in reduced motion${errs.length ? ': ' + errs.slice(0, 2).join(' | ') : ''}`);
     await ctx.close();
   }
