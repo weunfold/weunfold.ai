@@ -1,12 +1,12 @@
 # we unfold — Open Intelligence
 
-> Home of the Open Intelligence movement and its economic dimension, Open Economy. This is a preview: the manifesto is Draft 0.9 (2026-10-24), proposed for review, and nothing here has been launched or approved.
+> Home of the Open Intelligence movement and its economic dimension, Open Economy. This is a preview: the manifesto is Draft 0.10 (2026-10-24), proposed for review, and nothing here has been launched or approved.
 
 Every figure on the site carries its state: Proposal, Example, Not measured yet, or Sample data. There are no live member counts, funding totals or votes. Proposed initiatives and their terms are proposals, not offers.
 
 ## Manifesto
 
-- [Manifesto and charter (Markdown)](manifesto.md): the full text, Draft 0.9. SHA-256 `25583653ab507d892f096d87ebce6014f1ade65206a79aac76eb1cf0e61cba15`, not anchored yet.
+- [Manifesto and charter (Markdown)](manifesto.md): the full text, Draft 0.10. SHA-256 `25583653ab507d892f096d87ebce6014f1ade65206a79aac76eb1cf0e61cba15`, not anchored yet.
 - [Manifesto and charter (plain page)](manifesto.html): the same text as an accessible HTML page with a contents list.
 - [Everything in one file](llms-full.txt): the manifesto and charter in a single Markdown file.
 
