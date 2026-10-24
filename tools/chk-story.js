@@ -91,7 +91,7 @@ async function takeover(p, label, kind, send, minT) { // kind: take over during 
     await p.evaluate(RECORDER);
     net = true; await p.click('#storyPlay'); await frames(p, 3);
     const ui = await p.evaluate(() => { const v = (id) => { const e = document.getElementById(id), r = e.getBoundingClientRect(); return !e.hidden && r.width > 0 && r.bottom <= innerHeight; }; return { bar: v('storyBar'), mute: v('sbMute'), credit: v('sbCredit'), text: document.getElementById('sbCredit').textContent }; });
-    const creditOk = pilot.placeholder ? /placeholder/i.test(ui.text) : ui.text === 'AI-generated voice';
+    const creditOk = pilot.placeholder ? /placeholder/i.test(ui.text) : ui.text === (pilot.voices > 1 ? 'AI-generated voices' : 'AI-generated voice');
     check('5 bar', ui.bar && ui.mute && ui.credit && creditOk, `player bar, mute and credit visible: "${ui.text}"${pilot.placeholder ? ' (placeholder audio: the real credit appears once the voice is generated)' : ''}`);
     // the bar's own controls never count as a takeover
     await waitFor(p, () => window.__wuStory.state().t > 5, null, 30000);

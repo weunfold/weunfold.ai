@@ -1,6 +1,7 @@
-// The auto story's sound and cue sheet, made at build time. The narrator reads the page's own words: the .beat / .ln
-// text of #top and #today in site/index.html, in order. Writes site/assets/story/: voice.mp3 (every line in one
-// Text to Dialogue request with timestamps, eleven_v3, one Voice Design voice), bed.mp3 (Eleven Music, instrumental),
+// The auto story's sound and cue sheet, made at build time. The film speaks the page's own words: the .beat / .ln
+// text of #top and #today in site/index.html, in order, each line in one of ten Voice Design voices from around the
+// world (tools/story-cast.mjs). Writes site/assets/story/: voice.mp3 (every line in one Text to Dialogue request with
+// timestamps, eleven_v4), bed.mp3 (Eleven Music, instrumental),
 // sfx-bang.mp3 and sfx-doors.mp3 (sound effects), and pilot.json (line cues timed inside voice.mp3, hold cues with their
 // lengths, scroll targets and camera moves). No dependencies.
 //
@@ -8,7 +9,8 @@
 //        node tools/story.mjs --voice-only    regenerate the narration only, keep bed and effects
 //        node tools/story.mjs --placeholder   synthetic tones instead of ElevenLabs (needs ffmpeg), for building the player
 //        node tools/story.mjs --plan          print the cue sheet with estimated speech, call nothing, write nothing
-// Key and voice: ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID from the environment or an ignored .env at the repo root.
+// Key and voices: ELEVENLABS_API_KEY and ELEVENLABS_CAST (role:voice_id,..., saved by the picker at /__voices on
+// tools/dev.mjs) from the environment or an ignored .env at the repo root. ELEVENLABS_VOICE_ID alone gives every line one voice.
 // The key is only sent to api.elevenlabs.io; this tool never writes or prints it.
 import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { execFile } from "node:child_process";
@@ -16,11 +18,13 @@ import { promisify } from "node:util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
+import { ROLES, LINES, parseCast, lines } from "./story-cast.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "site/assets/story");
 const API = "https://api.elevenlabs.io/v1";
 const FORMAT = "mp3_44100_192"; // constant bitrate, so seeking to a line's start is exact
+const SPEECH = "eleven_v4"; // the most emotive model; takes Text to Dialogue. The voices are designed with eleven_ttv_v3 (no v4 design model yet)
 const FILM = 90; // seconds from Play to the choice
 const GAP = 0.7; // the pause between two lines that have no hold between them
 const LEAD = 0.5; // a hold reaches its scroll target this long before the next line starts (the field trails the scroll)
@@ -45,30 +49,23 @@ const HOLDS = [
 // after Shape it: the last beat, then into the start of Open Intelligence (these do not count toward FILM)
 const SHAPE_HOLDS = [{ before: "today@0.84", name: "the choice made", min: 2, w: 0, cam: [0, 0, -0.2] }];
 const OUTRO = { name: "open intelligence", to: ["oi", 0.03], min: 4, cam: [0, 0, -0.4] };
-// audio tags (pace and tone only), keyed like the holds
-const TAGS = { "top@0": "[calm]", "today@0.14": "[thoughtful]", "today@0.52": "[quietly]", "today@0.68": "[hopeful]" };
+// direction for each line (eleven_v4 audio tags): tone and pace only, describing the voice, never a sound; keyed like the holds.
+// The arc: quiet wonder, gratitude, then unease at the questions, a low weight on "held by a few", and hope at the turn.
+const TAGS = {
+  "top@0": "[quiet, warm, close to the listener, almost a secret]",
+  "top@0.3": "[softly curious]", "top@0.36": "[small wonder, gently]", "top@0.42": "[patient, kind]", "top@0.48": "[tender, unhurried]",
+  "top@0.62": "[warm, grateful, slow]", "top@0.7": "[gentle, wise]", "top@0.77": "[calm, clear]", "top@0.84": "[softly, with quiet awe]",
+  "today@0": "[firm but gentle]", "today@0.14": "[thoughtful, a little troubled]",
+  "today@0.3": "[sincere question]", "today@0.37": "[sincere question, more pointed]", "today@0.44": "[quiet, serious, the hardest question]",
+  "today@0.52": "[low, steady voice, restrained sadness]", "today@0.68": "[hopeful, opening up, warm]",
+  "today@0.84": "[hopeful, clear]", "today@0.88": "[confident, warm]", "today@0.92": "[resolute, gentle, an ending]",
+};
 const BED_PROMPT = "Slow ambient instrumental score for a quiet cosmic opening that turns into dawn: deep warm pads, soft low strings, sparse felt piano, no drums, no vocals. It begins almost silent, swells gently around the middle, grows darker and tighter for a while, then opens into a calm, hopeful, warm ending. It leaves room for a narrator.";
 const SFX = {
   bang: { text: "A deep, soft cosmic burst: a low boom swelling out of silence with a long shimmering tail, cinematic, not harsh", seconds: 4 },
   doors: { text: "Heavy doors closing slowly in a vast empty hall, one deep echoing thud, cinematic", seconds: 3 },
 };
 
-// ---- the script, from the page ----
-function decode(s) { return s.replace(/<br\s*\/?>/g, " ").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;|&rsquo;/g, "’").replace(/\s+/g, " ").trim(); }
-function lines(html, id) {
-  const m = html.match(new RegExp(`<section id="${id}"[^>]*>([\\s\\S]*?)</section>`));
-  if (!m) throw new Error(`no #${id} in site/index.html`);
-  const out = [];
-  for (const b of m[1].matchAll(/<div class="beat" data-in="([\d.]+)" data-out="[\d.]+">(.*?)<\/div>/g)) {
-    const at = +b[1], body = b[2], re = /<span class="ln" data-in="([\d.]+)">(.*?)<\/span>/g;
-    let last = 0, free = "", r;
-    while ((r = re.exec(body))) { free += body.slice(last, r.index); last = re.lastIndex; }
-    free += body.slice(last);
-    const t = decode(free); if (t) out.push({ sec: id, in: at, text: t });
-    for (const l of body.matchAll(/<span class="ln" data-in="([\d.]+)">(.*?)<\/span>/g)) out.push({ sec: id, in: +l[1], text: decode(l[2]) });
-  }
-  return out;
-}
 const key = (l) => `${l.sec}@${+l.in}`;
 
 // ---- the cue sheet ----
@@ -96,7 +93,7 @@ function sheet(script, speech) {
       // while the line is spoken the scene keeps moving a little toward the next line, never reaching it
       let to = pos;
       if (next && next.sec === l.sec) to = [l.sec, +(pos[1] + Math.min(0.04, 0.4 * (next.in + 0.008 - pos[1]))).toFixed(3)];
-      cues.push({ kind: "line", key: key(l), text: l.text, start: s.start, end: s.end, dur: +(s.end - s.start).toFixed(3), from: pos, to });
+      cues.push({ kind: "line", key: key(l), voice: LINES[key(l)] || null, text: l.text, start: s.start, end: s.end, dur: +(s.end - s.start).toFixed(3), from: pos, to });
       pos = to;
     });
   }
@@ -116,8 +113,11 @@ async function env() {
       const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.*?)\s*$/); if (m && !(m[1] in e)) e[m[1]] = m[2].replace(/^["']|["']$/g, "");
     }
   } catch {}
-  if (!e.ELEVENLABS_API_KEY || !e.ELEVENLABS_VOICE_ID) throw new Error("set ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID (environment or .env at the repo root)");
-  return { key: e.ELEVENLABS_API_KEY, voice: e.ELEVENLABS_VOICE_ID };
+  if (!e.ELEVENLABS_API_KEY) throw new Error("set ELEVENLABS_API_KEY (environment or .env at the repo root)");
+  const cast = parseCast(e.ELEVENLABS_CAST), one = e.ELEVENLABS_VOICE_ID;
+  const missing = ROLES.filter((r) => !cast[r.id]).map((r) => r.name);
+  if (missing.length && !one) throw new Error(`no voice for ${missing.join(", ")}: pick them at http://localhost:3000/__voices (node tools/dev.mjs)`);
+  return { key: e.ELEVENLABS_API_KEY, voiceOf: (l) => cast[LINES[key(l)]] || one };
 }
 async function call(path, body, cred) {
   const res = await fetch(`${API}${path}${path.includes("?") ? "&" : "?"}output_format=${FORMAT}`, { method: "POST", headers: { "xi-api-key": cred.key, "content-type": "application/json" }, body: JSON.stringify(body) });
@@ -125,10 +125,11 @@ async function call(path, body, cred) {
   return res;
 }
 async function narrate(script, cred) {
-  const inputs = script.map((l) => ({ text: `${TAGS[key(l)] ? TAGS[key(l)] + " " : ""}${l.text}`, voice_id: cred.voice }));
+  for (const l of script) if (!LINES[key(l)]) throw new Error(`line ${key(l)} "${l.text}" has no voice in tools/story-cast.mjs`);
+  const inputs = script.map((l) => ({ text: `${TAGS[key(l)] ? TAGS[key(l)] + " " : ""}${l.text}`, voice_id: cred.voiceOf(l) }));
   const chars = inputs.reduce((a, i) => a + i.text.length, 0);
   if (chars > 2000) throw new Error(`${chars} characters: over the 2,000 a dialogue request handles reliably`);
-  const r = await (await call("/text-to-dialogue/with-timestamps", { model_id: "eleven_v3", inputs }, cred)).json();
+  const r = await (await call("/text-to-dialogue/with-timestamps", { model_id: SPEECH, inputs }, cred)).json();
   const speech = script.map(() => ({ start: Infinity, end: -Infinity }));
   for (const s of r.voice_segments) { const x = speech[s.dialogue_input_index]; x.start = Math.min(x.start, s.start_time_seconds); x.end = Math.max(x.end, s.end_time_seconds); }
   // a line with no voice segment: find its words in the character alignment instead (the request is paid either way)
@@ -210,7 +211,8 @@ const pilot = {
   version: 1,
   placeholder: placeholderMode, // true: synthetic tones, not a voice; the player says so instead of crediting an AI voice
   generated: new Date().toISOString().slice(0, 10),
-  model: placeholderMode ? null : { voice: "eleven_v3 (Text to Dialogue, Voice Design voice)", music: "music_v2_5", format: FORMAT },
+  model: placeholderMode ? null : { voice: `${SPEECH} (Text to Dialogue, Voice Design voices)`, music: "music_v2_5", format: FORMAT },
+  voices: new Set(script.map((l) => LINES[key(l)])).size, // how many voices speak: the bar credits "AI-generated voices"
   files: { voice: "voice.mp3", bed: "bed.mp3", bang: "sfx-bang.mp3", doors: "sfx-doors.mp3" },
   bedVolume: 0.45,
   film, choiceSeconds: CHOICE_SECONDS,

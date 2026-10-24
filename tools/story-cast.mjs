@@ -1,0 +1,46 @@
+// The auto story's cast. Intelligence never had one voice: it carries ours. So the film has no narrator; every line of
+// the page is spoken by one of ten voices from ten places, designed with ElevenLabs Voice Design (no voice of a real
+// person is cloned). Ten is what one Text to Dialogue request takes. Each voice speaks two lines, never twice in a row.
+// tools/story.mjs reads this to build the dialogue; tools/dev.mjs serves the picker (/__voices) that designs and saves them.
+// The chosen voice ids live in the ignored .env as ELEVENLABS_CAST (role:voice_id,...): they belong to the account.
+export const ROLES = [
+  { id: "lagos", name: "Lagos", prompt: "A young woman from Lagos, Nigeria, in her early twenties. Bright, curious and warm, speaking English with a natural Nigerian accent. Close to the microphone, unhurried, sincere, never theatrical." },
+  { id: "kyoto", name: "Kyoto", prompt: "An elderly man from Kyoto, Japan, in his seventies. Gentle, slow and thoughtful, speaking English with a soft Japanese accent. Quiet and intimate, with a little breath in the voice." },
+  { id: "saopaulo", name: "São Paulo", prompt: "A woman in her forties from São Paulo, Brazil. Warm, grounded and calm, speaking English with a natural Brazilian Portuguese accent. Close to the microphone, sincere, unhurried." },
+  { id: "mumbai", name: "Mumbai", prompt: "A man in his thirties from Mumbai, India. Calm, clear and thoughtful, speaking English with a natural Indian accent. Soft-spoken and steady, like someone explaining something they care about." },
+  { id: "mexico", name: "Mexico City", prompt: "A young man in his twenties from Mexico City. Soft-spoken and earnest, speaking English with a natural Mexican Spanish accent. Quiet, close to the microphone, sincere." },
+  { id: "galway", name: "Galway", prompt: "A woman in her sixties from the west of Ireland. Kind, slightly raspy and wise, speaking English with a gentle Irish accent. Slow and warm, like telling a story by a fire." },
+  { id: "cairo", name: "Cairo", prompt: "A man in his fifties from Cairo, Egypt. Deep, measured and warm, speaking English with a natural Egyptian Arabic accent. Calm and dignified, unhurried." },
+  { id: "seoul", name: "Seoul", prompt: "A woman in her late twenties from Seoul, South Korea. Clear, quiet and precise, speaking English with a light Korean accent. Thoughtful, close to the microphone." },
+  { id: "nairobi", name: "Nairobi", prompt: "A woman in her forties from Nairobi, Kenya. Confident, warm and steady, speaking English with a natural Kenyan accent. Grounded and clear, sincere." },
+  { id: "jakarta", name: "Jakarta", prompt: "A man in his forties from Jakarta, Indonesia. Friendly, gentle and clear, speaking English with a natural Indonesian accent. Relaxed and sincere, close to the microphone." },
+];
+// who speaks which line (section@data-in, as in tools/story.mjs)
+export const LINES = {
+  "top@0": "lagos", "top@0.3": "kyoto", "top@0.36": "saopaulo", "top@0.42": "mumbai", "top@0.48": "mexico",
+  "top@0.62": "galway", "top@0.7": "cairo", "top@0.77": "seoul", "top@0.84": "nairobi",
+  "today@0": "jakarta", "today@0.14": "lagos", "today@0.3": "kyoto", "today@0.37": "mexico", "today@0.44": "seoul",
+  "today@0.52": "galway", "today@0.68": "saopaulo", "today@0.84": "cairo", "today@0.88": "nairobi", "today@0.92": "mumbai",
+};
+// what every voice says in its previews, so they can be compared on the same words (100–1,000 characters)
+export const PREVIEW_TEXT = "Intelligence never began with one of us. A question. A discovery. Something taught. Something passed on. Everything we know arrived through someone.";
+export const DESIGN_MODEL = "eleven_ttv_v3";
+// ELEVENLABS_CAST="lagos:abc,kyoto:def,..." → { lagos: "abc", ... }
+export function parseCast(s) { const o = {}; for (const p of (s || "").split(",")) { const [k, v] = p.split(":").map((x) => x && x.trim()); if (k && v) o[k] = v; } return o; }
+
+// the script, from the page: every .beat / .ln line of a section of site/index.html, in order, with its data-in
+function decode(s) { return s.replace(/<br\s*\/?>/g, " ").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;|&rsquo;/g, "’").replace(/\s+/g, " ").trim(); }
+export function lines(html, id) {
+  const m = html.match(new RegExp(`<section id="${id}"[^>]*>([\\s\\S]*?)</section>`));
+  if (!m) throw new Error(`no #${id} in site/index.html`);
+  const out = [];
+  for (const b of m[1].matchAll(/<div class="beat" data-in="([\d.]+)" data-out="[\d.]+">(.*?)<\/div>/g)) {
+    const at = +b[1], body = b[2], re = /<span class="ln" data-in="([\d.]+)">(.*?)<\/span>/g;
+    let last = 0, free = "", r;
+    while ((r = re.exec(body))) { free += body.slice(last, r.index); last = re.lastIndex; }
+    free += body.slice(last);
+    const t = decode(free); if (t) out.push({ sec: id, in: at, text: t });
+    for (const l of body.matchAll(/<span class="ln" data-in="([\d.]+)">(.*?)<\/span>/g)) out.push({ sec: id, in: +l[1], text: decode(l[2]) });
+  }
+  return out;
+}

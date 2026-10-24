@@ -2444,7 +2444,7 @@ function makeGeometry() {
     if (!d || !d.cues || !d.cues.length) return;
     D = d; cues = d.cues.map(function (c) { var x = {}; for (var k in c) x[k] = c[k]; if (reduce && x.kind === "hold") x.dur = Math.min(x.dur, 2); return x; }); // still scenes need no long holds
     var t = 0; cues.forEach(function (c, i) { T0[i] = t; t += c.dur; if (c.kind === "choice") KC = i; }); TOTAL = t;
-    document.getElementById("sbCredit").textContent = d.placeholder ? "Placeholder audio" : "AI-generated voice";
+    document.getElementById("sbCredit").textContent = d.placeholder ? "Placeholder audio" : d.voices > 1 ? "AI-generated voices" : "AI-generated voice";
     requestAnimationFrame(tick);
   }).catch(function () {});
 
