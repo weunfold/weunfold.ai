@@ -98,7 +98,7 @@ async function env() {
   const e = { ...process.env };
   try {
     for (const line of (await readFile(join(ROOT, ".env"), "utf8")).split("\n")) {
-      const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.*?)\s*$/); if (m && !(m[1] in e)) e[m[1]] = m[2].replace(/^["']|["']$/g, "");
+      const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.*?)\s*$/); if (m) e[m[1]] = m[2].replace(/^["']|["']$/g, ""); // .env wins: it is what the key page and the voice picker wrote
     }
   } catch {}
   if (!e.ELEVENLABS_API_KEY) throw new Error("set ELEVENLABS_API_KEY (environment or .env at the repo root)");
