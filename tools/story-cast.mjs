@@ -24,7 +24,20 @@ export const LINES = {
 };
 // what every voice says in its previews, so they can be compared on the same words (100–1,000 characters)
 export const PREVIEW_TEXT = "Intelligence never began with one of us. A question. A discovery. Something taught. Something passed on. Everything we know arrived through someone.";
-export const DESIGN_MODEL = "eleven_ttv_v3";
+export const DESIGN_MODEL = "eleven_ttv_v3"; // the API's Voice Design takes eleven_multilingual_ttv_v2 or eleven_ttv_v3 only
+export const SPEECH = "eleven_v4"; // what the film speaks with: the most emotive model, through Text to Dialogue
+// direction for each line (eleven_v4 audio tags): tone and pace only, describing the voice, never a sound; keyed like the holds.
+// The arc: quiet wonder, gratitude, then unease at the questions, a low weight on "held by a few", and hope at the turn.
+export const TAGS = {
+  "top@0": "[quiet, warm, close to the listener, almost a secret]",
+  "top@0.3": "[softly curious]", "top@0.36": "[small wonder, gently]", "top@0.42": "[patient, kind]", "top@0.48": "[tender, unhurried]",
+  "top@0.62": "[warm, grateful, slow]", "top@0.7": "[gentle, wise]", "top@0.77": "[calm, clear]", "top@0.84": "[softly, with quiet awe]",
+  "today@0": "[firm but gentle]", "today@0.14": "[thoughtful, a little troubled]",
+  "today@0.3": "[sincere question]", "today@0.37": "[sincere question, more pointed]", "today@0.44": "[quiet, serious, the hardest question]",
+  "today@0.52": "[low, steady voice, restrained sadness]", "today@0.68": "[hopeful, opening up, warm]",
+  "today@0.84": "[hopeful, clear]", "today@0.88": "[confident, warm]", "today@0.92": "[resolute, gentle, an ending]",
+};
+
 // ELEVENLABS_CAST="lagos:abc,kyoto:def,..." → { lagos: "abc", ... }
 export function parseCast(s) { const o = {}; for (const p of (s || "").split(",")) { const [k, v] = p.split(":").map((x) => x && x.trim()); if (k && v) o[k] = v; } return o; }
 

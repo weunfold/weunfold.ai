@@ -8,7 +8,7 @@ import { watch } from "node:fs";
 import { execFile } from "node:child_process";
 import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { ROLES, LINES, PREVIEW_TEXT, DESIGN_MODEL, parseCast, lines } from "./story-cast.mjs";
+import { ROLES, LINES, TAGS, SPEECH, PREVIEW_TEXT, DESIGN_MODEL, parseCast, lines } from "./story-cast.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(ROOT, "site");
@@ -26,7 +26,8 @@ async function envSet(k, v) {
 async function voicesPage() {
   const html = await readFile(join(SITE, "index.html"), "utf8"), said = {};
   for (const l of [...lines(html, "top"), ...lines(html, "today")]) said[`${l.sec}@${+l.in}`] = l.text;
-  const roles = ROLES.map((r) => ({ ...r, lines: Object.entries(LINES).filter(([, v]) => v === r.id).map(([k]) => "“" + (said[k] || k) + "”") }));
+  const cast = parseCast(await envValue("ELEVENLABS_CAST"));
+  const roles = ROLES.map((r) => ({ ...r, saved: cast[r.id] || "", lines: Object.entries(LINES).filter(([, v]) => v === r.id).map(([k]) => "“" + (said[k] || k) + "”") }));
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Story voices</title>
 <style>body{margin:0;background:#0b0d12;color:#ebe6da;font:15px/1.5 Spectral,Georgia,serif;padding:34px 16px 120px}main{max-width:1100px;margin:0 auto}
 h1{font-weight:300;font-size:32px;margin:0 0 8px}p{color:#a7abb9;margin:0 0 21px;max-width:60em}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
@@ -38,18 +39,25 @@ button.main{background:#ebe6da;color:#0b0d12;border-color:transparent}button:dis
 .pv{display:flex;align-items:center;gap:8px}.pv audio{flex:1;height:34px}.pv label{font:11px "IBM Plex Mono",monospace;display:flex;gap:6px;align-items:center;cursor:pointer}
 .msg{font:12px "IBM Plex Mono",monospace;color:#d9b45a;min-height:1.4em}.foot{position:fixed;left:0;right:0;bottom:0;padding:13px 16px;background:#0b0d12ee;border-top:1px solid #2a2f3a;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}</style></head>
 <body><main><h1>The voices of the story</h1>
-<p>Ten voices from ten places, one per line, so the film is spoken by many of us, never one. Each is designed by ElevenLabs Voice Design from the description (no real person's voice is copied). Edit a description if you like, generate three previews, listen, pick one. Every preview reads the same words. Saving creates the picked voices in your ElevenLabs account and writes their ids to .env.</p>
+<p>Ten voices from ten places, one per line, so the film is spoken by many of us, never one. Each is designed by ElevenLabs Voice Design from the description (no real person's voice is copied). Edit a description if you like, generate three previews, listen, pick one; or design it in the ElevenLabs app and paste its voice ID. Previews here are Voice Design's own (the API designs with eleven_ttv_v3); once saved, <b>Hear its lines in v4</b> speaks that voice's own lines of the film, with their directions, exactly as the film will. Saving creates the picked voices in your ElevenLabs account and writes their ids to .env.</p>
 <div style="display:flex;gap:10px;margin-bottom:21px"><button id="all">Generate all previews</button></div>
 <div class="grid" id="grid"></div></main>
 <div class="foot"><span class="msg" id="count"></span><button class="main" id="save" disabled>Save the cast</button><span class="msg" id="smsg"></span></div>
 <script>var R=${JSON.stringify(roles)},picks={};
 var g=document.getElementById("grid");
 R.forEach(function(r){var c=document.createElement("div");c.className="card";c.id="c-"+r.id;
-c.innerHTML='<h2>'+r.name+'</h2><div class="says">'+r.lines.join(" · ")+'</div><textarea>'+r.prompt+'</textarea><button>Generate 3 previews</button><div class="pvs"></div><div class="msg"></div>';
-c.querySelector("button").onclick=function(){design(r)};g.appendChild(c);});
+c.innerHTML='<h2>'+r.name+'</h2><div class="says">'+r.lines.join(" · ")+'</div><textarea>'+r.prompt+'</textarea><button>Generate 3 previews</button><div class="pvs"></div>'+
+'<div class="pv"><input class="paste" placeholder="or paste a voice ID from ElevenLabs" spellcheck="false" style="flex:1;font:12px IBM Plex Mono,monospace;padding:9px;border-radius:8px;border:1px solid #2a2f3a;background:#0b0d12;color:#ebe6da"></div>'+
+'<div class="pv"><button class="hear"'+(r.saved?'':' disabled')+'>Hear its lines in v4</button><span class="saved msg">'+(r.saved?'saved: '+r.saved:'')+'</span></div><div class="v4"></div><div class="msg"></div>';
+c.querySelector("button").onclick=function(){design(r)};
+c.querySelector(".paste").oninput=function(){var v=this.value.trim();if(v){picks[r.id]={voice:v};c.classList.add("done");}else{delete picks[r.id];c.classList.toggle("done",!!r.saved);}upd();};
+c.querySelector(".hear").onclick=function(){hear(r)};if(r.saved)c.classList.add("done");g.appendChild(c);});
+async function hear(r){var c=document.getElementById("c-"+r.id),m=c.querySelectorAll(".msg"),b=c.querySelector(".hear");m=m[m.length-1];b.disabled=true;m.textContent="Speaking in v4…";
+try{var res=await fetch("/__voices/speak",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({role:r.id})});if(!res.ok)throw new Error(await res.text());
+var a=await res.json();c.querySelector(".v4").innerHTML='<audio controls autoplay src="'+a.audio+'" style="width:100%;height:34px"></audio>';m.textContent="";}catch(e){m.textContent=e.message;}b.disabled=false;}
 async function design(r){var c=document.getElementById("c-"+r.id),m=c.querySelector(".msg"),b=c.querySelector("button");b.disabled=true;m.textContent="Designing…";
 try{var res=await fetch("/__voices/design",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({role:r.id,prompt:c.querySelector("textarea").value})});
-if(!res.ok)throw new Error(await res.text());var pv=await res.json(),box=c.querySelector(".pvs");box.innerHTML="";delete picks[r.id];c.classList.remove("done");
+if(!res.ok)throw new Error(await res.text());var pv=await res.json(),box=c.querySelector(".pvs");c.querySelector(".paste").value="";box.innerHTML="";delete picks[r.id];c.classList.remove("done");
 pv.forEach(function(p,i){var d=document.createElement("div");d.className="pv";d.innerHTML='<audio controls preload="auto" src="'+p.audio+'"></audio><label><input type="radio" name="'+r.id+'"> use</label>';
 d.querySelector("input").onchange=function(){picks[r.id]={id:p.id,prompt:c.querySelector("textarea").value};c.classList.add("done");upd();};box.appendChild(d);});m.textContent="";}
 catch(e){m.textContent=e.message;}b.disabled=false;b.textContent="Generate again";upd();}
@@ -57,7 +65,8 @@ document.getElementById("all").onclick=async function(){this.disabled=true;for(v
 function upd(){var n=Object.keys(picks).length;document.getElementById("count").textContent=n+" of "+R.length+" picked";document.getElementById("save").disabled=n===0;}
 document.getElementById("save").onclick=async function(){var m=document.getElementById("smsg");this.disabled=true;m.textContent="Creating voices…";
 var res=await fetch("/__voices/save",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({picks:picks})});
-m.textContent=res.ok?"Saved: "+(await res.json()).saved.join(", "):await res.text();this.disabled=false;};upd();</script></body></html>`;
+if(res.ok){var d=await res.json();m.textContent="Saved: "+d.saved.join(", ");R.forEach(function(r){if(d.cast[r.id]){r.saved=d.cast[r.id];var c=document.getElementById("c-"+r.id);c.querySelector(".hear").disabled=false;c.querySelector(".saved").textContent="saved: "+r.saved;}});picks={};upd();}
+else m.textContent=await res.text();this.disabled=false;};upd();</script></body></html>`;
 }
 
 const KEY_PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Story key</title>
@@ -131,12 +140,25 @@ createServer(async (req, res) => {
         const cast = parseCast(await envValue("ELEVENLABS_CAST"));
         for (const r of ROLES) {
           const p = body.picks && body.picks[r.id]; if (!p) continue;
+          if (p.voice) { if (!/^[A-Za-z0-9]{10,64}$/.test(p.voice)) throw new Error(`${r.name}: that doesn't look like a voice ID`); cast[r.id] = p.voice; continue; }
           const v = await api("/text-to-voice", { voice_name: `we unfold · ${r.name}`, voice_description: String(p.prompt || r.prompt).slice(0, 1000), generated_voice_id: p.id, labels: { project: "weunfold-story" } });
           cast[r.id] = v.voice_id;
         }
         await envSet("ELEVENLABS_CAST", ROLES.filter((r) => cast[r.id]).map((r) => `${r.id}:${cast[r.id]}`).join(","));
         console.log(`voices · cast saved (${Object.keys(cast).length} of ${ROLES.length})`);
-        res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ saved: ROLES.filter((r) => cast[r.id]).map((r) => r.name) }));
+        res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ saved: ROLES.filter((r) => cast[r.id]).map((r) => r.name), cast }));
+        return;
+      }
+      if (url.pathname === "/__voices/speak") { // a saved voice says its own lines of the film, with their directions, in the film's model
+        const cast = parseCast(await envValue("ELEVENLABS_CAST")), voice = cast[body.role];
+        if (!voice) throw new Error("Save this voice first.");
+        const html = await readFile(join(SITE, "index.html"), "utf8");
+        const mine = [...lines(html, "top"), ...lines(html, "today")].filter((l) => LINES[`${l.sec}@${+l.in}`] === body.role);
+        const inputs = mine.map((l) => { const k = `${l.sec}@${+l.in}`; return { text: `${TAGS[k] ? TAGS[k] + " " : ""}${l.text}`, voice_id: voice }; });
+        const r = await fetch(`https://api.elevenlabs.io/v1/text-to-dialogue?output_format=mp3_44100_128`, { method: "POST", headers: { "xi-api-key": key, "content-type": "application/json" }, body: JSON.stringify({ model_id: SPEECH, inputs }) });
+        if (!r.ok) throw new Error(`ElevenLabs /text-to-dialogue: ${r.status} ${(await r.text()).slice(0, 300)}`);
+        console.log(`voices · ${body.role} speaks its lines in ${SPEECH}`);
+        res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ audio: `data:audio/mpeg;base64,${Buffer.from(await r.arrayBuffer()).toString("base64")}` }));
         return;
       }
       res.writeHead(404).end();

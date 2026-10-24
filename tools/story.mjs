@@ -18,13 +18,12 @@ import { promisify } from "node:util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
-import { ROLES, LINES, parseCast, lines } from "./story-cast.mjs";
+import { ROLES, LINES, TAGS, SPEECH, parseCast, lines } from "./story-cast.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "site/assets/story");
 const API = "https://api.elevenlabs.io/v1";
 const FORMAT = "mp3_44100_192"; // constant bitrate, so seeking to a line's start is exact
-const SPEECH = "eleven_v4"; // the most emotive model; takes Text to Dialogue. The voices are designed with eleven_ttv_v3 (no v4 design model yet)
 const FILM = 90; // seconds from Play to the choice
 const GAP = 0.7; // the pause between two lines that have no hold between them
 const LEAD = 0.5; // a hold reaches its scroll target this long before the next line starts (the field trails the scroll)
@@ -49,17 +48,6 @@ const HOLDS = [
 // after Shape it: the last beat, then into the start of Open Intelligence (these do not count toward FILM)
 const SHAPE_HOLDS = [{ before: "today@0.84", name: "the choice made", min: 2, w: 0, cam: [0, 0, -0.2] }];
 const OUTRO = { name: "open intelligence", to: ["oi", 0.03], min: 4, cam: [0, 0, -0.4] };
-// direction for each line (eleven_v4 audio tags): tone and pace only, describing the voice, never a sound; keyed like the holds.
-// The arc: quiet wonder, gratitude, then unease at the questions, a low weight on "held by a few", and hope at the turn.
-const TAGS = {
-  "top@0": "[quiet, warm, close to the listener, almost a secret]",
-  "top@0.3": "[softly curious]", "top@0.36": "[small wonder, gently]", "top@0.42": "[patient, kind]", "top@0.48": "[tender, unhurried]",
-  "top@0.62": "[warm, grateful, slow]", "top@0.7": "[gentle, wise]", "top@0.77": "[calm, clear]", "top@0.84": "[softly, with quiet awe]",
-  "today@0": "[firm but gentle]", "today@0.14": "[thoughtful, a little troubled]",
-  "today@0.3": "[sincere question]", "today@0.37": "[sincere question, more pointed]", "today@0.44": "[quiet, serious, the hardest question]",
-  "today@0.52": "[low, steady voice, restrained sadness]", "today@0.68": "[hopeful, opening up, warm]",
-  "today@0.84": "[hopeful, clear]", "today@0.88": "[confident, warm]", "today@0.92": "[resolute, gentle, an ending]",
-};
 const BED_PROMPT = "Slow ambient instrumental score for a quiet cosmic opening that turns into dawn: deep warm pads, soft low strings, sparse felt piano, no drums, no vocals. It begins almost silent, swells gently around the middle, grows darker and tighter for a while, then opens into a calm, hopeful, warm ending. It leaves room for a narrator.";
 const SFX = {
   bang: { text: "A deep, soft cosmic burst: a low boom swelling out of silence with a long shimmering tail, cinematic, not harsh", seconds: 4 },
