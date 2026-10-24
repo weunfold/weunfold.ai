@@ -7,7 +7,7 @@
   if (!T || !top) return;
   var KEY = "wu-tune", saved = JSON.parse(JSON.stringify(T)), savedH = parseFloat(getComputedStyle(top).height) / innerHeight * 100;
   var ROWS = [
-    ["Burst", [["bang", "length (share of opening)", 0.03, 0.6, 0.005], ["ease", "sharpness", 1, 8, 0.1], ["core", "seed radius", 0, 0.3, 0.005]]],
+    ["Burst", [["bang", "length (share of opening)", 0.03, 0.6, 0.005], ["ease", "sharpness", 1, 8, 0.1], ["core", "seed radius", 0, 0.3, 0.005], ["spread", "slow ones trail", 0, 0.95, 0.05], ["fingers", "lobes by direction", 0, 0.9, 0.05], ["warm", "dust warmth", 0, 1, 0.05]]],
     ["Heat", [["cool", "white heat lasts (× burst)", 0.5, 4, 0.05], ["heat", "brightness", 1, 3, 0.05], ["glowIn", "field brightens over", 0.02, 1, 0.01], ["hot", "hot colour", "color"]]],
     ["Singularity", [["bangX", "x", -4, 4, 0.05], ["bangY", "y", -3, 3, 0.05], ["bangZ", "depth", -3, 3, 0.05], ["singFade", "fades over", 0.005, 0.2, 0.005]]],
     ["Galaxy", [["galaxyAt", "dust gathers at", 0, 0.6, 0.01], ["galaxyIn", "gathers over", 0.02, 0.8, 0.01], ["gal3d", "in the scene (1) · old backdrop (0)", 0, 1, 1], ["galTint", "takes the web's hues", 0, 1, 0.05], ["galGather", "dims as the web forms", 0, 0.8, 0.05]]],

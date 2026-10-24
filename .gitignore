@@ -4,3 +4,5 @@ node_modules/
 # the claude.ai artifact copy, and the project's private agent memory.
 private/
 CLAUDE.local.md
+# ElevenLabs key and voice id for tools/story.mjs: never committed (this repo is public)
+.env*

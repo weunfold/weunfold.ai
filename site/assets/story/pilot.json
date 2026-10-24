@@ -1,0 +1,800 @@
+{
+ "version": 2,
+ "placeholder": false,
+ "generated": "2026-10-24",
+ "model": {
+  "voice": "eleven_v4 (Text to Dialogue, Voice Design voices)",
+  "music": "music_v2_5",
+  "format": "mp3_44100_192"
+ },
+ "voices": 10,
+ "files": {
+  "voice": "voice.mp3",
+  "bed": "bed.mp3",
+  "bang": "sfx-bang.mp3",
+  "doors": "sfx-doors.mp3"
+ },
+ "bedVolume": 0.45,
+ "film": 89.99,
+ "choiceSeconds": 10,
+ "cues": [
+  {
+   "kind": "hold",
+   "name": "singularity",
+   "dur": 3,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0
+   ],
+   "to": [
+    "top",
+    0
+   ],
+   "cam": [0, 0, -0.2]
+  },
+  {
+   "kind": "hold",
+   "name": "burst",
+   "dur": 6.66,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0
+   ],
+   "to": [
+    "top",
+    0.15
+   ],
+   "cam": [0.1, 0.03, -0.45],
+   "ease": "linear",
+   "sfx": "bang",
+   "sfxAt": 0
+  },
+  {
+   "kind": "line",
+   "key": "top@0.14",
+   "voice": "lagos",
+   "text": "Intelligence never began with one of us.",
+   "sel": "#top .beat[data-in=\"0.14\"] > :not(.ln-list)",
+   "t": [0.393, 0.395, 0.399, 0.403, 0.464, 0.525, 0.587, 0.648, 0.709, 0.77, 0.832, 0.893, 1.19, 1.238, 1.285, 1.332, 1.379, 1.505, 1.584, 1.663, 1.741, 1.82, 1.977, 2.017, 2.056, 2.095, 2.213, 2.24, 2.266, 2.371, 2.41, 2.528, 2.764, 3],
+   "start": 0,
+   "end": 3.106,
+   "dur": 3.106,
+   "from": [
+    "top",
+    0.15
+   ],
+   "to": [
+    "top",
+    0.154
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "galaxy",
+   "dur": 11.32,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0.154
+   ],
+   "to": [
+    "top",
+    0.308
+   ],
+   "cam": [-0.12, 0.05, -0.5]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.3",
+   "voice": "kyoto",
+   "text": "A question.",
+   "sel": "#top .ln[data-in=\"0.3\"]",
+   "t": [4.071, 4.181, 4.25, 4.319, 4.388, 4.458, 4.527, 4.596, 4.665, 4.734],
+   "start": 3.648,
+   "end": 4.789,
+   "dur": 1.141,
+   "from": [
+    "top",
+    0.308
+   ],
+   "to": [
+    "top",
+    0.332
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.332
+   ],
+   "to": [
+    "top",
+    0.368
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.36",
+   "voice": "saopaulo",
+   "text": "A discovery.",
+   "sel": "#top .ln[data-in=\"0.36\"]",
+   "t": [5.361, 5.419, 5.489, 5.559, 5.63, 5.735, 5.84, 5.946, 6.051, 6.157, 6.262],
+   "start": 5.102,
+   "end": 6.28,
+   "dur": 1.178,
+   "from": [
+    "top",
+    0.368
+   ],
+   "to": [
+    "top",
+    0.392
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.392
+   ],
+   "to": [
+    "top",
+    0.428
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.42",
+   "voice": "mumbai",
+   "text": "Something taught.",
+   "sel": "#top .ln[data-in=\"0.42\"]",
+   "t": [6.777, 6.821, 6.865, 6.909, 6.953, 6.997, 7.041, 7.085, 7.129, 7.305, 7.338, 7.371, 7.536, 7.701, 7.866, 8.031],
+   "start": 6.601,
+   "end": 8.036,
+   "dur": 1.435,
+   "from": [
+    "top",
+    0.428
+   ],
+   "to": [
+    "top",
+    0.452
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.452
+   ],
+   "to": [
+    "top",
+    0.488
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.48",
+   "voice": "mexico",
+   "text": "Something passed on.",
+   "sel": "#top .ln[data-in=\"0.48\"]",
+   "t": [8.447, 8.495, 8.545, 8.594, 8.643, 8.693, 8.742, 8.791, 8.841, 9.038, 9.086, 9.136, 9.185, 9.234, 9.284, 9.407, 9.555, 9.702],
+   "start": 8.303,
+   "end": 9.801,
+   "dur": 1.498,
+   "from": [
+    "top",
+    0.488
+   ],
+   "to": [
+    "top",
+    0.528
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "web",
+   "dur": 5.66,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0.528
+   ],
+   "to": [
+    "top",
+    0.628
+   ],
+   "cam": [0.1, -0.04, -0.35]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.62",
+   "voice": "galway",
+   "text": "Everything we know arrived through someone.",
+   "sel": "#top .beat[data-in=\"0.62\"] > :not(.ln-list)",
+   "t": [10.797, 10.851, 10.905, 10.959, 11.013, 11.067, 11.121, 11.175, 11.229, 11.283, 11.405, 11.438, 11.607, 11.692, 11.776, 11.861, 12.283, 12.35, 12.418, 12.485, 12.587, 12.688, 12.789, 13.026, 13.054, 13.084, 13.113, 13.141, 13.17, 13.2, 13.296, 13.402, 13.508, 13.614, 13.721, 13.827, 13.933, 14.039],
+   "start": 10.347,
+   "end": 14.044,
+   "dur": 3.697,
+   "from": [
+    "top",
+    0.628
+   ],
+   "to": [
+    "top",
+    0.66
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.66
+   ],
+   "to": [
+    "top",
+    0.708
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.7",
+   "voice": "cairo",
+   "text": "Across generations.",
+   "sel": "#top .ln[data-in=\"0.7\"]",
+   "t": [14.508, 14.578, 14.647, 14.717, 14.786, 14.855, 14.994, 15.05, 15.106, 15.161, 15.217, 15.272, 15.423, 15.574, 15.724, 15.874, 16.025, 16.176],
+   "start": 14.374,
+   "end": 16.179,
+   "dur": 1.805,
+   "from": [
+    "top",
+    0.708
+   ],
+   "to": [
+    "top",
+    0.736
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.736
+   ],
+   "to": [
+    "top",
+    0.778
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.77",
+   "voice": "seoul",
+   "text": "Across languages.",
+   "sel": "#top .ln[data-in=\"0.77\"]",
+   "t": [16.489, 16.569, 16.649, 16.729, 16.809, 16.889, 17.049, 17.147, 17.245, 17.342, 17.44, 17.538, 17.636, 17.733, 17.83, 17.928],
+   "start": 16.41,
+   "end": 17.932,
+   "dur": 1.522,
+   "from": [
+    "top",
+    0.778
+   ],
+   "to": [
+    "top",
+    0.806
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "top",
+    0.806
+   ],
+   "to": [
+    "top",
+    0.848
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "top@0.84",
+   "voice": "nairobi",
+   "text": "Across lives we will never know.",
+   "sel": "#top .ln[data-in=\"0.84\"]",
+   "t": [18.324, 18.393, 18.462, 18.532, 18.6, 18.669, 18.808, 18.877, 18.981, 19.085, 19.189, 19.57, 19.605, 19.709, 19.742, 19.777, 19.812, 19.985, 20.026, 20.068, 20.11, 20.151, 20.262, 20.418, 20.574, 20.73, 20.886],
+   "start": 18.254,
+   "end": 20.893,
+   "dur": 2.639,
+   "from": [
+    "top",
+    0.848
+   ],
+   "to": [
+    "top",
+    0.848
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "into capture",
+   "dur": 4.99,
+   "lead": 0.5,
+   "from": [
+    "top",
+    0.848
+   ],
+   "to": [
+    "today",
+    0.008
+   ],
+   "cam": [0, 0.04, -0.3]
+  },
+  {
+   "kind": "line",
+   "key": "today@0",
+   "voice": "jakarta",
+   "text": "No single mind wrote it.",
+   "sel": "#today .beat[data-in=\"0\"] > :not(.ln-list)",
+   "t": [21.395, 21.469, 21.692, 21.741, 21.791, 21.84, 21.889, 21.939, 22.137, 22.211, 22.285, 22.359, 22.508, 22.582, 22.619, 22.656, 22.693, 22.804, 22.916, 23.027],
+   "start": 21.254,
+   "end": 23.032,
+   "dur": 1.778,
+   "from": [
+    "today",
+    0.008
+   ],
+   "to": [
+    "today",
+    0.048
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.048
+   ],
+   "to": [
+    "today",
+    0.148
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.14",
+   "voice": "lagos",
+   "text": "Yet contributing to intelligence does not give us a say in its future.",
+   "sel": "#today .beat[data-in=\"0.14\"] > :not(.ln-list)",
+   "t": [23.214, 23.303, 23.393, 23.839, 23.902, 23.966, 24.029, 24.094, 24.158, 24.221, 24.285, 24.356, 24.427, 24.499, 24.57, 24.686, 24.709, 24.82, 24.895, 24.968, 25.043, 25.118, 25.191, 25.266, 25.341, 25.415, 25.489, 25.564, 25.638, 25.802, 25.868, 25.935, 26.002, 26.158, 26.248, 26.337, 26.515, 26.538, 26.56, 26.582, 26.694, 26.738, 26.872, 27.14, 27.229, 27.318, 27.497, 27.541, 27.72, 27.764, 27.809, 27.943, 28.018, 28.091, 28.166, 28.241, 28.314, 28.389],
+   "start": 23.041,
+   "end": 28.395,
+   "dur": 5.354,
+   "from": [
+    "today",
+    0.148
+   ],
+   "to": [
+    "today",
+    0.188
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "wells",
+   "dur": 4.49,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.188
+   ],
+   "to": [
+    "today",
+    0.308
+   ],
+   "cam": [-0.08, 0, -0.4]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.3",
+   "voice": "kyoto",
+   "text": "Who can build with it?",
+   "sel": "#today .ln[data-in=\"0.3\"]",
+   "t": [28.717, 28.763, 28.811, 28.963, 28.998, 29.034, 29.139, 29.196, 29.252, 29.308, 29.365, 29.491, 29.527, 29.562, 29.597, 29.703, 29.984, 30.266],
+   "start": 28.643,
+   "end": 30.269,
+   "dur": 1.626,
+   "from": [
+    "today",
+    0.308
+   ],
+   "to": [
+    "today",
+    0.336
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.336
+   ],
+   "to": [
+    "today",
+    0.378
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.37",
+   "voice": "mexico",
+   "text": "Who can examine it?",
+   "sel": "#today .ln[data-in=\"0.37\"]",
+   "t": [30.705, 30.718, 30.731, 30.804, 30.823, 30.843, 30.922, 31.01, 31.099, 31.134, 31.17, 31.205, 31.241, 31.542, 31.675, 31.808],
+   "start": 30.561,
+   "end": 31.813,
+   "dur": 1.252,
+   "from": [
+    "today",
+    0.378
+   ],
+   "to": [
+    "today",
+    0.406
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.406
+   ],
+   "to": [
+    "today",
+    0.448
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.44",
+   "voice": "seoul",
+   "text": "Who gets to decide?",
+   "sel": "#today .ln[data-in=\"0.44\"]",
+   "t": [32.343, 32.365, 32.385, 32.47, 32.518, 32.565, 32.613, 32.724, 32.756, 32.851, 32.914, 32.978, 33.041, 33.273, 33.506, 33.739],
+   "start": 32.219,
+   "end": 33.75,
+   "dur": 1.531,
+   "from": [
+    "today",
+    0.448
+   ],
+   "to": [
+    "today",
+    0.48
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "doors",
+   "dur": 6.16,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.48
+   ],
+   "to": [
+    "today",
+    0.528
+   ],
+   "cam": [0.06, -0.03, -0.25],
+   "sfx": "doors",
+   "sfxAt": 0.7
+  },
+  {
+   "kind": "line",
+   "key": "today@0.52",
+   "voice": "galway",
+   "text": "Built from all of us. Held by a few.",
+   "sel": "#today .beat[data-in=\"0.52\"] > :not(.ln-list)",
+   "t": [34.454, 34.457, 34.46, 34.462, 34.465, 34.693, 34.731, 34.768, 34.806, 34.993, 35.043, 35.094, 35.218, 35.256, 35.368, 35.556, 35.743, 36.419, 36.494, 36.618, 36.744, 37.094, 37.131, 37.244, 37.469, 37.694, 37.919, 38.144],
+   "start": 34.107,
+   "end": 38.147,
+   "dur": 4.04,
+   "from": [
+    "today",
+    0.528
+   ],
+   "to": [
+    "today",
+    0.568
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "dawn",
+   "dur": 4.99,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.568
+   ],
+   "to": [
+    "today",
+    0.688
+   ],
+   "cam": [0, 0.06, -0.35]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.68",
+   "voice": "saopaulo",
+   "text": "What if we could help shape what comes next?",
+   "sel": "#today .beat[data-in=\"0.68\"] > :not(.ln-list)",
+   "t": [38.634, 38.646, 38.658, 38.671, 38.757, 38.794, 38.905, 38.942, 39.053, 39.082, 39.112, 39.142, 39.171, 39.275, 39.33, 39.385, 39.441, 39.57, 39.629, 39.689, 39.748, 39.807, 39.94, 39.977, 40.014, 40.051, 40.162, 40.206, 40.25, 40.295, 40.339, 40.457, 40.661, 40.864, 41.067, 41.27],
+   "start": 38.455,
+   "end": 41.274,
+   "dur": 2.819,
+   "from": [
+    "today",
+    0.688
+   ],
+   "to": [
+    "today",
+    0.688
+   ]
+  },
+  {
+   "kind": "choice",
+   "dur": 10,
+   "from": [
+    "today",
+    0.688
+   ],
+   "to": [
+    "today",
+    0.688
+   ],
+   "cam": [0, 0.03, -0.3]
+  },
+  {
+   "kind": "hold",
+   "name": "the choice made",
+   "dur": 2,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.688
+   ],
+   "to": [
+    "today",
+    0.848
+   ],
+   "cam": [0, 0, -0.2]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.84",
+   "voice": "cairo",
+   "text": "The freedom to understand.",
+   "sel": "#today .ln[data-in=\"0.84\"]",
+   "t": [41.575, 41.631, 41.687, 41.826, 41.854, 41.882, 41.91, 41.993, 42.077, 42.161, 42.328, 42.37, 42.496, 42.563, 42.629, 42.696, 42.763, 42.83, 42.947, 43.065, 43.182, 43.299, 43.416],
+   "start": 41.491,
+   "end": 43.42,
+   "dur": 1.929,
+   "from": [
+    "today",
+    0.848
+   ],
+   "to": [
+    "today",
+    0.864
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.864
+   ],
+   "to": [
+    "today",
+    0.888
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.88",
+   "voice": "nairobi",
+   "text": "The means to build.",
+   "sel": "#today .ln[data-in=\"0.88\"]",
+   "t": [43.634, 43.634, 43.636, 43.783, 43.871, 43.958, 44.046, 44.133, 44.294, 44.33, 44.586, 44.732, 44.878, 45.024, 45.17, 45.316],
+   "start": 43.566,
+   "end": 45.319,
+   "dur": 1.753,
+   "from": [
+    "today",
+    0.888
+   ],
+   "to": [
+    "today",
+    0.904
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.7,
+   "lead": 0.2,
+   "from": [
+    "today",
+    0.904
+   ],
+   "to": [
+    "today",
+    0.928
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "today@0.92",
+   "voice": "mumbai",
+   "text": "A meaningful choice.",
+   "sel": "#today .ln[data-in=\"0.92\"]",
+   "t": [45.637, 45.766, 45.812, 45.858, 45.904, 45.951, 45.997, 46.043, 46.089, 46.132, 46.176, 46.348, 46.423, 46.499, 46.574, 46.649, 46.725, 46.8],
+   "start": 45.569,
+   "end": 47.135,
+   "dur": 1.566,
+   "from": [
+    "today",
+    0.928
+   ],
+   "to": [
+    "today",
+    0.928
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "open intelligence",
+   "dur": 4,
+   "lead": 0.5,
+   "from": [
+    "today",
+    0.928
+   ],
+   "to": [
+    "oi",
+    0.03
+   ],
+   "cam": [0, 0, -0.4]
+  },
+  {
+   "kind": "line",
+   "key": "oi@we",
+   "voice": "all",
+   "text": "we unfold",
+   "sel": "#oi .oi-head .tag",
+   "t": [48.199, 48.351, 48.503, 48.656, 48.808, 48.96, 49.112, 49.264],
+   "start": 48.159,
+   "end": 49.566,
+   "dur": 1.407,
+   "from": [
+    "oi",
+    0.03
+   ],
+   "to": [
+    "oi",
+    0.03
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "gap",
+   "dur": 0.6,
+   "lead": 0.2,
+   "from": [
+    "oi",
+    0.03
+   ],
+   "to": [
+    "oi",
+    0.03
+   ],
+   "cam": [0, 0, 0]
+  },
+  {
+   "kind": "line",
+   "key": "oi@name",
+   "voice": "all",
+   "text": "Open Intelligence",
+   "sel": "#oi .oi-head h2",
+   "t": [50.151, 50.244, 50.337, 50.431, 50.524, 50.618, 50.711, 50.805, 50.898, 50.992, 51.085, 51.179, 51.272, 51.365, 51.459, 51.552],
+   "start": 50.111,
+   "end": 51.796,
+   "dur": 1.685,
+   "from": [
+    "oi",
+    0.03
+   ],
+   "to": [
+    "oi",
+    0.03
+   ]
+  },
+  {
+   "kind": "hold",
+   "name": "the name settles",
+   "dur": 5,
+   "lead": 0.5,
+   "from": [
+    "oi",
+    0.03
+   ],
+   "to": [
+    "oi",
+    0.03
+   ],
+   "cam": [0, 0, 0.25]
+  }
+ ],
+ "env": {
+  "fps": 25,
+  "v": "aachlldcbjnpomofbhlnmkaaadllklmonhblmgaloaalollkjigfdagabkkiheaafebaaaaaaaaaaaaaaaaaaaaaaaaaemrlatqovvpmoolcorstqnliegaaaaaaaaaaaqskdqncacaahhturmloppponkkfaaaaaaaaaaaaadnxywvojuuwutrgecavwsqnfeaopjhaaaaaaaaaaaabfrwvuqabrutsslalpstridaapppmnmnkaaaaaaaaaaaaaaaapvvthiksuqhffruttttqststtstsrqpmlljieeaaaaaajrvtqqttssrqqpnheianhcaimltqmkjghorqpnkklljaaaaaaaaaaaaagrtflppvvusjhhecluvrttrrrqqmlnlnkklkaaaaceeaaaaaaaalsqaomlutrnfcjiuuutspsqemioonmfbaaafaaaaaaaaaacngalnjnpohaagknnmmnmllkaeaaaabbaaaaalnmdlllkjjijjkkbajjkjihgffcaaaaaaaaaaaetuvxzzywmigdwywvqyzutsttrqqppqnkmmqponjlkgaaaaaaaaaaaaafmovzxxlfaaaaaaaikkuuvjnzunuvvmbrqrodeqtqpcdipuvvujfnomlkhaaaadvukkrrsuvtohfaovpksmaanmaaaaiussrqlionlmhaabaakmmjakknlheaaaaaaaaadkmxyuetrvwvunaqvvuttrpmipqqemqnlaanlfaaaaaaaaaaemmxrapuvvtqqpluutsrrqmlkeaahaaaaaaaaaaaaafjmsuqerushdeaanupmrofdjstssqpmialdaaaaaaaaaaaaswvtsoaamlieeghlpvuutiaqttrqonnffjmnhedaabbdaaaaaaaaaaaaaaaadknuttromjhemkebaaaorrqppmfglmprqnjgeaaaaaaaaaaaannvyxwxrnksvqhhtromkqvukhjjihgquusneccmsoebeepnnnhalnnnnkhaaaaaaaaaaaaaaaaaipwvmijmwzxxqvuttphnstoqturrsmhfcisrpomkjjjifcaaaaaaekuzuutuvwvvvwvvupbaaagsolgaaqtsnkkhgfaaaaaaaaaaaahxxvuuwxxwvvspijkwwunmopstromkecaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaampsvuuttrprrqqqopnooqppnokkihegiaaaaaaaaaaaaaaaalwyxxqjtwwsssrsttssrtuvuttrppokjkljfeedaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+ },
+ "places": {
+  "lagos": [0.019, 0.072],
+  "kyoto": [0.754, 0.389],
+  "saopaulo": [-0.259, -0.261],
+  "mumbai": [0.405, 0.212],
+  "mexico": [-0.551, 0.216],
+  "galway": [-0.05, 0.592],
+  "cairo": [0.173, 0.333],
+  "seoul": [0.706, 0.418],
+  "nairobi": [0.204, -0.014],
+  "jakarta": [0.593, -0.069]
+ }
+}

@@ -329,7 +329,7 @@ section.scene { display: block; min-height: 0; padding: 0; }
 .ln { opacity: 0; transition: opacity 700ms ease; }
 .ln.on { opacity: 1; }
 .beat-big.ln { display: block; margin-top: 13px !important; }
-.scroll-hint { position: absolute; bottom: calc(34px + env(safe-area-inset-bottom, 0px)); left: 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-faint); transition: opacity 500ms ease; }
+.scroll-hint { position: absolute; bottom: calc(30px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-faint); transition: opacity 500ms ease; }
 .scene-pin { position: sticky; }
 .oi-head { display: flex; flex-direction: column; gap: 13px; }
 .oi-head h2 { font-size: clamp(48px, 7vw, 104px); }
@@ -421,6 +421,65 @@ section.plain { min-height: 0; padding-block: 144px 89px; }
   .scroll-hint { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .beat, .ln, .commit li { transition: none; transform: none; } }
+/* story:start */
+/* the auto story: Play on the first screen, the player bar, the letters as they are said, the one choice and the end card */
+.story-play { position: absolute; bottom: calc(62px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 11px; min-height: 46px; padding: 12px 22px 12px 18px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text); background: var(--veil); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; transition: border-color 200ms ease; }
+.story-play:hover { border-color: var(--text-faint); }
+.story-play svg, .sb-btn svg { width: 14px; height: 14px; flex: none; }
+.story-play[hidden], .story-bar[hidden], .story-line[hidden], .story-choice[hidden], .story-end[hidden] { display: none; }
+.story-bar { position: fixed; left: 50%; bottom: calc(13px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 30; display: flex; align-items: center; gap: 2px; padding: 4px 16px 4px 4px; max-width: calc(100vw - 32px); background: var(--surface-raised); border: 1px solid var(--line); border-radius: 999px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+.sb-btn { width: 40px; height: 40px; flex: none; display: grid; place-items: center; padding: 0; background: none; border: 0; border-radius: 50%; color: var(--text); cursor: pointer; font: inherit; }
+.sb-btn:hover { background: var(--line); }
+.sb-btn[aria-pressed="false"] { color: var(--text-faint); }
+.story-choice { position: fixed; left: 50%; bottom: calc(70px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 31; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: max-content; max-width: calc(100vw - 32px); }
+.sc-btn { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 18px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text); background: var(--surface-raised); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.sc-btn:hover { border-color: var(--text-faint); }
+.sc-btn.primary { color: var(--ground); background: var(--ivory); border-color: transparent; padding-left: 12px; }
+/* Shape it: its own outline is the timer, running out as the choice waits (one ring, no browser focus halo on top) */
+.sc-btn.primary { position: relative; padding-left: 18px; }
+.sc-btn.primary:focus { outline: none; }
+.sc-btn:not(.primary):focus-visible { outline: 2px solid var(--text-faint); outline-offset: 3px; }
+.sc-time { position: absolute; left: -5px; top: -5px; width: calc(100% + 10px); height: calc(100% + 10px); overflow: visible; pointer-events: none; }
+.sc-time rect { x: 1.5px; y: 1.5px; width: calc(100% - 3px); height: calc(100% - 3px); rx: 25px; fill: none; stroke-width: 2; }
+.sc-time .sc-track { stroke: var(--line); }
+#scRing { stroke: #d9b45a; }
+.story-end { position: fixed; left: 50%; bottom: calc(21px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 31; display: flex; flex-direction: column; align-items: center; gap: 13px; width: max-content; max-width: calc(100vw - 32px); padding: 18px 21px; text-align: center; background: var(--surface-raised); border: 1px solid var(--line); border-radius: 14px; animation: story-in 1.4s ease 0.4s both; }
+@keyframes story-in { from { opacity: 0; transform: translate(-50%, 8px); } }
+.story-end p { margin: 0; font-family: var(--font-display); font-size: 19px; color: var(--text); }
+.story-end .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.story-end .pill { min-height: 44px; padding: 10px 18px; }
+@media (max-width: 820px) {
+  .story-choice { bottom: auto; top: calc(72px + env(safe-area-inset-top, 0px)); }
+}
+/* while the film plays the page's text is its caption: a letter appears as its voice says it, with a short fade behind */
+html.story-film .sl { opacity: 0; transition: opacity 260ms ease-out; }
+html.story-film .sl.on { opacity: 1; }
+html.story-film .ln { opacity: 1; transition: none; }
+html.story-film .oi-head .lead { opacity: 0; transition: opacity 1.6s ease 0.4s; }
+html.story-film.story-named .oi-head .lead { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { html.story-film .sl, html.story-film .oi-head .lead { transition: none; } .story-end { animation: none; } }
+/* the timeline: where the film is (or, paused, where play continues from: it follows the visitor's scroll); click or drag to go there */
+.story-bar { width: min(620px, calc(100vw - 32px)); }
+.sb-track { position: relative; flex: 1 1 auto; min-width: 64px; height: 28px; margin: 0 8px; cursor: pointer; touch-action: none; }
+.sb-track::before { content: ""; position: absolute; left: 0; right: 0; top: 13px; height: 2px; border-radius: 1px; background: var(--line); }
+.sb-fill { position: absolute; left: 0; top: 13px; height: 2px; width: 0; border-radius: 1px; background: var(--text); }
+.sb-fill::after { content: ""; position: absolute; right: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--text); }
+.sb-tick { position: absolute; top: 12px; width: 1px; height: 4px; background: var(--text-faint); opacity: 0.6; }
+.sb-mark { position: absolute; top: 10px; width: 2px; height: 8px; margin-left: -1px; background: #d9b45a; border-radius: 1px; }
+.sb-track:focus-visible { outline: 1px solid var(--text-faint); outline-offset: 2px; border-radius: 4px; }
+.sb-clock { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text-muted); }
+.sb-state { padding-left: 8px; white-space: nowrap; color: var(--text); }
+.sb-state[hidden] { display: none; }
+.story-bar.paused #sbPlay { background: var(--ivory); color: var(--ground); }
+@media (max-width: 820px) { .story-bar { flex-wrap: wrap; border-radius: 22px; padding-right: 12px; } .sb-state { flex-basis: 100%; padding: 0 0 6px; text-align: center; } .sb-track { margin: 0 6px; } }
+/* while the film plays the bar stays out of sight: it shows for a moment after Play, whenever the visitor moves the pointer
+   or touches, and for as long as the film is paused. A hairline at the bottom edge keeps the film's place meanwhile */
+.story-bar { transition: opacity 400ms ease, transform 400ms ease; }
+.story-bar.quiet:not(:has(:focus-visible)) { opacity: 0; transform: translate(-50%, 6px); }
+.story-line { position: fixed; left: 0; right: 0; bottom: 0; height: 2px; z-index: 29; pointer-events: none; }
+.story-line div { height: 100%; width: 0; background: var(--text-faint); opacity: 0.55; }
+@media (prefers-reduced-motion: reduce) { .story-bar { transition: none; } }
+/* story:end */
 /* genesis, the first contribution, the kit */
 .genesis { margin-top: 55px; border-top: 1px solid var(--line); padding-top: 21px; max-width: 680px; display: flex; flex-direction: column; gap: 10px; }
 .hash { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text); word-break: break-all; line-height: 1.6; }
@@ -555,14 +614,36 @@ section.plain { min-height: 0; padding-block: 144px 89px; }
   <section id="top" class="scene scene-a">
     <div class="scene-pin">
       <div class="beats">
-        <div class="beat" data-in="0" data-out="0.3"><h1 class="arrive">Intelligence never began with <i>one of us.</i></h1></div>
+        <div class="beat" data-in="0.14" data-out="0.3"><h1 class="arrive">Intelligence never began with <i>one of us.</i></h1></div>
         <div class="beat" data-in="0.3" data-out="0.62"><p class="ln-list"><span class="ln" data-in="0.3">A question.</span><span class="ln" data-in="0.36">A discovery.</span><span class="ln" data-in="0.42">Something taught.</span><span class="ln" data-in="0.48">Something passed on.</span></p></div>
         <div class="beat" data-in="0.62" data-out="9"><p class="beat-big">Everything we know arrived <i>through someone.</i></p><p class="ln-list soft"><span class="ln" data-in="0.7">Across generations.</span><span class="ln" data-in="0.77">Across languages.</span><span class="ln" data-in="0.84">Across lives we will never know.</span></p></div>
       </div>
-      <div class="scroll-hint" aria-hidden="true">Scroll</div>
+      <div class="scroll-hint" aria-hidden="true">or scroll to begin</div>
+      <!-- story:play -->
+      <button type="button" class="story-play" id="storyPlay" hidden><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9.5-5.5z" fill="currentColor"/></svg>Play the story</button>
+      <!-- /story:play -->
     </div>
   </section>
 
+  <!-- story:start -->
+  <!-- the auto story (shown only while the film plays): the player bar, the one choice and the end card -->
+  <div class="story-line" id="storyLine" aria-hidden="true" hidden><div></div></div>
+  <div class="story-bar" id="storyBar" role="group" aria-label="Story player" hidden>
+    <button type="button" class="sb-btn" id="sbPlay" aria-label="Pause"></button>
+    <button type="button" class="sb-btn" id="sbMute" aria-pressed="false" aria-label="Mute"></button>
+    <div class="sb-track" id="sbTrack" role="slider" tabindex="0" aria-label="Story position (← and → move one chapter)" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-valuetext="0:00"><div class="sb-fill" id="sbFill"></div><div class="sb-mark" id="sbMark"></div></div>
+    <span class="sb-clock" id="sbClock">0:00</span>
+    <span class="sb-state" id="sbState" hidden>Paused</span>
+  </div>
+  <div class="story-choice" id="storyChoice" role="group" aria-label="Where the story goes next" hidden>
+    <button type="button" class="sc-btn primary" id="scShape"><svg class="sc-time" aria-hidden="true"><rect class="sc-track" pathLength="100"/><rect id="scRing" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0"/></svg>Shape it</button>
+    <button type="button" class="sc-btn" id="scRead">Read the charter first</button>
+  </div>
+  <div class="story-end" id="storyEnd" role="group" aria-label="The opening ends here" hidden>
+    <p>That was the opening.</p>
+    <div class="row"><button type="button" class="pill ghost" id="seKeep">Keep scrolling</button><a class="pill" href="#invite" id="seInvite">Go to the invitation</a></div>
+  </div>
+  <!-- story:end -->
   <!-- 3–4 · the concentration, and the first reconnection -->
   <section id="today" class="scene scene-b">
     <div class="scene-pin">
@@ -1430,7 +1511,10 @@ function makeGeometry() {
   // heat: how far past white the hot colour goes · core: the seed's radius · bangX/Y/Z: where the singularity sits · singFade, galaxyAt, galaxyIn: the sky
   // galaxyAt/In: when the dust gathers into the galaxy, and the galaxy's light rises with it · gal3d: 1 the galaxy is a disc in the field's space, 0 the old flat backdrop
   // galTint: how much the galaxy takes the web's hues · galGather: how much it dims as the web gathers its light
-  var TUNE = window.__wuTune = {"bang":0.15,"ease":4,"cool":2.8,"glowIn":0.77,"hotR":1,"hotG":0.93,"hotB":0.78,"heat":1.65,"core":0.03,"bangX":0.55,"bangY":0.15,"bangZ":0,"singFade":0.03,"galaxyAt":0.12,"galaxyIn":0.2,"gal3d":1,"galTint":1,"galGather":0.35};
+  // spread: how much slower some particles are than the front (0: all as fast, 1: some barely leave the core) · fingers: how much the speed varies
+  // by direction, so the front breaks into lobes instead of a sphere. Both 0: every particle at the same share of its path
+  // warm: how amber the loose dust is after the bang, until the galaxy gathers it
+  var TUNE = window.__wuTune = {"bang":0.15,"ease":4,"cool":4,"glowIn":0.9,"hotR":1,"hotG":0.93,"hotB":0.78,"heat":1.25,"core":0.03,"bangX":0.55,"bangY":0.15,"bangZ":0,"singFade":0.03,"galaxyAt":0.12,"galaxyIn":0.2,"gal3d":1,"galTint":1,"galGather":0.35,"spread":0.7,"fingers":0.5,"warm":0.65};
   // the galaxy the web forms from: one tilted disc in the field's own space, so it turns and parallaxes with the particles.
   // The sky draws its light from the same frame (GAL), and every dust particle has a place on its arms (FG) near where it will join the web.
   var GAL = (function () { var f = -0.42, i = Math.acos(1 / 2.6); return { o: [0.5, 0, -0.3], e1: [Math.cos(f), Math.sin(f), 0], e2: [-Math.sin(f) * Math.cos(i), Math.cos(f) * Math.cos(i), -Math.sin(i)], k: 5.969 }; })();
@@ -1468,7 +1552,12 @@ function makeGeometry() {
       }
       if (x < 1) { // from a point on a small sphere around BANG_AT, along the line to where the particle is headed
         var dx = pos[j] - BANG_AT[0], dy = pos[j + 1] - BANG_AT[1], dz = pos[j + 2] - BANG_AT[2], dl = Math.hypot(dx, dy, dz) || 1, rc = CORE * Math.cbrt(HU[i]) / dl;
-        pos[j] = BANG_AT[0] + dx * (rc + (1 - rc) * g); pos[j + 1] = BANG_AT[1] + dy * (rc + (1 - rc) * g); pos[j + 2] = BANG_AT[2] + dz * (rc + (1 - rc) * g);
+        // a blast, not a zoom: each particle has its own launch speed and slows on its own (drag), g = 1 − (1 − x)^(ease·s).
+        // s mixes a per-particle speed with broad lobes over direction; every particle still arrives exactly at x = 1
+        var hb = (HU[i] * 7.31 + HSEL[i] * 3.17) % 1, ux = dx / dl, uy = dy / dl, uz = dz / dl;
+        var lobe = Math.sin(3.1 * ux + 1.7) * Math.sin(2.3 * uy + 0.4) * Math.sin(2.9 * uz + 2.2);
+        var sp = (1 - TUNE.spread * hb) * (1 + TUNE.fingers * lobe), gi = 1 - Math.pow(1 - x, Math.max(1.2, TUNE.ease * sp)); // the slow ones trail; no curve lands hard
+        pos[j] = BANG_AT[0] + dx * (rc + (1 - rc) * gi); pos[j + 1] = BANG_AT[1] + dy * (rc + (1 - rc) * gi); pos[j + 2] = BANG_AT[2] + dz * (rc + (1 - rc) * gi);
       }
       if (cool < 1) for (var c = 0; c < 3; c++) { col[j + c] = HOT[c] * H + (col[j + c] - HOT[c] * H) * cool; }
       if (x < 1) { var lit = 0.1 + 0.9 * Math.min(1, x / TUNE.glowIn); col[j] *= lit; col[j + 1] *= lit; col[j + 2] *= lit; }
@@ -1523,28 +1612,50 @@ function makeGeometry() {
   var canvas = document.getElementById("field");
   var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  var scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100); camera.position.z = 8.2;
+  var scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100); camera.position.z = 8.2; var CAM0 = camera.position.clone();
   var geo = new THREE.BufferGeometry(), aFrom = new Float32Array(N * 3), aTo = new Float32Array(N * 3), cFrom = new Float32Array(N * 3), cTo = new Float32Array(N * 3), aSeed = new Float32Array(N);
   for (var i = 0; i < N; i++) aSeed[i] = rnd();
   geo.setAttribute("position", new THREE.BufferAttribute(aFrom, 3)); geo.setAttribute("aTo", new THREE.BufferAttribute(aTo, 3));
   geo.setAttribute("cFrom", new THREE.BufferAttribute(cFrom, 3)); geo.setAttribute("cTo", new THREE.BufferAttribute(cTo, 3));
   geo.setAttribute("aSeed", new THREE.BufferAttribute(aSeed, 1)); geo.setAttribute("aPhase", new THREE.BufferAttribute(PHASE, 1)); geo.setAttribute("aEdge", new THREE.BufferAttribute(EDGE, 1));
+  var VB = null; // the web's bounds, for the voices' places
+  // the text on screen (the shown beats of the pinned scenes) as one rectangle in clip space, padded; the field fades inside it
+  var safeK = 0, safeRange = document.createRange();
+  function safeZone(u) {
+    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, W = innerWidth, H = innerHeight, pad = 28;
+    document.querySelectorAll(".scene-pin .beat.on").forEach(function (b) {
+      safeRange.selectNodeContents(b); var r = safeRange.getBoundingClientRect();
+      if (r.width < 1 || r.bottom < 0 || r.top > H) return;
+      x0 = Math.min(x0, r.left - pad); y0 = Math.min(y0, r.top - pad); x1 = Math.max(x1, r.right + pad); y1 = Math.max(y1, r.bottom + pad);
+    });
+    var on = x1 > x0; safeK += ((on ? 1 : 0) - safeK) * 0.08;
+    if (on) u.uSafe.value.set(x0 / W * 2 - 1, 1 - y1 / H * 2, x1 / W * 2 - 1, 1 - y0 / H * 2);
+    u.uSafeK.value = reduce ? (on ? 1 : 0) : safeK; u.uAsp.value = W / H;
+  }
   var mat = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    uniforms: { uMix: { value: 0 }, uTime: { value: 0 }, uSize: { value: MOBILE ? 20 : 17 }, uPR: { value: renderer.getPixelRatio() }, uFocus: { value: 8.2 }, uDof: { value: 0.4 }, uPulse: { value: 1 }, uDim: { value: 1 }, uScatter: { value: 0.45 }, uDay: { value: 0 }, uBox: { value: [new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4()] }, uBoxR: { value: new THREE.Matrix3() } },
+    uniforms: { uMix: { value: 0 }, uTime: { value: 0 }, uSize: { value: MOBILE ? 20 : 17 }, uPR: { value: renderer.getPixelRatio() }, uFocus: { value: 8.2 }, uDof: { value: 0.4 }, uPulse: { value: 1 }, uVoice: { value: 0 }, uVP: { value: new THREE.Vector2() }, uVF: { value: 1 }, uVK: { value: 0 }, uVC: { value: new THREE.Vector2() }, uVE: { value: new THREE.Vector2(1, 1) }, uSafe: { value: new THREE.Vector4(2, 2, 2, 2) }, uSafeK: { value: 0 }, uAsp: { value: 1 }, uWarm: { value: 0 }, uDim: { value: 1 }, uScatter: { value: 0.45 }, uDay: { value: 0 }, uBox: { value: [new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4()] }, uBoxR: { value: new THREE.Matrix3() } },
     vertexShader: [
       "attribute vec3 aTo; attribute vec3 cFrom; attribute vec3 cTo; attribute float aSeed; attribute float aPhase; attribute float aEdge;",
-      "uniform float uMix, uTime, uSize, uPR, uFocus, uDof, uPulse, uDim, uScatter; uniform vec4 uBox[3]; uniform mat3 uBoxR; varying vec3 vC; varying float vA; varying float vSig;",
+      "uniform float uMix, uTime, uSize, uPR, uFocus, uDof, uPulse, uVoice, uVF, uVK, uDim, uScatter; uniform vec2 uVP, uVC, uVE; uniform vec4 uSafe; uniform float uSafeK, uAsp, uWarm; uniform vec4 uBox[3]; uniform mat3 uBoxR; varying vec3 vC; varying float vA; varying float vSig;",
       "void main(){",
       " float t = clamp((uMix - aSeed * 0.35) / 0.65, 0.0, 1.0); t = t < 0.5 ? 4.0 * t * t * t : 1.0 - pow(-2.0 * t + 2.0, 3.0) / 2.0;",
       " vec3 p = mix(position, aTo, t) + sin(t * 3.14159) * uScatter * vec3(sin(aSeed * 91.7), cos(aSeed * 53.3), sin(aSeed * 17.1));",
       " float sig = 0.0;",
-      " if (aEdge >= 0.0) { float ph = uTime * 0.32 + aEdge * 17.0; float on = step(0.58, fract(sin(floor(ph) * 12.9898 + aEdge * 78.233) * 43758.5453)); float d = fract(ph) * 1.5 - 0.25 - aPhase; sig = on * exp(-d * d * 260.0) * uPulse; }",
+      // the field listens: the voice speaking lights its own place (uVP: its city, on the field laid out like a map), the light
+      // travels when the next voice takes over; uVF 0 (the chorus) lights the whole field; uVK a short kick on each syllable
+      " vec2 vq = (p.xy - uVC) / uVE - uVP; float vw = mix(1.0, exp(-dot(vq, vq) * 2.2), uVF) * uVoice;",
+      " if (aEdge >= 0.0) { float ph = uTime * 0.32 + aEdge * 17.0; float on = step(0.58 - 0.3 * vw - 0.15 * uVK * vw, fract(sin(floor(ph) * 12.9898 + aEdge * 78.233) * 43758.5453)); float d = fract(ph) * 1.5 - 0.25 - aPhase; sig = on * exp(-d * d * 260.0) * (uPulse + vw * (1.1 + 0.7 * uVK)); }",
       " vec4 mv = modelViewMatrix * vec4(p, 1.0); gl_Position = projectionMatrix * mv;",
+      // the words keep their own space: the dust thins out toward the text on screen (uSafe: its box, in clip space), one particle
+      // at a time (each its own threshold), so the edge is scattered dust, not a shape
+      " vec2 nd = gl_Position.xy / gl_Position.w, sc = (uSafe.xy + uSafe.zw) * 0.5, sr = max((uSafe.zw - uSafe.xy) * 0.5, vec2(0.05));",
+      " float se = length((nd - sc) / sr * vec2(1.0, 0.85)), near = (1.0 - smoothstep(0.55, 1.75, se)) * uSafeK;",
+      " float safe = near * 0.35 + (1.0 - near * 0.35) * smoothstep(-0.12, 0.12, near * 1.05 - fract(aSeed * 7.13 + aPhase * 3.7));",
       " float dep = -mv.z; float coc = min(abs(dep - uFocus) * uDof, 2.5);",
       " gl_PointSize = uSize * uPR * (0.5 + aSeed * 0.7) / dep * (1.0 + coc * 2.2) * (1.0 + sig * 1.4);",
-      " vA = (0.72 + 0.28 * sin(uTime * 1.3 + aSeed * 40.0)) * uDim / (1.0 + coc * coc * 3.0);",
-      " vC = mix(cFrom, cTo, t); vSig = sig;",
+      " vA = (0.72 + 0.28 * sin(uTime * 1.3 + aSeed * 40.0)) * uDim * (1.0 + 0.1 * uVoice + 0.45 * vw) / (1.0 + coc * coc * 3.0);", // uVoice: the story's voice, 0–1
+      " vC = mix(cFrom, cTo, t); vC = mix(vC, vec3(dot(vC, vec3(0.4, 0.4, 0.2))) * vec3(1.18, 0.96, 0.72) + vec3(0.04, 0.02, 0.0), uWarm); vSig = sig * (1.0 - safe); vA *= 1.0 - safe;", // uWarm: the dust after the bang, amber
       " float hide = 1.0, dust = 0.0;",
       " for (int k = 0; k < 3; k++) { float h = uBox[k].w; if (h > 0.001) { vec3 q = uBoxR * (p - uBox[k].xyz); float m = max(max(abs(q.x), abs(q.y)), abs(q.z)); hide *= smoothstep(h * 0.9, h * 1.02, m); dust = max(dust, 1.0 - smoothstep(h, h * 2.8, m)); } }",
       " vC = mix(vC, vec3(dot(vC, vec3(0.333))) * vec3(0.82, 0.84, 0.9), dust * 0.85); vA *= hide; gl_PointSize *= mix(1.0, 0.5, dust);",
@@ -1654,7 +1765,9 @@ function makeGeometry() {
     cores.forEach(function (m) { m.visible = false; });
     boxes.forEach(function (bx, k) { var on = a === 1 && rhNow[k] > 0.004, h = on ? rhNow[k] * 1.25 : 0; bx.visible = on; if (on) bx.scale.setScalar(h * 1.45); var cp = Math.max(0, Math.min(1, cur - 1)); doors[k].rotation.y = -(1 - ss(0.32, 0.54, cp)) * 1.9; mat.uniforms.uBox.value[k].set(WELLS[k][0], WELLS[k][1], WELLS[k][2], h); });
     dustMat.uniforms.uT.value = reduce ? 0 : now / 1000; dustMat.uniforms.uOp.value = Math.max.apply(null, rhNow) > 0.004 ? Math.min(1, Math.max.apply(null, rhNow) * 4) : 0; keyMat.uniforms.uOp.value = dustMat.uniforms.uOp.value * ss(0.56, 0.66, Math.max(0, Math.min(1, cur - 1)));
-    u.uTime.value = time;
+    u.uTime.value = time; u.uVoice.value = window.__wuVoice || 0; safeZone(u); u.uWarm.value = cur < 1 ? TUNE.warm * ss(0.02, 0.12, cur) * (1 - ss(0.26, 0.44, cur)) : 0;
+    var va = window.__wuVoiceAt; if (va) { u.uVP.value.set(va[0], va[1]); u.uVF.value = va[2]; u.uVK.value = va[3]; }
+    if (!VB) { VB = [1e9, 1e9, -1e9, -1e9]; for (var vi = 0; vi < N; vi++) { VB[0] = Math.min(VB[0], SP[vi * 3]); VB[1] = Math.min(VB[1], SP[vi * 3 + 1]); VB[2] = Math.max(VB[2], SP[vi * 3]); VB[3] = Math.max(VB[3], SP[vi * 3 + 1]); } u.uVC.value.set((VB[0] + VB[2]) / 2, (VB[1] + VB[3]) / 2); u.uVE.value.set((VB[2] - VB[0]) / 2, (VB[3] - VB[1]) / 2); } // the web's extent: the map the voices sit on
     var late = clamp(cur - 3, 0, 1), end = clamp(cur - 4, 0, 1), mz = clamp(cur - 5, 0, 1), kitDim = 1 - 0.7 * enterP(secKit);
     u.uPulse.value = cur < 1 ? ss(0.5, 0.95, cur) : 1 - clamp((cur - 1) / 0.12, 0, 1);
     u.uDof.value = (0.42 * (1 - clamp(cur - 1, 0, 1)) + 0.12 * late * (1 - end) + 0.3 * end) * (1 - mz) + 0.04 * mz;
@@ -1662,11 +1775,14 @@ function makeGeometry() {
     u.uScatter.value = a < 3 ? 0 : 0.45;
     spin += reduce ? 0 : dt;
     var turn = 1 - clamp((cur - 1) / 0.15, 0, 1);
-    group.rotation.y = 0.32 * Math.sin(spin * 0.09) * turn + 0.2 * Math.sin(spin * 0.06) * end * (1 - mz) + mx * 0.3 * (1 - late * 0.6);
+    var cw0 = window.__wuCam; group.rotation.y = (cw0 && cw0.r || 0) + 0.32 * Math.sin(spin * 0.09) * turn + 0.2 * Math.sin(spin * 0.06) * end * (1 - mz) + mx * 0.3 * (1 - late * 0.6);
     group.rotation.x = my * 0.22 + 0.16 * turn + 0.1 * end * (1 - mz);
-    var arrive = cur < 1 ? ss(0.2, 0.9, cur) : 1; // a full-width field first, then the web settles beside the text
-    group.position.x = (sideX * arrive * (1 - late) + sideX * 0.75 * end) * (1 - mz) + sideX * mz;
+    var arrive = cur < 1 ? ss(0.02, 0.16, cur) : 1; // the singularity first; the field is beside the text by the time the first words come
+    // a little further right while the first words are up, closer in while the galaxy gathers (whole on screen), then beside the web
+    var lean = cur < 1 ? 1 + 0.12 * (1 - ss(0.16, 0.2, cur)) - 0.24 * ss(0.17, 0.27, cur) * (1 - ss(0.5, 0.62, cur)) : 1;
+    group.position.x = (sideX * arrive * lean * (1 - late) + sideX * 0.75 * end) * (1 - mz) + sideX * mz;
     group.position.y = wide ? 0 : 0.55 * (1 - late);
+    var cw = window.__wuCam; if (cw) camera.position.set(CAM0.x + cw.x, CAM0.y + cw.y, CAM0.z + cw.z); // the auto story's slow camera moves (zero unless it plays)
     renderer.render(scene, camera);
     if (!window.__wuManual) requestAnimationFrame(frame);
   }
@@ -1894,7 +2010,7 @@ function makeGeometry() {
     var last = "";
     function draw() {
       state();
-      var live = !reduce && (S.bang > 0.001 || S.cosmos > 0.001), key = [S.sun, S.night, S.day, S.glow, S.bang, S.cosmos, c.width].map(function (x) { return Math.round(x * 1000); }).join();
+      var cw = window.__wuCam || { x: 0, y: 0, z: 0 }, live = !reduce && (S.bang > 0.001 || S.cosmos > 0.001), key = [S.sun, S.night, S.day, S.glow, S.bang, S.cosmos, c.width, cw.x, cw.y, cw.z, cw.r || 0].map(function (x) { return Math.round(x * 1000); }).join();
       if (live || key !== last) {
         last = key;
         var bv = new THREE.Vector3(TUNE.bangX, TUNE.bangY, TUNE.bangZ).applyMatrix4(pts.matrixWorld).project(camera);
@@ -2381,6 +2497,339 @@ function makeGeometry() {
   window.__wuReader = { open: open, close: close, go: go, next: next, state: function () { return { ch: st.ch, page: page, pages: pages, cols: cols }; } };
 })();
 </script>
+<script data-story>
+// ---- the auto story: the opening plays itself, narrated, as a timeline over the scroll position ----
+// assets/story/pilot.json (made by tools/story.mjs) lists line cues (a spoken line, timed inside voice.mp3) and hold cues
+// (the film waits for the scene), each with a scroll target. The player moves the scroll position along them, so every
+// scene, beat and sky follows exactly as it does for a visitor who scrolls. The page's own text is the caption: while the
+// film plays, each line's letters appear as its voice says them (letter times from the voice's alignment). Any input outside the player takes over:
+// the film pauses and the page stays where it is; the bar's play button resumes from there.
+(function story() {
+  "use strict";
+  var BASE = "assets/story/";
+  var playBtn = document.getElementById("storyPlay"); if (!playBtn || !window.fetch) return;
+  var bar = document.getElementById("storyBar"), bPlay = document.getElementById("sbPlay"), bMute = document.getElementById("sbMute");
+  var line = document.getElementById("storyLine"), seen = 0, track = document.getElementById("sbTrack"), fill = document.getElementById("sbFill"), clock = document.getElementById("sbClock"), stateEl = document.getElementById("sbState");
+  var choice = document.getElementById("storyChoice"), ring = document.getElementById("scRing"), endCard = document.getElementById("storyEnd");
+  var root = document.documentElement, reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SEC = { top: document.getElementById("top"), today: document.getElementById("today"), oi: document.getElementById("oi") };
+  var ICON = { play: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9.5-5.5z" fill="currentColor"/></svg>', pause: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5h3v11H3zM8 1.5h3v11H8z" fill="currentColor"/></svg>',
+    sound: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 5h2.5l3.5-3v10L4 9H1.5z" fill="currentColor"/><path d="M9.5 4.5a3.5 3.5 0 0 1 0 5M11 2.8a6 6 0 0 1 0 8.4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>',
+    muted: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 5h2.5l3.5-3v10L4 9H1.5z" fill="currentColor"/><path d="M9.5 5l3.5 4M13 5l-3.5 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>' };
+  var D = null, cues = [], T0 = [], CH = [], VT0 = [], TOTAL = 0, KC = -1, KN = -1, A = null;
+  // on: the film is in progress (bar shown) · playing: the clock runs · picked: "shape" or "read" once the choice is made
+  var st = { on: false, playing: false, t: 0, k: -1, picked: null, muted: false, rate: 1, pausedY: null, fired: {} };
+  var lastY = null, resized = false, voiceT = 0, vFrom = 0, stall = 0, stopT = 0, fade = 0; // vFrom: where in voice.mp3 the current line was started
+  var C = window.__wuCam = { x: 0, y: 0, z: 0, r: 0 }; // the camera offset frame() adds; zero whenever the film is not playing
+  function sm(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+
+  // pilot.json on load, not on Play, so the click can start every sound at once (iOS allows audio only inside a gesture)
+  fetch(BASE + "pilot.json").then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d || !d.cues || !d.cues.length) return;
+    D = d; cues = d.cues.map(function (c) { var x = {}; for (var k in c) x[k] = c[k]; if (reduce && x.kind === "hold") x.dur = Math.min(x.dur, 2); return x; }); // still scenes need no long holds
+    var t = 0, said = -1; cues.forEach(function (c, i) { T0[i] = t; t += c.dur; if (c.kind === "choice") KC = i; VT0[i] = said; if (c.kind === "line") { said = c.end; KN = i + 1; } }); TOTAL = t; // VT0: the voice time a hold shows (its last line said) · KN: the name has been said
+    // chapters: every spoken line (from the pause before it) and every named movement of the scene; ← and → step through them
+    cues.forEach(function (c, i) { var at = c.kind === "line" && i && cues[i - 1].name === "gap" ? T0[i - 1] : T0[i]; if ((c.kind !== "hold" || c.name !== "gap") && CH.indexOf(at) < 0) CH.push(at); });
+    CH.sort(function (a, b) { return a - b; });
+    CH.forEach(function (at) { if (!at) return; var tk = document.createElement("div"); tk.className = "sb-tick"; tk.style.left = (100 * at / TOTAL) + "%"; track.insertBefore(tk, track.firstChild); });
+    document.getElementById("sbMark").style.left = (100 * T0[KC] / TOTAL) + "%"; track.setAttribute("aria-valuemax", Math.round(TOTAL)); // the choice, on the timeline
+    requestAnimationFrame(tick);
+  }).catch(function () {});
+
+  // ---- where the film is: a cue's target is [section, progress], turned into a scrollY from the section's current box
+  // every frame (a phone's address bar can resize the viewport mid-film)
+  function yAt(p) { var el = SEC[p[0]], r = el.getBoundingClientRect(); return r.top + window.scrollY + p[1] * Math.max(1, el.offsetHeight - window.innerHeight); }
+  function cueAt(t) { var k = 0; while (k < cues.length - 1 && T0[k + 1] <= t) k++; return k; }
+  function span(c) { return c.kind === "line" ? c.dur : Math.max(0.05, c.dur - (c.lead || 0)); } // a hold arrives `lead` early: the field trails the scroll
+  function ease(c, u) { return c.ease === "linear" ? Math.max(0, Math.min(1, u)) : sm(u); } // linear: the burst, which eases itself
+  function yOf(t) { var k = cueAt(t), c = cues[k], a = yAt(c.from), b = yAt(c.to); if (reduce) return b; return a + (b - a) * ease(c, (t - T0[k]) / span(c)); }
+  // the other way: the film time whose scroll position is the page's current one (the opening only moves forward)
+  function timeAt(y) {
+    for (var k = 0; k < cues.length; k++) {
+      var c = cues[k], a = yAt(c.from), b = yAt(c.to);
+      if (Math.abs(b - a) < 2) { if (Math.abs(y - a) < 2) return T0[k]; continue; }
+      if (y < Math.min(a, b) - 1 || y > Math.max(a, b) + 1) continue;
+      var lo = 0, hi = 1; for (var i = 0; i < 30; i++) { var m = (lo + hi) / 2; if ((a + (b - a) * ease(c, m) - y) * (b - a) < 0) lo = m; else hi = m; }
+      return T0[k] + lo * span(c);
+    }
+    return y < yAt(cues[0].from) ? 0 : TOTAL;
+  }
+
+  // ---- the letters: while playing, each line's element is split into one span per letter, shown once the voice reaches its
+  // time; on pause or at the end the element gets its own markup back (the split breaks ligatures, so it lives only in the film)
+  var split = false, EARLY = 0.03, gap = 0, M = { n: 0, late: 0, early: 0, stalled: 0 }; // gap: ms since the previous frame
+  function splitText() {
+    if (split) return; split = true;
+    cues.forEach(function (c) {
+      if (c.kind !== "line" || !c.sel || !c.t || !c.t.length) return;
+      var el = document.querySelector(c.sel); if (!el) return;
+      c.el = el; c.html = el.innerHTML; c.ls = []; c.n = 0;
+      (function walk(n) {
+        if (n.nodeType === 3) {
+          var f = document.createDocumentFragment(), txt = n.nodeValue, run = "";
+          for (var i = 0; i < txt.length; i++) {
+            if (/\s/.test(txt[i])) { run += txt[i]; continue; }
+            if (run) { f.appendChild(document.createTextNode(run)); run = ""; }
+            var sp = document.createElement("span"); sp.className = "sl"; sp.textContent = txt[i]; f.appendChild(sp); c.ls.push(sp);
+          }
+          if (run) f.appendChild(document.createTextNode(run));
+          n.parentNode.replaceChild(f, n);
+        } else for (var k = n.firstChild, nx; k; k = nx) { nx = k.nextSibling; walk(k); }
+      })(el);
+      // one time per letter; if the page and the alignment disagree on the count, spread the alignment over the page's letters
+      var L = c.ls.length, m = c.t.length; c.tt = c.ls.map(function (_, i) { return L === m ? c.t[i] : c.t[Math.round(i * (m - 1) / Math.max(1, L - 1))]; });
+    });
+  }
+  function unsplit() {
+    if (!split) return; split = false;
+    cues.forEach(function (c) { if (c.el) { c.el.innerHTML = c.html; c.el = c.ls = c.tt = null; } });
+  }
+  function vtAt(t) { var k = cueAt(t), c = cues[k]; return c.kind === "line" ? c.start + (t - T0[k]) : VT0[k]; }
+  function vtNow() { // the voice's own clock while it speaks the current line
+    var c = cues[st.k]; if (!c) return vtAt(st.t);
+    if (c.kind === "line" && A && !A.voiceFailed && !A.voice.paused && stall === 0) return Math.max(c.start, Math.min(c.end + 0.1, A.voice.currentTime));
+    return vtAt(st.t);
+  }
+  function reveal(vt, measure) {
+    var ct = measure ? A.voice.currentTime : 0;
+    cues.forEach(function (c, k) {
+      if (!c.ls) return;
+      var want = 0; if (reduce) want = vt + EARLY >= c.tt[0] ? c.ls.length : 0; else while (want < c.tt.length && c.tt[want] <= vt + EARLY) want++;
+      while (c.n < want) { c.ls[c.n].classList.add("on"); if (measure && k === st.k) { var d = ct - c.tt[c.n]; if (gap > 120) M.stalled++; else { M.n++; if (d > M.late) { M.late = d; M.at = [k, c.n, +(ct - c.start).toFixed(3), Math.round(gap)]; } M.early = Math.max(M.early, -d); } } c.n++; } // a letter shown after the browser drew no frame for 120 ms measures the browser, not the player
+      while (c.n > want) c.ls[--c.n].classList.remove("on");
+    });
+  }
+
+  // ---- sound: every element is started inside the Play click, the voice and effects paused again at once ----
+  function sounds() {
+    if (A) return;
+    A = {}; ["voice", "bed", "bang", "doors"].forEach(function (k) { var a = new Audio(BASE + D.files[k]); a.preload = "auto"; A[k] = a; });
+    A.bed.loop = true;
+    A.voice.addEventListener("error", function () { A.voiceFailed = true; });
+    ["voice", "bang", "doors"].forEach(function (k) { var a = A[k]; a.muted = true; safePlay(a); a.pause(); a.muted = st.muted; });
+  }
+  function all(f) { if (A) ["voice", "bed", "bang", "doors"].forEach(function (k) { f(A[k]); }); }
+  function safePlay(a) { var p = a.play(); if (p && p.catch) p.catch(function () {}); }
+  function stopVoice() { clearTimeout(stopT); stopT = 0; if (A) A.voice.pause(); }
+
+  // ---- control ----
+  function styles(on) { root.style.scrollBehavior = on ? "auto" : ""; root.style.overflowAnchor = on ? "none" : ""; } // back to "", so the CSS (and reduced motion) wins again
+  function run() {
+    styles(true); st.playing = true; st.k = -1; lastY = null; stall = 0; slow = 1 / 60; // a hitch before Play must not shrink the opening's moves
+    splitText(); reveal(vtAt(st.t), false); // letters already said appear at once, without a fade
+    cancelFade(); A.bed.volume = D.bedVolume || 0.45; safePlay(A.bed); ui();
+  }
+  function start() { // "Play the story": from the singularity
+    sounds(); endCard.hidden = true;
+    st.on = true; st.t = 0; seen = performance.now(); st.picked = null; st.fired = {}; st.pausedY = null;
+    A.bed.currentTime = 0; run(); window.scrollTo(0, Math.round(yOf(0)));
+    bPlay.focus({ preventScroll: true });
+  }
+  function resume() { // the bar's play: exactly where it paused if the page has not moved, otherwise from where the page is now
+    if (!st.on) return;
+    var y = window.scrollY;
+    if (st.pausedY === null || Math.abs(y - st.pausedY) > 2) { st.t = timeAt(y); if (st.t > T0[KC] + cues[KC].dur && !st.picked) st.picked = "shape"; }
+    run();
+  }
+  function pause() {
+    if (!st.playing) return;
+    st.playing = false; st.pausedY = lastY !== null ? lastY : window.scrollY; lastY = null; // where the player left the page: any move since is the visitor's
+    stopVoice(); all(function (a) { if (a !== A.voice) a.pause(); }); styles(false); unsplit(); ui();
+  }
+  function finish(why) { // the film ends: the bed fades out slowly under the name, then the end card (it fades in) or the reader
+    st.playing = false; st.on = false; st.picked = why; lastY = null; styles(false);
+    stopVoice(); A.bang.pause(); A.doors.pause(); fadeBed(why === "shape" ? 6000 : 2500); choice.hidden = true; unsplit(); ui();
+    if (why === "shape") { endCard.hidden = false; document.getElementById("seKeep").focus({ preventScroll: true }); }
+    if (why === "read" && window.__wuReader) {
+      var secs = document.getElementById("book").content.querySelectorAll("section"), at = 0;
+      for (var i = 0; i < secs.length; i++) if (secs[i].getAttribute("data-title") === "How we work") at = i;
+      window.__wuReader.open(); window.__wuReader.go(at, 0);
+    }
+  }
+  function fadeBed(ms) {
+    cancelFade(); var a = A.bed, v0 = a.volume, t0 = performance.now();
+    (function f(now) { var u = Math.min(1, Math.max(0, now - t0) / ms); a.volume = v0 * (1 - u); if (u < 1) fade = requestAnimationFrame(f); else { a.pause(); fade = 0; } })(t0);
+  }
+  function cancelFade() { if (fade) cancelAnimationFrame(fade); fade = 0; }
+  // the timeline: jump to a film time. Dragging holds the film paused; letting go plays from there
+  function seekTo(t, play) {
+    t = Math.max(0, Math.min(TOTAL - 0.05, t));
+    if (st.playing) pause();
+    st.t = t; st.k = -1; st.fired = {};
+    if (t <= T0[KC]) st.picked = null; else if (t >= T0[KC] + cues[KC].dur && !st.picked) st.picked = "shape";
+    window.scrollTo(0, Math.round(yOf(t))); st.pausedY = window.scrollY;
+    if (play) run();
+  }
+  var dragging = false;
+  function trackT(e) { var r = track.getBoundingClientRect(); return TOTAL * Math.max(0, Math.min(1, (e.clientX - r.left) / Math.max(1, r.width))); }
+  track.addEventListener("pointerdown", function (e) { if (!st.on) return; dragging = true; track.setPointerCapture(e.pointerId); seekTo(trackT(e), false); });
+  track.addEventListener("pointermove", function (e) { if (dragging) seekTo(trackT(e), false); });
+  track.addEventListener("pointerup", function (e) { if (!dragging) return; dragging = false; seekTo(trackT(e), true); });
+  track.addEventListener("pointercancel", function () { dragging = false; });
+  function shownT() { return st.playing || dragging || st.pausedY === null || Math.abs(window.scrollY - st.pausedY) <= 2 ? st.t : timeAt(window.scrollY); } // paused: where play continues from
+  // the field listens: the voice's loudness (pilot.json env, 25 a second) as one level 0–1 the particle shader reads
+  // (window.__wuVoice); quick to rise, slower to fall, zero when no line is spoken and in reduced motion
+  // and where: the speaking voice's place (pilot.json places), the light gliding there when the next voice takes over;
+  // the chorus lights the whole field (focus 0); a syllable's sharp rise gives a short kick
+  var lv = 0, VA = window.__wuVoiceAt = [0, 0, 1, 0], vPrev = 0;
+  function envAt(E, t) { var x = t * E.fps, i = Math.floor(x), a = E.v.charCodeAt(i), b = E.v.charCodeAt(i + 1); a = a >= 97 ? (a - 97) / 25 : 0; b = b >= 97 ? (b - 97) / 25 : a; return a + (b - a) * (x - i); }
+  function voiceLevel(dt) {
+    var c = cues[st.k], want = 0, E = D && D.env, on = E && st.playing && !reduce && c && c.kind === "line" && A && !A.voice.paused;
+    if (on) {
+      var ct = A.voice.currentTime; want = envAt(E, ct);
+      if (want - envAt(E, ct - 0.08) > 0.18 && want > vPrev) VA[3] = 1; // a syllable's onset
+      var pl = D.places && D.places[c.voice], f = 1 - Math.exp(-dt / 0.35);
+      if (pl) { VA[0] += (pl[0] - VA[0]) * f; VA[1] += (pl[1] - VA[1]) * f; }
+      VA[2] += ((c.voice === "all" ? 0 : 1) - VA[2]) * f;
+    }
+    vPrev = want; VA[3] *= Math.exp(-dt / 0.18); if (VA[3] < 0.01) VA[3] = 0;
+    lv += (want - lv) * (want > lv ? 0.5 : 0.1); if (lv < 0.002) lv = 0;
+    window.__wuVoice = lv;
+  }
+  function mmss(t) { t = Math.max(0, Math.round(t)); return Math.floor(t / 60) + ":" + ("0" + t % 60).slice(-2); }
+  function pick(which) {
+    if (!st.on) return;
+    if (which === "read") { finish("read"); return; }
+    st.picked = "shape"; st.t = T0[KC] + cues[KC].dur; st.k = -1; if (!st.playing) run();
+  }
+
+  // ---- takeover: input on the page outside the bar and the choice pauses at once ----
+  function ours(e) { var n = e.target; return !!(n && n.closest && n.closest("#storyBar, #storyChoice, #storyEnd")); }
+  // Space plays and pauses, as in any player, and never scrolls the page (registered first: it is not a takeover). The
+  // choice and the end card keep Space for their own buttons; the keyup is held back so a focused bar button does not click too
+  function spaceKey(e) { return (e.key === " " || e.code === "Space") && st.on && !e.altKey && !e.ctrlKey && !e.metaKey && !(e.target && e.target.closest && e.target.closest("#storyChoice, #storyEnd, input, textarea, select, [contenteditable]")); }
+  function arrowKey(e) { return (e.key === "ArrowLeft" || e.key === "ArrowRight") && st.on && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(e.target && e.target.closest && e.target.closest("#storyChoice, #storyEnd, input, textarea, select, [contenteditable]")); }
+  window.addEventListener("keydown", function (e) {
+    var sp = spaceKey(e), ar = !sp && arrowKey(e); if (!sp && !ar) return;
+    e.preventDefault(); e.stopImmediatePropagation(); seen = performance.now();
+    if (ar) chapter(e.key === "ArrowRight" ? 1 : -1); else if (!e.repeat) { if (st.playing) pause(); else resume(); }
+  }, { capture: true });
+  window.addEventListener("keyup", function (e) { if (spaceKey(e) || arrowKey(e)) { e.preventDefault(); e.stopImmediatePropagation(); } }, { capture: true });
+  // → the next chapter · ← back to the start of this one, or to the one before when it has only just begun (as video players do)
+  function chapter(dir) {
+    var t = shownT(), i = 0; while (i < CH.length - 1 && CH[i + 1] <= t + 0.05) i++;
+    var to = dir > 0 ? CH[i + 1] : (t - CH[i] > 1.5 ? CH[i] : CH[Math.max(0, i - 1)]);
+    if (to !== undefined) seekTo(to, true);
+  }
+  ["wheel", "touchstart", "pointerdown", "keydown"].forEach(function (type) {
+    window.addEventListener(type, function (e) {
+      if (type === "keydown" && /^(Shift|Control|Alt|Meta|CapsLock|Fn|OS)$/.test(e.key)) return;
+      if (!endCard.hidden && !ours(e)) endCard.hidden = true;
+      if (st.playing && !ours(e)) pause();
+    }, { capture: true, passive: true });
+  });
+  // the visitor is navigating: show the bar. A pointer move counts only if the pointer itself moved (Chrome sends moves
+  // while the page scrolls under a still mouse, and the film scrolls the page)
+  var px = null, py = null;
+  window.addEventListener("pointermove", function (e) { if (px !== null && Math.abs(e.clientX - px) + Math.abs(e.clientY - py) > 3) seen = performance.now(); px = e.clientX; py = e.clientY; }, { capture: true, passive: true });
+  ["pointerdown", "touchstart", "keydown"].forEach(function (type) { window.addEventListener(type, function () { seen = performance.now(); }, { capture: true, passive: true }); });
+  window.addEventListener("resize", function () { resized = true; });
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", function () { resized = true; });
+
+  // ---- each frame ----
+  var last = performance.now(), slow = 1 / 60, spinY = null;
+  function enter(k) {
+    st.k = k; var c = cues[k];
+    choice.hidden = c.kind !== "choice";
+    if (c.kind === "choice") document.getElementById("scShape").focus({ preventScroll: true });
+    if (k > KC && !st.picked) st.picked = "shape";
+    if (c.kind === "line" && !A.voiceFailed) {
+      var v = A.voice; stopVoice(); v.playbackRate = st.rate; v.currentTime = vFrom = c.start + (st.t - T0[k]); voiceT = v.currentTime; stall = 0; safePlay(v);
+    } else stopVoice();
+  }
+  function step(dt) {
+    // a scroll the player did not make (scrollbar drag, find in page, focus) is a takeover too
+    if (lastY !== null && !resized && Math.abs(window.scrollY - lastY) > 2) { pause(); return; }
+    resized = false;
+    var k = cueAt(st.t); if (k !== st.k) enter(k);
+    var c = cues[k], u = st.t - T0[k];
+    if (c.kind === "line" && !A.voiceFailed) {
+      // while a line is spoken the voice is the clock (phones start audio late after a seek); the timeline owns only the holds
+      var v = A.voice, ct = v.currentTime;
+      if (ct > voiceT + 1e-4) { voiceT = ct; stall = 0; st.t = T0[k] + Math.max(0, Math.min(c.dur, ct - c.start)); }
+      else if ((stall += dt) > 2) st.t += dt * st.rate; // the voice never started: keep the film moving on the clock
+      if (!v.paused && ct > c.start + 0.005 && ct < c.end) {
+        if (!stopT) stopT = setTimeout(function () { stopT = 0; if (st.k === k && A.voice.currentTime >= c.end - 0.06) A.voice.pause(); }, Math.max(0, (c.end - ct) / st.rate * 1000 - 15)); // stop on the line's end, not a frame late
+      }
+      if (ct >= c.end - 0.02 || (v.paused && voiceT >= c.end - 0.06)) { stopVoice(); st.t = T0[k] + c.dur; }
+    } else {
+      st.t += dt * st.rate;
+      if (c.sfx && !st.fired[k] && u >= (c.sfxAt || 0) * c.dur) { st.fired[k] = 1; var s = A[c.sfx]; s.currentTime = 0; s.muted = st.muted; safePlay(s); }
+      if (k === cues.length - 1 && KN === k) A.bed.volume = (D.bedVolume || 0.45) * (1 - 0.45 * sm(u / c.dur)); // the bed starts to leave while the name settles
+      if (c.kind === "choice") ring.setAttribute("stroke-dashoffset", (100 * Math.min(1, u / c.dur)).toFixed(2)); // the timer runs only while playing
+    }
+    if (st.t >= TOTAL) { window.scrollTo(0, Math.round(yAt(cues[cues.length - 1].to))); finish("shape"); return; }
+    if (cueAt(st.t) !== st.k) enter(cueAt(st.t)); // the next cue starts on the frame the clock reaches it, with its scroll
+    window.scrollTo(0, Math.round(yOf(st.t))); lastY = window.scrollY;
+  }
+  // the camera drifts toward a hold's move while playing and eases back to exactly zero otherwise. Its offset is held to what
+  // can return to zero within 0.45 s at this frame rate, moving at most 0.02 a frame, so a pause never leaves the view shifted
+  function camera(dt) {
+    var tg = [0, 0, 0], c = st.playing && !reduce ? cues[st.k] : null;
+    if (c && c.cam && c.kind !== "line") tg = c.cam;
+    var amp = Math.min(0.6, 0.02 * 0.45 / slow), n = Math.hypot(tg[0], tg[1], tg[2]); if (n > amp) tg = tg.map(function (x) { return x * amp / n; });
+    var dx = tg[0] - C.x, dy = tg[1] - C.y, dz = tg[2] - C.z, f = st.playing && !reduce ? 1 - Math.exp(-dt / 2.4) : 1;
+    dx *= f; dy *= f; dz *= f; var m = Math.hypot(dx, dy, dz); if (m > 0.0195) { dx *= 0.0195 / m; dy *= 0.0195 / m; dz *= 0.0195 / m; } // under the 0.02 a frame the design allows
+    C.x += dx; C.y += dy; C.z += dz;
+    // a little spin in the quick moves: the field turns with the film's scroll speed and settles when it slows
+    var y = window.scrollY, v = spinY === null || dt <= 0 ? 0 : (y - spinY) / dt / innerHeight; spinY = y;
+    var rt = st.playing && !reduce ? Math.max(-0.14, Math.min(0.14, 0.09 * v)) : 0;
+    C.r += (rt - C.r) * (1 - Math.exp(-dt / (st.playing ? 0.6 : 0.15))); if (!st.playing && Math.abs(C.r) < 1e-4) C.r = 0;
+    if (!st.playing && Math.hypot(C.x, C.y, C.z) < 1e-4) { C.x = 0; C.y = 0; C.z = 0; }
+  }
+  function ui() {
+    var top = SEC.top.getBoundingClientRect(), atTop = -top.top / Math.max(1, top.height - window.innerHeight) <= 0.03;
+    playBtn.hidden = !(D && !st.on && atTop);
+    // paused far past the opening, the bar steps aside; it comes back when the visitor returns
+    bar.hidden = !st.on || (!st.playing && SEC.oi.getBoundingClientRect().bottom < 0);
+    var want = st.playing ? "pause" : "play";
+    if (bPlay.getAttribute("data-icon") !== want) { bPlay.innerHTML = ICON[want]; bPlay.setAttribute("data-icon", want); bPlay.setAttribute("aria-label", st.playing ? "Pause" : "Play"); }
+    var mi = st.muted ? "muted" : "sound";
+    if (bMute.getAttribute("data-icon") !== mi) { bMute.innerHTML = ICON[mi]; bMute.setAttribute("data-icon", mi); bMute.setAttribute("aria-pressed", st.muted ? "true" : "false"); }
+    if (!st.on) choice.hidden = true;
+    line.hidden = !st.on;
+    if (st.on && D) {
+      var t = shownT(), txt = mmss(t) + " / " + mmss(TOTAL);
+      fill.style.width = (100 * t / TOTAL).toFixed(2) + "%";
+      if (clock.textContent !== txt) { clock.textContent = txt; track.setAttribute("aria-valuenow", Math.round(t)); track.setAttribute("aria-valuetext", mmss(t)); }
+      bar.classList.toggle("paused", !st.playing); stateEl.hidden = st.playing;
+      bar.classList.toggle("quiet", st.playing && !dragging && performance.now() - seen > 2500);
+      line.firstChild.style.width = fill.style.width;
+    }
+    root.classList.toggle("story-film", st.playing); root.classList.toggle("story-named", st.playing && st.k >= KN && KN > 0);
+  }
+  function tick(now) {
+    gap = now - last; var dt = Math.min(0.25, Math.max(0, gap) / 1000); last = now; slow = Math.max(dt, slow * 0.995, 1 / 120);
+    if (st.playing) step(dt);
+    if (st.playing) reveal(vtNow(), true);
+    voiceLevel(dt);
+    camera(dt); ui();
+    requestAnimationFrame(tick);
+  }
+
+  playBtn.addEventListener("click", start);
+  bPlay.addEventListener("click", function () { if (st.playing) pause(); else resume(); });
+  bMute.addEventListener("click", function () { st.muted = !st.muted; all(function (a) { a.muted = st.muted; }); ui(); });
+  document.getElementById("scShape").addEventListener("click", function () { pick("shape"); });
+  document.getElementById("scRead").addEventListener("click", function () { pick("read"); });
+  document.getElementById("seKeep").addEventListener("click", function () { endCard.hidden = true; });
+  document.getElementById("seInvite").addEventListener("click", function () { endCard.hidden = true; });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !endCard.hidden) endCard.hidden = true; });
+
+  // for the checks (tools/chk-story.js)
+  window.__wuStory = {
+    state: function () { var c = cues[st.k] || {}; return { ready: !!D, on: st.on, playing: st.playing, t: st.t, k: st.k, kind: c.kind || null, picked: st.picked, film: KC >= 0 ? T0[KC] : null, total: TOTAL, cam: [C.x, C.y, C.z], lastY: lastY, voice: A ? { t: A.voice.currentTime, from: vFrom, paused: A.voice.paused } : null, bed: A ? !A.bed.paused : false }; },
+    cues: function () { return cues.map(function (c, i) { return { kind: c.kind, name: c.name, text: c.text, sel: c.sel, letters: c.t ? c.t.length : 0, start: c.start, end: c.end, t0: T0[i], dur: c.dur, from: c.from, to: c.to }; }); },
+    // letters shown so far (per line cue, -1 when not split) and how far each reveal was from its voice time, in seconds
+    shown: function () { return cues.map(function (c) { return c.ls ? c.n : -1; }); },
+    voice: function () { return lv; },
+    sync: function (reset) { var r = { n: M.n, late: M.late, early: M.early, at: M.at, stalled: M.stalled }; if (reset) M = { n: 0, late: 0, early: 0, stalled: 0 }; return r; },
+    seek: function (t) { st.t = t; st.k = -1; lastY = null; },
+    timeAt: function (y) { return timeAt(y); }, yOf: function (t) { return yOf(t); },
+    rate: function (r) { st.rate = r; if (A) A.voice.playbackRate = r; }
+  };
+})();
+</script><!-- /story -->
 <script data-build="capacity">
 // The capacity expression: contributions gather into a region of shared compute. Stamped by tools/build.mjs
 // into pages that carry <script data-build="capacity">. weCapacity(canvas, progress) draws the state for
