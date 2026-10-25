@@ -320,6 +320,7 @@ section.scene { display: block; min-height: 0; padding: 0; }
 .beat { grid-area: 1 / 1; opacity: 0; transform: translateY(13px); transition: opacity 600ms ease, transform 600ms ease; pointer-events: none; }
 .beat.on { opacity: 1; transform: none; pointer-events: auto; }
 .beat p { margin: 0; color: var(--text); }
+#top .arrive::before { content: "Chapter 1 · Where intelligence comes from"; display: block; margin-bottom: 21px; font-family: var(--font-mono); font-size: 12px; line-height: 1.4; letter-spacing: 0.24em; text-transform: uppercase; font-style: normal; color: var(--text-faint); }
 .arrive { font-size: clamp(48px, 7.4vw, 112px); line-height: 0.95; }
 .beat-big { font-family: var(--font-display); font-weight: 300; font-size: clamp(40px, 6vw, 84px); line-height: 0.98; letter-spacing: -0.025em; }
 .beat-big i, .beat-mid i { font-style: italic; }
@@ -528,6 +529,154 @@ html.story-film.story-named .oi-head .lead { opacity: 1; }
 .seg button[aria-pressed="true"] { background: var(--ivory); color: var(--ground); }
 @media (max-width: 820px) { .item.embed { grid-template-columns: minmax(0, 1fr); } .embed-prev { border-right: 0; border-bottom: 1px solid var(--line); min-height: 200px; } }
 
+/* ---- 7 · Meet Unfold: a claymation. Seven stills crossfade with the scroll; the pane shows what Unfold is doing ---- */
+.scene-u { height: 680vh; }
+.u-pin { align-items: center; gap: 13px; }
+.u-head { width: min(1180px, 92vw, 74vh * 16 / 9); display: flex; align-items: baseline; gap: 21px; flex-wrap: wrap; }
+.u-title { margin: 0; font-family: var(--font-display); font-weight: 300; font-size: clamp(30px, 3.6vw, 48px); line-height: 1; letter-spacing: -0.02em; }
+.u-title i { font-style: italic; }
+.u-screen { position: relative; width: min(1180px, 92vw, 74vh * 16 / 9); aspect-ratio: 1672 / 941; border-radius: 18px; overflow: hidden; background: #0b0d12; box-shadow: 0 30px 80px -30px rgba(20, 12, 4, 0.55); color: #ebe6da; }
+.u-screen p { color: #ebe6da; }
+.u-frames img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; will-change: opacity, transform; }
+.u-frames img:first-child { opacity: 1; }
+.u-lines { position: absolute; left: 4%; bottom: 6%; width: 56%; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.u-say { margin: 0; max-width: 100%; align-self: flex-start; font-size: clamp(14px, 1.45vw, 19px); line-height: 1.4; padding: 9px 14px 10px; border-radius: 14px; background: rgba(11, 13, 18, 0.72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); opacity: 0; transform: translateY(8px); transition: opacity 450ms ease, transform 450ms ease; }
+.u-say.on { opacity: 1; transform: none; }
+.u-say.uf { border: 1px solid rgba(219, 173, 87, 0.45); }
+.u-who { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #8a8f9e; margin-bottom: 2px; }
+.u-say.uf .u-who { color: #dbad57; }
+.u-pane { position: absolute; top: 4%; right: 2.4%; bottom: 4%; width: 31%; border-radius: 14px; background: rgba(11, 13, 18, 0.62); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(235, 230, 218, 0.1); padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; font-size: 14px; line-height: 1.45; }
+.u-pane-h { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a8f9e; }
+.u-guard { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 99px; border: 1px solid rgba(235, 230, 218, 0.12); transition: color 400ms, border-color 400ms, background 400ms; }
+.u-guard svg { width: 12px; height: 12px; }
+.u-guard.lit { color: #dbad57; border-color: rgba(219, 173, 87, 0.55); background: rgba(219, 173, 87, 0.1); }
+.u-steps { position: relative; flex: 1; }
+.u-step { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 12px; opacity: 0; transform: translateY(8px); transition: opacity 450ms ease, transform 450ms ease; }
+.u-step.on { opacity: 1; transform: none; }
+.u-step-h { font-family: var(--font-display); font-size: clamp(18px, 1.7vw, 24px); font-weight: 300; }
+.u-log, .u-flow, .u-map { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.u-log li, .u-flow li { opacity: 0; transition: opacity 400ms ease; }
+.u-log li.on, .u-flow li.on { opacity: 1; }
+.u-log li { display: flex; gap: 9px; align-items: baseline; color: #c9c4b8; }
+.u-chip { flex: none; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 6px; border-radius: 5px; color: #33d6a8; border: 1px solid rgba(51, 214, 168, 0.4); }
+.u-chip.sent { color: #dbad57; border-color: rgba(219, 173, 87, 0.5); }
+.u-map { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+.u-map li { font-family: var(--font-mono); font-size: 11px; padding: 4px 9px; border-radius: 99px; border: 1px dashed rgba(235, 230, 218, 0.22); color: #8a8f9e; }
+.u-map li.on { border: 1px solid rgba(219, 173, 87, 0.6); color: #ebe6da; background: rgba(219, 173, 87, 0.12); }
+.u-card { border: 1px solid rgba(235, 230, 218, 0.14); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.u-card p { margin: 0; }
+.u-btns { display: flex; gap: 8px; }
+.u-btns span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; padding: 7px 12px; border-radius: 99px; border: 1px solid rgba(235, 230, 218, 0.2); }
+.u-btns .yes { background: #ebe6da; color: #11141c; border-color: #ebe6da; }
+.u-clean { display: flex; flex-direction: column; gap: 10px; }
+.u-clean p { margin: 0; }
+.u-clean .u-chip { display: table; margin-bottom: 5px; }
+.u-screen .u-before { color: #8a8f9e; }
+.u-before b { font-weight: 400; text-decoration: line-through; text-decoration-color: rgba(219, 173, 87, 0.7); }
+.u-after b { font-weight: 400; color: #dbad57; font-family: var(--font-mono); font-size: 0.9em; }
+.u-flow li { padding-left: 16px; position: relative; color: #c9c4b8; }
+.u-flow li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 7px; height: 7px; border-radius: 50%; background: #dbad57; }
+.u-flow li + li::after { content: ""; position: absolute; left: 3px; top: -0.75em; height: 0.9em; border-left: 1px solid rgba(219, 173, 87, 0.45); }
+.u-screen .u-fine { margin: 0; font-size: 12px; line-height: 1.5; color: #8a8f9e; }
+.u-screen .u-state { margin: auto 0 0; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a8f9e; }
+.u-state::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; border: 1px solid currentColor; }
+.u-screen .u-state.live { color: #33d6a8; } .u-state.live::before { background: currentColor; }
+.u-screen .u-state.designed { color: #9a85ff; }
+.u-screen .u-state.aim { color: #dbad57; }
+.u-end { width: min(1180px, 92vw, 74vh * 16 / 9); margin: 0; display: flex; justify-content: space-between; gap: 21px; flex-wrap: wrap; font-size: clamp(16px, 1.5vw, 20px); color: var(--text-muted); opacity: 0; transition: opacity 600ms ease; }
+.u-end.on { opacity: 1; }
+.u-end i { font-style: italic; color: var(--text); }
+@media (max-width: 820px) {
+  .u-pin { justify-content: flex-start; padding-top: 72px; }
+  .u-head, .u-end, .u-screen { width: calc(100vw - 32px); }
+  .u-screen { aspect-ratio: auto; overflow: visible; background: none; box-shadow: none; display: flex; flex-direction: column; gap: 10px; }
+  .u-frames { position: relative; aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: #0b0d12; }
+  .u-frames img { object-position: 28% 50%; }
+  .u-lines { left: 10px; right: 10px; width: auto; bottom: auto; top: calc((100vw - 32px) * 0.75 - 10px); transform: translateY(-100%); }
+  .u-say { font-size: 14px; padding: 7px 11px 8px; }
+  .u-pane { position: relative; inset: auto; width: auto; height: 41vh; min-height: 300px; background: #0e1017; padding: 13px 15px; gap: 10px; font-size: 13px; }
+  .u-pin { padding-top: 64px; gap: 10px; }
+  .u-step { gap: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .u-say, .u-step, .u-guard, .u-end, .u-frames img { transition: none; transform: none !important; } }
+/* ---- 7b · Chapter 2, giving back: a dark cinema between the daylight sections; shots crossfade and drift with the scroll ---- */
+.scene-g { height: 920vh; background: #0b0d12; color: #ebe6da; box-shadow: 0 0 0 100vmax #0b0d12; clip-path: inset(0 -100vmax); }
+.g-pin { align-items: center; gap: 18px; width: 100vw; margin-left: calc(50% - 50vw); }
+.g-head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: opacity 600ms ease; }
+.g-head .eyebrow { color: #8a8f9e; }
+.g-title { margin: 0; font-family: var(--font-display); font-weight: 300; font-size: clamp(28px, 3.2vw, 44px); line-height: 1; letter-spacing: -0.02em; color: #ebe6da; }
+.g-title i { font-style: italic; }
+.g-screen { position: relative; width: 100vw; aspect-ratio: 2.39 / 1; max-height: 62vh; overflow: hidden; }
+.g-intro { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; pointer-events: none; }
+.g-say { grid-area: 1 / 1; width: min(980px, 88vw); text-align: center; opacity: 0; transform: translateY(10px); transition: opacity 700ms ease, transform 700ms ease; }
+.g-say.on { opacity: 1; transform: none; pointer-events: auto; }
+.g-big { margin: 0; font-family: var(--font-display); font-weight: 300; font-size: clamp(30px, 4.4vw, 64px); line-height: 1.08; letter-spacing: -0.02em; color: #ebe6da; }
+.g-big i { font-style: italic; color: #dbad57; }
+.g-src { margin: 18px 0 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8a8f9e; }
+.g-src a { color: #c9c4b8; }
+.g-screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; will-change: opacity, transform; }
+
+.g-lines { position: relative; width: min(900px, 92vw); height: 92px; }
+.g-line { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; opacity: 0; transform: translateY(8px); transition: opacity 700ms ease, transform 700ms ease; }
+.g-line.on { opacity: 1; transform: none; }
+.g-line p { margin: 0; font-family: var(--font-display); font-weight: 300; font-size: clamp(20px, 2.3vw, 32px); line-height: 1.25; color: #ebe6da; }
+.g-state { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #8a8f9e; }
+.g-state::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; border: 1px solid currentColor; }
+.g-state.live { color: #33d6a8; } .g-state.live::before { background: currentColor; }
+.g-state.designed { color: #9a85ff; }
+.g-state.aim { color: #dbad57; }
+@media (max-width: 820px) {
+  .g-screen { aspect-ratio: 4 / 3; max-height: 50vh; }
+  .g-lines { height: 110px; }
+}
+@media (prefers-reduced-motion: reduce) { .g-line, .g-say, .g-screen img { transition: none; transform: none !important; } }
+/* ---- 6b · The show: a streaming screen from 2030, imagined. Chapter 1 watched; the next ones up ---- */
+.series { position: relative; padding: 110px 0 120px; background: #0b0d12; color: #ebe6da; box-shadow: 0 0 0 100vmax #0b0d12; clip-path: inset(0 -100vmax); }
+.series-in { width: min(1180px, 92vw); margin: 0 auto; display: flex; flex-direction: column; gap: 34px; }
+.series .eyebrow { color: #8a8f9e; }
+.s-hero { position: relative; border-radius: 18px; overflow: hidden; min-height: min(520px, 62vh); display: flex; align-items: flex-end; }
+.s-hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.s-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11, 13, 18, 0.92) 0%, rgba(11, 13, 18, 0.55) 45%, rgba(11, 13, 18, 0) 75%), linear-gradient(0deg, rgba(11, 13, 18, 0.85), rgba(11, 13, 18, 0) 45%); }
+.s-copy { position: relative; z-index: 1; padding: clamp(21px, 4vw, 48px); max-width: 560px; display: flex; flex-direction: column; gap: 13px; }
+.s-brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #dbad57; }
+.s-title { margin: 0; font-family: var(--font-display); font-weight: 300; font-size: clamp(40px, 5.6vw, 76px); line-height: 0.98; letter-spacing: -0.025em; color: #ebe6da; }
+.s-title i { font-style: italic; }
+.s-line { margin: 0; font-size: 17px; line-height: 1.5; color: #c9c4b8; }
+.s-facts { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #8a8f9e; }
+.s-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.s-play { display: inline-flex; align-items: center; gap: 9px; min-height: 46px; padding: 10px 22px; border-radius: 99px; border: 0; background: #ebe6da; color: #11141c; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; }
+.s-play svg { width: 12px; height: 12px; }
+.s-ghost { display: inline-flex; align-items: center; min-height: 46px; padding: 10px 20px; border-radius: 99px; border: 1px solid rgba(235, 230, 218, 0.3); color: #ebe6da !important; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; }
+.s-rail-h { display: flex; justify-content: space-between; align-items: baseline; gap: 13px; flex-wrap: wrap; }
+.s-rail-h h3 { margin: 0; font-family: var(--font-display); font-weight: 300; font-size: 24px; color: #ebe6da; }
+.s-rail { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.ep { display: flex; flex-direction: column; gap: 9px; color: #ebe6da; text-decoration: none; border-radius: 12px; outline-offset: 4px; }
+.ep-thumb { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: #151821; border: 1px solid rgba(235, 230, 218, 0.08); transition: transform 300ms ease, border-color 300ms ease; }
+a.ep:hover .ep-thumb, a.ep:focus-visible .ep-thumb { transform: translateY(-3px); border-color: rgba(219, 173, 87, 0.6); }
+.ep-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ep-thumb > span { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a8f9e; background: repeating-linear-gradient(135deg, #12151d 0 10px, #151821 10px 20px); }
+.ep-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(235, 230, 218, 0.18); }
+.ep-bar b { display: block; height: 100%; width: 0; background: #dbad57; }
+.ep.is-watched .ep-bar b { width: 100%; }
+.ep.is-soon .ep-bar, .ep.is-anim .ep-bar, .ep.is-next .ep-bar { display: none; }
+.ep-meta { display: flex; justify-content: space-between; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a8f9e; }
+.ep.is-watched .ep-st { color: #33d6a8; } .ep.is-next .ep-st { color: #dbad57; } .ep.is-soon .ep-st { color: #9a85ff; }
+.ep-t { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 19px; line-height: 1.2; color: #ebe6da; }
+.ep-d { margin: 0; font-size: 14px; line-height: 1.5; color: #a7abb9; }
+.s-fine { margin: 0; font-size: 13px; line-height: 1.55; color: #8a8f9e; max-width: 720px; }
+@media (max-width: 820px) { .s-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); } .s-hero { min-height: 70vh; } .s-hero::after { background: linear-gradient(0deg, rgba(11, 13, 18, 0.96) 0%, rgba(11, 13, 18, 0.78) 55%, rgba(11, 13, 18, 0.1) 100%); } .series { padding: 80px 0 90px; } }
+/* while Chapters 2 and 3 play by themselves */
+.ch-player { position: fixed; left: 50%; bottom: calc(21px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 31; display: flex; align-items: center; gap: 13px; padding: 9px 9px 9px 18px; border-radius: 99px; background: rgba(11, 13, 18, 0.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(235, 230, 218, 0.14); color: #ebe6da; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+.ch-player[hidden] { display: none; }
+.ch-player button { min-height: 36px; padding: 6px 14px; border-radius: 99px; border: 1px solid rgba(235, 230, 218, 0.3); background: none; color: inherit; font: inherit; cursor: pointer; }
+/* the film's end card: up next */
+.se-next { display: flex; align-items: center; gap: 13px; text-align: left; }
+.se-next img { width: 128px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; display: block; }
+.se-up { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); }
+.story-end .se-next p { font-size: 19px; }
+.se-ring { width: 16px; height: 16px; transform: rotate(-90deg); }
+.se-ring circle { fill: none; stroke: currentColor; stroke-width: 2; }
+.se-ring .bg { opacity: 0.25; }
 .card-h { display: flex; align-items: center; gap: 10px; } .card-h svg { flex: none; }
 </style>
 
@@ -594,11 +743,12 @@ html.story-film.story-named .oi-head .lead { opacity: 1; }
     <button type="button" class="sc-btn primary" id="scShape"><svg class="sc-time" aria-hidden="true"><rect class="sc-track" pathLength="100"/><rect id="scRing" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0"/></svg>Shape it</button>
     <button type="button" class="sc-btn" id="scRead">Read the charter first</button>
   </div>
-  <div class="story-end" id="storyEnd" role="group" aria-label="The opening ends here" hidden>
-    <p>That was the opening.</p>
-    <div class="row"><button type="button" class="pill ghost" id="seKeep">Keep scrolling</button><a class="pill" href="#invite" id="seInvite">Go to the invitation</a></div>
+  <div class="story-end" id="storyEnd" role="group" aria-label="Chapter 1 ends here; up next, Chapter 2" hidden>
+    <div class="se-next"><img src="assets/unfold/f1.jpg" alt="" width="128" height="72"><div><span class="se-up">Chapter 1 watched · Up next</span><p>Chapter 2 · Unfold</p><span class="se-up">Animatic</span></div></div>
+    <div class="row"><button type="button" class="pill" id="sePlay" data-play><svg class="se-ring" viewBox="0 0 16 16" aria-hidden="true"><circle class="bg" cx="8" cy="8" r="6"/><circle id="seRing" cx="8" cy="8" r="6" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg>Play Chapter 2</button><button type="button" class="pill ghost" id="seKeep">Keep scrolling</button><a class="pill ghost" href="#invite" id="seInvite">Go to the invitation</a></div>
   </div>
   <!-- story:end -->
+  <div class="ch-player" id="chPlayer" role="group" aria-label="Chapter player" hidden><span id="chNow">Playing Chapter 2</span><button type="button" id="chStop">Stop</button></div>
   <!-- 3–4 · the concentration, and the first reconnection -->
   <section id="today" class="scene scene-b">
     <div class="scene-pin">
@@ -651,6 +801,87 @@ html.story-film.story-named .oi-head .lead { opacity: 1; }
     </div>
   </section>
 
+
+  <!-- 6b · The show: a streaming screen from 2030, imagined (our own, no real service). Chapter 1 watched, the next ones up -->
+  <section id="series" class="series" aria-labelledby="seriesTitle">
+    <div class="series-in">
+      <div class="eyebrow">A screen from 2030, imagined</div>
+      <div class="s-hero">
+        <img src="assets/unfold/c8.jpg" alt="" loading="lazy" decoding="async">
+        <div class="s-copy">
+          <span class="s-brand">we unfold · a series in chapters</span>
+          <h2 class="s-title" id="seriesTitle">Open <i>Intelligence.</i></h2>
+          <p class="s-line">Where intelligence comes from, who it belongs to, and how everyone gets to shape it.</p>
+          <span class="s-facts">Chapter 1 watched · Chapters 2 and 3 as animatics · Chapter 4 being written</span>
+          <div class="s-row"><button type="button" class="s-play" data-play><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9.5-5.5z" fill="currentColor"/></svg>Play Chapter 2</button><a class="s-ghost" href="#unfold">Scroll it yourself</a></div>
+        </div>
+      </div>
+      <div class="s-rail-h"><h3>Chapters</h3><span class="eyebrow">Animatic: still frames now, the full chapter is being made</span></div>
+      <div class="s-rail">
+        <a class="ep is-watched" href="#top"><div class="ep-thumb"><img src="assets/unfold/ep1.jpg" alt="" loading="lazy" decoding="async"><i class="ep-bar"><b></b></i></div><div class="ep-meta"><span class="ep-n">Chapter 1</span><span class="ep-st">Watched</span></div><h3 class="ep-t">Where intelligence comes from</h3><p class="ep-d">The Big Bang, everything that taught us, and the choice of what comes next.</p></a>
+        <a class="ep is-next" href="#unfold" data-play><div class="ep-thumb"><img src="assets/unfold/f1.jpg" alt="" loading="lazy" decoding="async"><i class="ep-bar"><b></b></i></div><div class="ep-meta"><span class="ep-n">Chapter 2</span><span class="ep-st">Up next · Animatic</span></div><h3 class="ep-t">Unfold</h3><p class="ep-d">Ju meets a small intelligence that lives at home, and is honest about what it can't do yet.</p></a>
+        <a class="ep is-anim" href="#giveback"><div class="ep-thumb"><img src="assets/unfold/c1.jpg" alt="" loading="lazy" decoding="async"><i class="ep-bar"><b></b></i></div><div class="ep-meta"><span class="ep-n">Chapter 3</span><span class="ep-st">Animatic</span></div><h3 class="ep-t">Giving back to everyone</h3><p class="ep-d">What people choose to share becomes open data, open models and open tasks, and comes back to everyone.</p></a>
+        <div class="ep is-soon"><div class="ep-thumb"><span>Being written</span><i class="ep-bar"><b></b></i></div><div class="ep-meta"><span class="ep-n">Chapter 4</span><span class="ep-st">Being written</span></div><h3 class="ep-t">The big jobs</h3><p class="ep-d">Unfold hands a website to a frontier model, and your private details never leave the Mac.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Chapter 2, Meet Unfold: a claymation. Small talk stays on the Mac; Unfold says what it can't do yet; sharing is a choice, cleaned first -->
+  <section id="unfold" class="scene scene-u" aria-labelledby="unfoldTitle">
+    <div class="scene-pin u-pin">
+      <div class="u-head"><div class="eyebrow">Chapter 2 · Unfold</div><h2 class="u-title" id="unfoldTitle">Meet <i>Unfold.</i></h2></div>
+      <div class="u-screen">
+        <div class="u-frames" aria-hidden="true"><img src="assets/unfold/f1.jpg" alt="" decoding="async" width="1672" height="941"><img src="assets/unfold/f2.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/f3.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/f4.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/f5.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/f6.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/f7.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"></div>
+        <div class="u-talk">
+          <div class="u-lines" data-b="0"><p class="u-say ju" data-t="0.06"><span class="u-who">Ju</span>hi?</p><p class="u-say uf" data-t="0.30"><span class="u-who">Unfold</span>Hi. I'm Unfold. I run right here, on your Mac.</p></div>
+          <div class="u-lines" data-b="1"><p class="u-say ju" data-t="0.06"><span class="u-who">Ju</span>Can I see what you're thinking?</p><p class="u-say uf" data-t="0.30"><span class="u-who">Unfold</span>Always. It's on the right.</p></div>
+          <div class="u-lines" data-b="2"><p class="u-say uf" data-t="0.06"><span class="u-who">Unfold</span>So, the way I decide is—</p><p class="u-say ju" data-t="0.30"><span class="u-who">Ju</span>Wait!</p><p class="u-say uf" data-t="0.54"><span class="u-who">Unfold</span>Go on. I'm listening.</p></div>
+          <div class="u-lines" data-b="3"><p class="u-say ju" data-t="0.06"><span class="u-who">Ju</span>Can you plan my whole trip to Japan?</p><p class="u-say uf" data-t="0.30"><span class="u-who">Unfold</span>Not yet. On my own I'm still small. Here's what I can do, and what I can't yet.</p></div>
+          <div class="u-lines" data-b="4"><p class="u-say ju" data-t="0.06"><span class="u-who">Ju</span>So how do you get smarter?</p><p class="u-say uf" data-t="0.30"><span class="u-who">Unfold</span>From people like you, if you choose to share.</p></div>
+          <div class="u-lines" data-b="5"><p class="u-say ju" data-t="0.06"><span class="u-who">Ju</span>Okay. Share it.</p><p class="u-say uf" data-t="0.30"><span class="u-who">Unfold</span>Data Guard cleans it first.</p></div>
+          <div class="u-lines" data-b="6"><p class="u-say uf" data-t="0.06"><span class="u-who">Unfold</span>Thank you, Ju.</p></div>
+        </div>
+        <aside class="u-pane" aria-label="What Unfold is doing">
+          <div class="u-pane-h"><span>What it's doing</span><span class="u-guard"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1 L10.5 2.6 V6 C10.5 8.4 8.6 10.2 6 11 C3.4 10.2 1.5 8.4 1.5 6 V2.6 Z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>Data Guard · <span class="u-guard-t">Nothing sent</span></span></div>
+          <div class="u-steps">
+            <div class="u-step" data-b="0" data-guard="Nothing sent" data-st="live"><div class="u-step-h">Meet</div><ol class="u-log"><li><span class="u-chip ">Local</span><span>heard “hi?”</span></li><li><span class="u-chip ">Local</span><span>answered, on this Mac</span></li><li><span class="u-chip ">Local</span><span>no account, no key</span></li></ol><p class="u-state live">Live today</p></div>
+            <div class="u-step" data-b="1" data-guard="Nothing sent" data-st="live"><div class="u-step-h">Mind stream</div><ol class="u-log"><li><span class="u-chip ">Local</span><span>heard: “can I see what you're thinking?”</span></li><li><span class="u-chip ">Local</span><span>decided: just talk, no tools needed</span></li><li><span class="u-chip ">Local</span><span>answered</span></li></ol><p class="u-state live">Live today</p></div>
+            <div class="u-step" data-b="2" data-guard="Nothing sent" data-st="live"><div class="u-step-h">Mind stream</div><ol class="u-log"><li><span class="u-chip ">Local</span><span>speaking…</span></li><li><span class="u-chip ">Local</span><span>heard you cut in</span></li><li><span class="u-chip ">Local</span><span>stopped at once</span></li><li><span class="u-chip ">Local</span><span>listening</span></li></ol><p class="u-state live">Live today</p></div>
+            <div class="u-step" data-b="3" data-guard="Nothing sent" data-st="live"><div class="u-step-h">What it can do</div><ul class="u-map"><li class="on">talk</li><li class="on">take turns</li><li class="on">stop when you cut in</li><li class="on">show its thinking</li><li>plan a trip</li><li>research</li><li>remember you</li><li>write code</li></ul><p class="u-fine">An illustration, not a score. Bigger jobs need frontier models, with your yes. That comes next.</p><p class="u-state live">Live today: saying what it can't do yet</p></div>
+            <div class="u-step" data-b="4" data-guard="Nothing sent" data-st="designed"><div class="u-step-h">Share</div><div class="u-card"><p>Share this chat to help train open models?</p><div class="u-btns"><span>Not now</span><span class="yes">Share, cleaned</span></div><p class="u-fine">Nothing leaves unless you say yes.</p></div><p class="u-state designed">Designed, not built yet</p></div>
+            <div class="u-step" data-b="5" data-guard="Cleaned text sent" data-st="designed"><div class="u-step-h">Data Guard</div><div class="u-clean"><p class="u-before"><span class="u-chip">Local</span>I'm <b>Ju</b>, my number is <b>(555) 010-0134</b>, I live at <b>12 Clay Street</b>.</p><p class="u-after"><span class="u-chip sent">Sent, cleaned</span>I'm <b>[name]</b>, my number is <b>[phone]</b>, I live at <b>[address]</b>.</p></div><p class="u-fine">Personal values are removed on the Mac. Only the cleaned text leaves.</p><p class="u-state designed">Designed, not built yet · Example text</p></div>
+            <div class="u-step" data-b="6" data-guard="Cleaned text sent" data-st="aim"><div class="u-step-h">Where it goes</div><ol class="u-flow"><li>your cleaned chat</li><li>open data</li><li>open tasks</li><li>better open models</li><li>back to everyone's Mac</li></ol><p class="u-state aim">Our aim</p></div>
+          </div>
+        </aside>
+      </div>
+      <p class="u-end"><span><i>Local-first intelligence.</i> Outbound data under your control.</span><span>Towards general collective intelligence.</span></p>
+    </div>
+  </section>
+
+  <!-- 7b · Chapter 3: giving back to everyone. What people choose to share becomes open data, open models and open tasks, and comes back -->
+  <section id="giveback" class="scene scene-g" aria-labelledby="givebackTitle">
+    <div class="scene-pin g-pin">
+      <div class="g-head"><div class="eyebrow">Chapter 3</div><h2 class="g-title" id="givebackTitle">Giving back <i>to everyone.</i></h2></div>
+      <div class="g-screen">
+        <div class="g-intro">
+          <div class="g-say" data-in="0.01"><p class="g-big">About <i>1 in 5</i> working-age people in the world use AI today.</p><p class="g-src">18.8% in June 2026, a modeled estimate · <a href="https://blogs.microsoft.com/on-the-issues/2026/09/21/the-continued-state-of-global-ai-diffusion-in-2026/" target="_blank" rel="noopener">Microsoft, Global AI Diffusion Report</a></p></div>
+          <div class="g-say" data-in="0.075"><p class="g-big">Most of the world hasn't started. <i>We're early.</i></p><p class="g-src">16.2% in the Global South, 28.8% in the Global North (same report)</p></div>
+          <div class="g-say" data-in="0.14"><p class="g-big">So what we build now should belong <i>to humanity.</i></p></div>
+        </div>
+        <div class="g-shots" aria-hidden="true"><img src="assets/unfold/c1.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/c2.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/c3.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/c4.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/c5.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/c6.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/c7.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"><img src="assets/unfold/c8.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"></div>
+      </div>
+      <div class="g-lines">
+          <div class="g-line" data-b="0"><p>Everyone has their own Unfold. It lives at home.</p><span class="g-state live">Live today: it runs on your Mac</span></div>
+          <div class="g-line" data-b="1"><p>Some people choose to share. Data Guard cleans it first.</p><span class="g-state designed">Designed, not built yet</span></div>
+          <div class="g-line" data-b="2"><p>Every decision is sorted into an open dataset anyone can read.</p><span class="g-state aim">Our aim</span></div>
+          <div class="g-line" data-b="3"><p>From it, we train and tune open models.</p><span class="g-state aim">Our aim</span></div>
+          <div class="g-line" data-b="4"><p>Every model faces the same public tests, in the open.</p><span class="g-state designed">Designed · Not measured yet</span></div>
+          <div class="g-line" data-b="5"><p>What gets better comes back to everyone.</p><span class="g-state aim">Our aim</span></div>
+          <div class="g-line" data-b="6"><p>Anyone can build parts and offer tasks. A collaborative economy.</p><span class="g-state aim">Our aim</span></div>
+          <div class="g-line" data-b="7"><p>Towards general collective intelligence.</p><span class="g-state aim">Our aim</span></div>
+      </div>
+    </div>
+  </section>
 
   <!-- 7b · Initiatives: where the principles go to work; each initiative has its own page -->
   <section id="initiatives" class="plain">
@@ -1696,6 +1927,90 @@ function makeGeometry() {
     web: function () { return Array.from(SP); }, mark: function () { return Array.from(TM); }, cq: function () { return Array.from(CQ.pos); }, N: N
   };
   requestAnimationFrame(frame);
+
+  // ---- 7 · Meet Unfold: seven stills, each held, then crossfaded into the next; the lines and the pane follow the same scroll ----
+  (function unfoldScene() {
+    var sec = document.getElementById("unfold"); if (!sec) return;
+    var imgs = Array.prototype.slice.call(sec.querySelectorAll(".u-frames img")), lines = Array.prototype.slice.call(sec.querySelectorAll(".u-lines")),
+      steps = Array.prototype.slice.call(sec.querySelectorAll(".u-step")), guard = sec.querySelector(".u-guard"), guardT = sec.querySelector(".u-guard-t"), end = sec.querySelector(".u-end"), n = imgs.length, last = -1;
+    function update() {
+      var P = pinP(sec), x = clamp(P * 1.04, 0, 1) * n, k = Math.min(n - 1, Math.floor(x)), t = x - k;
+      if (Math.abs(P - last) < 1e-4) return; last = P;
+      imgs.forEach(function (im, i) {
+        im.style.opacity = i === 0 ? 1 : clamp((x - i + 0.12) / 0.24, 0, 1);
+        if (!reduce) im.style.transform = "scale(" + (1.02 + 0.025 * clamp(x - i + 0.12, 0, 1.3)).toFixed(4) + ")";
+      });
+      lines.forEach(function (g, i) { Array.prototype.forEach.call(g.children, function (p) { p.classList.toggle("on", i === k && t >= +p.getAttribute("data-t")); }); });
+      steps.forEach(function (st, i) { st.classList.toggle("on", i === k); Array.prototype.forEach.call(st.querySelectorAll(".u-log li, .u-flow li"), function (li, j) { li.classList.toggle("on", i > k || (i === k && t >= 0.08 + j * 0.16)); }); if (i === k) { guardT.textContent = st.getAttribute("data-guard"); guard.classList.toggle("lit", st.getAttribute("data-guard") !== "Nothing sent"); } });
+      end.classList.toggle("on", k === n - 1 && t > 0.3);
+    }
+    window.addEventListener("scroll", update, { passive: true }); window.addEventListener("resize", function () { last = -1; update(); }); update();
+  })();
+
+  // ---- 7b · Chapter 2: each shot drifts slowly (a different direction each time), then dissolves into the next ----
+  (function givebackScene() {
+    var sec = document.getElementById("giveback"); if (!sec) return;
+    var says = Array.prototype.slice.call(sec.querySelectorAll(".g-say")), imgs = Array.prototype.slice.call(sec.querySelectorAll(".g-screen img")), lines = Array.prototype.slice.call(sec.querySelectorAll(".g-line")), n = imgs.length, last = -1;
+    var DRIFT = [[-1, 0], [1, -0.4], [0, 1], [-1, 0.5], [1, 0], [0, -1], [-1, 0], [0, 0]];
+    function update() {
+      var P0 = pinP(sec); if (Math.abs(P0 - last) < 1e-4) return; last = P0;
+      says.forEach(function (g, i) { g.classList.toggle("on", P0 >= +g.getAttribute("data-in") && (i === says.length - 1 ? P0 < 0.2 : P0 < +says[i + 1].getAttribute("data-in"))); });
+      var P = (P0 - 0.22) / 0.78, x = clamp(P * 1.04, 0, 1) * n, k = Math.min(n - 1, Math.floor(x)), t = x - k;
+      imgs.forEach(function (im, i) {
+        im.style.opacity = i === 0 ? clamp((P0 - 0.19) / 0.05, 0, 1) : clamp((x - i + 0.15) / 0.3, 0, 1);
+        if (reduce) return;
+        var u = clamp(x - i + 0.15, 0, 1.3), d = DRIFT[i], z = i === n - 1 ? 1.12 - 0.08 * u : 1.05 + 0.05 * u; // the last shot pulls back
+        im.style.transform = "translate(" + (d[0] * 1.6 * (u - 0.6)).toFixed(2) + "%," + (d[1] * 1.2 * (u - 0.6)).toFixed(2) + "%) scale(" + z.toFixed(4) + ")";
+      });
+      lines.forEach(function (l, i) { l.classList.toggle("on", P > 0 && i === k && t > 0.12 && (t < 0.9 || i === n - 1)); });
+    }
+    window.addEventListener("scroll", update, { passive: true }); window.addEventListener("resize", function () { last = -1; update(); }); update();
+  })();
+
+  // ---- the show plays on: Chapters 2 and 3 by themselves, beat by beat, the scroll moving as a visitor's would; any input stops it ----
+  (function chapters() {
+    var player = document.getElementById("chPlayer"), now = document.getElementById("chNow"), endCard = document.getElementById("storyEnd"), ring = document.getElementById("seRing");
+    var u = document.getElementById("unfold"), g = document.getElementById("giveback"); if (!u || !g || !player) return;
+    function yAt(el, P) { return el.getBoundingClientRect().top + window.scrollY + P * Math.max(1, el.offsetHeight - window.innerHeight); }
+    function stops() { // [y, hold seconds, label]: each beat once its lines are up
+      var S = [], k;
+      for (k = 0; k < 7; k++) S.push([yAt(u, (k + 0.72) / 7.28), k === 3 || k === 5 ? 5.5 : 4.5, "Playing Chapter 2 · Unfold"]);
+      [0.04, 0.11, 0.18].forEach(function (P) { S.push([yAt(g, P), 4.5, "Playing Chapter 3 · Giving back"]); });
+      for (k = 0; k < 8; k++) S.push([yAt(g, 0.22 + 0.78 * (k + 0.55) / 8.32), k === 7 ? 6 : 4.5, "Playing Chapter 3 · Giving back"]);
+      return S;
+    }
+    var run = null;
+    function ease(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+    function stop() { if (!run) return; cancelAnimationFrame(run.raf); run = null; player.hidden = true; document.documentElement.style.scrollBehavior = ""; }
+    function play() {
+      stop(); endCard.hidden = true; countdown(false);
+      var S = stops(), i = 0, from = window.scrollY, t0 = performance.now(), phase = "move";
+      run = { raf: 0 }; player.hidden = false; document.documentElement.style.scrollBehavior = "auto";
+      function step(t) {
+        if (!run) return;
+        var s = S[i], dist = Math.abs(s[0] - from), dur = reduce ? 0 : Math.min(2600, 900 + dist * 0.35);
+        now.textContent = s[2];
+        if (phase === "move") {
+          var x = dur ? clamp((t - t0) / dur, 0, 1) : 1; window.scrollTo(0, from + (s[0] - from) * ease(x));
+          if (x >= 1) { phase = "hold"; t0 = t; }
+        } else if ((t - t0) / 1000 >= s[1]) { i++; if (i >= S.length) { stop(); return; } from = window.scrollY; t0 = t; phase = "move"; }
+        run.raf = requestAnimationFrame(step);
+      }
+      run.raf = requestAnimationFrame(step);
+    }
+    ["wheel", "touchstart", "keydown", "pointerdown"].forEach(function (ev) { window.addEventListener(ev, function (e) { if (run && !(e.target && e.target.closest && e.target.closest("#chPlayer"))) stop(); }, { passive: true }); });
+    document.getElementById("chStop").addEventListener("click", stop);
+    document.querySelectorAll("[data-play]").forEach(function (b) { b.addEventListener("click", function (e) { e.preventDefault(); play(); }); });
+    // the end card counts down to Chapter 2; it stops as soon as the card goes (keep scrolling, any input, Escape)
+    var cd = null;
+    function countdown(on) {
+      if (cd) { cancelAnimationFrame(cd); cd = null; } ring.style.strokeDashoffset = 100; if (!on || reduce) return;
+      var c0 = performance.now(), D = 10000;
+      (function tick(t) { if (endCard.hidden) { cd = null; return; } var x = clamp((t - c0) / D, 0, 1); ring.style.strokeDashoffset = (100 - 100 * x).toFixed(1); if (x >= 1) { cd = null; play(); return; } cd = requestAnimationFrame(tick); })(c0);
+    }
+    new MutationObserver(function () { countdown(!endCard.hidden); }).observe(endCard, { attributes: true, attributeFilter: ["hidden"] });
+    window.__wuChapters = { play: play, stop: stop, playing: function () { return !!run; } };
+  })();
 
   // ---- 6 · Open Economy: a job, an improvement, and where the saving travels (an illustration, scroll-driven) ----
   // the inline drawings follow the day too: a night colour mixed toward its day ink by the sky's --day
