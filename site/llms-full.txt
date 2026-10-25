@@ -1,6 +1,6 @@
 # we unfold — Open Intelligence
 
-> The full text of the Open Intelligence manifesto and charter. Draft 0.11, 2026-10-24. Proposed, for review. A preview, not launched.
+> The full text of the Open Intelligence manifesto and charter. Draft 0.12, 2026-10-25. Proposed, for review. A preview, not launched.
 
 SHA-256 of the reader text: `25583653ab507d892f096d87ebce6014f1ade65206a79aac76eb1cf0e61cba15`. Not anchored yet.
 
