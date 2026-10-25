@@ -108,7 +108,8 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
           <div class="nav-menu" id="navInitiatives" hidden>
             <a href="../../initiatives/b300/"><span class="nm-t">Compute we can build together</span><span class="nm-s">Shared B300 cluster · Proposal</span></a>
             <a href="../../initiatives/alexandria/" aria-current="page"><span class="nm-t">New Alexandria</span><span class="nm-s">Free open models, open data · Proposal</span></a>
-            <a href="../../initiatives/"><span class="nm-t">All initiatives</span><span class="nm-s">Two so far</span></a>
+            <a href="../../initiatives/tactu/"><span class="nm-t">Tactu</span><span class="nm-s">Open Economy in practice · Early access</span></a>
+            <a href="../../initiatives/"><span class="nm-t">All initiatives</span><span class="nm-s">Three so far</span></a>
           </div>
         </div>
         <a href="../../#people" data-nav="people">Participants</a>
@@ -376,7 +377,7 @@ window.weCapacity = function (canvas, progress) {
   }
 
   // where you are: a subpage names its section on <body data-section>; the landing follows the section on screen
-  var SECTIONS = { manifesto: ["top", "today", "oi"], econ: ["econ", "tactu"], initiatives: ["initiatives"], people: ["people"], progress: ["progress"] };
+  var SECTIONS = { manifesto: ["top", "today", "oi"], econ: ["econ"], initiatives: ["initiatives"], people: ["people"], progress: ["progress"] };
   var fixed = document.body.getAttribute("data-section"), current = null;
   function place() {
     var el = current && items.filter(function (i) { return i.getAttribute("data-nav") === current; })[0], t = el && (el.querySelector(".nav-drop-btn") || el);
