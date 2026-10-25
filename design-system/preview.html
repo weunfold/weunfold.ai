@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>unfold design system</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  /* specimen layout only, not part of the system */
+  main section { padding-block: var(--space-55); border-top: 1px solid var(--line); }
+  .sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-13); }
+  .sw div { display: flex; flex-direction: column; gap: var(--space-5); }
+  .sw i { display: block; height: 55px; border: 1px solid var(--line); }
+  .pal { display: flex; gap: 0; height: 34px; border: 1px solid var(--line); }
+  .pal i { flex: 1; }
+  .type-row { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-21); align-items: baseline; padding-block: var(--space-13); border-top: 1px solid var(--line); }
+  .sp { display: flex; align-items: flex-end; gap: var(--space-13); flex-wrap: wrap; }
+  .sp i { display: block; background: var(--gold); }
+  .reader { background: var(--r-bg); color: var(--r-text); border: 1px solid var(--r-line); padding: var(--space-21); font-size: var(--r-size); }
+  .reader p { color: var(--r-muted); }
+  @media (max-width: 640px) { .type-row { grid-template-columns: 1fr; gap: var(--space-5); } }
+</style>
+</head>
+<body>
+<header class="topbar is-scrolled">
+  <div class="topbar-in">
+    <a class="brand" href="#"><img class="brand-mark" src="assets/Marks/mark.svg" alt=""><span class="wm">we <i>unfold</i></span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#color" aria-current="page">Colour</a><a href="#type">Type</a><a href="#parts">Parts</a>
+      <button type="button" class="theme-sw" id="sw"><span class="ts-ico" aria-hidden="true"></span><span>Day</span></button>
+      <span class="nav-ind" aria-hidden="true"></span>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <section style="border-top:0">
+    <div class="col">
+      <span class="eyebrow">Design system · v2</span>
+      <h1 class="hero">we <i>unfold</i></h1>
+      <p class="lead">The landing page, taken apart: tokens, type and the quiet parts it is built from.</p>
+      <span class="tag">Open Intelligence</span>
+    </div>
+  </section>
+
+  <section id="color">
+    <div class="col"><span class="eyebrow">Colour</span><h2>Ground, text, <i>one</i> accent</h2></div>
+    <div class="sw" id="swatches" style="margin-top:var(--space-34)"></div>
+    <div class="col" style="margin-top:var(--space-34); max-width:none">
+      <span class="label">Palettes: spectrum (mark and field only), arc, capacity</span>
+      <div class="pal" data-pal="spectrum" data-n="12"></div>
+      <div class="pal" data-pal="arc" data-n="7"></div>
+      <div class="pal" data-pal="capacity" data-n="6"></div>
+    </div>
+  </section>
+
+  <section id="type">
+    <div class="col"><span class="eyebrow">Type</span><h2>Spectral and <i>Plex Mono</i></h2></div>
+    <div style="margin-top:var(--space-34)">
+      <div class="type-row"><span class="label">hero</span><span class="hero" style="font-weight:300">Open <i>Intelligence</i></span></div>
+      <div class="type-row"><span class="label">display · h1</span><h1>Built together, for <i>everyone</i></h1></div>
+      <div class="type-row"><span class="label">heading · h2</span><h2>Ways in</h2></div>
+      <div class="type-row"><span class="label">title · h3</span><h3>Shared compute</h3></div>
+      <div class="type-row"><span class="label">lead</span><p class="lead">AI that belongs to humanity, built in the open, by anyone.</p></div>
+      <div class="type-row"><span class="label">body</span><p>We unfold is a movement for open intelligence. Running text sits in the muted colour; titles and leads in the full one.</p></div>
+      <div class="type-row"><span class="label">small</span><p class="small">Not measured yet.</p></div>
+      <div class="type-row"><span class="label">tag</span><span class="tag">Open Intelligence</span></div>
+      <div class="type-row"><span class="label">eyebrow</span><span class="eyebrow">01 · Today</span></div>
+      <div class="type-row"><span class="label">label</span><span class="label">Updated 24 Oct</span></div>
+      <div class="type-row"><span class="label">data</span><span class="data">SHA-256 3f2a9c…e81b</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="col"><span class="eyebrow">Space</span><h2>Fibonacci steps</h2></div>
+    <div class="sp" style="margin-top:var(--space-34)">
+      <i style="width:3px;height:3px"></i><i style="width:5px;height:5px"></i><i style="width:8px;height:8px"></i><i style="width:13px;height:13px"></i><i style="width:21px;height:21px"></i><i style="width:34px;height:34px"></i><i style="width:55px;height:55px"></i><i style="width:89px;height:89px"></i>
+    </div>
+  </section>
+
+  <section id="parts">
+    <div class="col"><span class="eyebrow">Parts</span><h2>Square, hairline, <i>no shadows</i></h2></div>
+    <div class="col" style="margin-top:var(--space-34); max-width:none">
+      <div class="row"><a class="pill" href="#">Explore participation</a><a class="pill ghost" href="#">Read the manifesto</a><button class="pill small" type="button">Sign</button></div>
+      <div class="row"><button class="toggle" type="button" aria-pressed="false">Join</button><button class="toggle" type="button" aria-pressed="true">Joined</button>
+        <div class="seg" role="group" aria-label="Theme"><button type="button" aria-pressed="true">Night</button><button type="button" aria-pressed="false">Dawn</button><button type="button" aria-pressed="false">Day</button></div></div>
+      <div class="row"><span class="state proposal">Proposal</span><span class="state">Example</span><span class="state">Not measured yet</span><span class="state">Sample data</span><span class="soon">Soon</span></div>
+      <div class="legend"><span><i class="dot done"></i><b>Done</b></span><span><i class="dot road"></i><b>On the road</b></span><span><i class="dot open"></i><b>Open</b></span></div>
+      <ol class="crumbs"><li><a href="#">we unfold</a></li><li><a href="#">Initiatives</a></li><li>B300</li></ol>
+      <div class="grid">
+        <div class="card"><span class="label">Card</span><h3>Shared compute</h3><p>A see-through ground over the field, a hairline border.</p></div>
+        <div class="card is-active"><span class="label">Active</span><h3>Joined</h3><p>Selected or joined: a firmer border, a fuller ground.</p></div>
+        <a class="card featured" href="#"><span class="row"><span class="label">Initiative</span><span class="state proposal">Proposal</span></span><h3>B300</h3><p>A featured card turns its border gold on hover.</p></a>
+      </div>
+      <div class="grid">
+        <ol class="pledge"><li><span><b>Open by default.</b> <span>Books and code.</span></span></li><li><span><b>Credit others.</b> <span>Name the work beneath ours.</span></span></li></ol>
+        <div class="creases"><div><b>Show limits.</b> <span>Every figure says what it is.</span></div><div><b>No invented scale.</b> <span>No counts we can't stand behind.</span></div></div>
+        <div class="row" style="align-items:flex-start"><span class="fold">Fold 3 of 7</span><span class="fold got">Found</span></div>
+      </div>
+      <div class="grid">
+        <nav class="menu" aria-label="Initiatives"><a href="#" aria-current="page">B300</a><a href="#">All initiatives</a></nav>
+        <label class="field"><span>Your name</span><input class="input" placeholder="As you want it shown"></label>
+        <div class="reader" data-theme="dawn"><p class="label" style="color:var(--r-faint)">Reader · dawn</p><p>Long text keeps its own light: night, dawn or paper day.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+  var root = document.documentElement, sw = document.getElementById("sw");
+  if (location.hash === "#day") { root.setAttribute("data-theme", "day"); sw.lastElementChild.textContent = "Night"; }
+  sw.addEventListener("click", function () {
+    var day = root.getAttribute("data-theme") !== "day";
+    if (day) root.setAttribute("data-theme", "day"); else root.removeAttribute("data-theme");
+    sw.lastElementChild.textContent = day ? "Night" : "Day";
+    paint();
+  });
+  var NAMES = ["ground", "surface", "surface-raised", "line", "text", "text-muted", "text-faint", "fill", "card", "gold", "focus", "status-done", "status-road", "status-open", "ivory", "ink"];
+  function paint() {
+    var cs = getComputedStyle(root), box = document.getElementById("swatches");
+    box.innerHTML = NAMES.map(function (n) { var v = cs.getPropertyValue("--" + n).trim(); return '<div><i style="background:' + v + '"></i><span class="label">' + n + '</span><span class="data">' + v + "</span></div>"; }).join("");
+    document.querySelectorAll(".pal").forEach(function (p) {
+      var out = ""; for (var i = 1; i <= +p.dataset.n; i++) out += '<i style="background:var(--' + p.dataset.pal + "-" + i + ')"></i>';
+      p.innerHTML = out;
+    });
+  }
+  paint();
+  var ind = document.querySelector(".nav-ind"), cur = document.querySelector('.nav-links [aria-current="page"]');
+  ind.style.width = cur.offsetWidth + "px"; ind.style.transform = "translateX(" + cur.offsetLeft + "px)";
+</script>
+</body>
+</html>
