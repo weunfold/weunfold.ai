@@ -25,7 +25,7 @@ const fixed = [
   ...t.color.palettes.flatMap((p) => p.values.map((v, i) => [`${p.name}-${i + 1}`, v])),
 ];
 const reader = Object.entries(t.color.reader.themes).map(([id, v]) =>
-  `.reader${id === "night" ? "" : `[data-theme="${id}"]`} {\n${decl(Object.entries(v).map(([k, x]) => [`r-${k}`, x]))}${id === "night" ? `\n  --r-size: ${t.color.reader.size.value};` : ""}${id === "day" ? "\n  color-scheme: light;" : ""}\n}`
+  `.reader${id === "night" ? "" : `[data-theme="${id}"]`} {\n${decl(Object.entries(v).map(([k, x]) => [`r-${k}`, x]))}${id === "night" ? `\n  --r-size: ${t.color.reader.size.value};\n  color-scheme: dark;` : ""}${id === "day" ? "\n  color-scheme: light;" : ""}\n}`
 ).join("\n");
 
 const css = `${HEAD}

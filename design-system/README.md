@@ -49,7 +49,7 @@ These come from the landing page (`site/index.html`), which is the source of tru
 | `tokens.json` | The source: colours (night + day), palettes, reader themes, type, space, radius, border, motion, layout. |
 | `tokens.css` | Generated. CSS custom properties; night on `:root`, day on `[data-theme="day"]`, reader themes on `.reader[data-theme]`. |
 | `tokens.js` | Generated. ES module: `tokens`, `colors(theme)`, `palettes`. |
-| `components.css` | The landing's pure-CSS parts: base type, `.pill` / `.pill.ghost`, `.toggle`, `.seg`, `.state`, `.dot` / `.legend`, `.card`, `.panel`, `.pledge`, `.creases`, `.fold`, `.crumbs`, `.topbar` / `.nav-ind`, `.menu`, `.theme-sw`, `.field` / `.input`. Class names match the site. |
+| `components.css` | The landing's pure-CSS parts: base type, `.pill` / `.pill.ghost`, `.toggle`, `.seg`, `.state`, `.dot` / `.legend`, `.card`, `.panel`, `.pledge`, `.creases`, `.fold`, `.crumbs`, `.topbar` / `.nav-ind`, `.menu`, `.theme-sw`, `.field` / `.input`. Class names match the site; the primary pill fills with `--fill` where the landing writes `--ivory` (same colour, themed). |
 | `fonts.css` | Google Fonts import (Spectral, IBM Plex Mono). Bundle the fonts locally in an app. |
 | `preview.html` | Specimen of everything above. Open it in a browser; add `#day` for the day theme. |
 | `assets/Marks/` | The mark files; `mark.svg` is the one in use. |

@@ -131,6 +131,7 @@
   --r-line: #222632;
   --r-panel: #12151d;
   --r-size: 20px;
+  color-scheme: dark;
 }
 .reader[data-theme="dawn"] {
   --r-bg: #241e26;
