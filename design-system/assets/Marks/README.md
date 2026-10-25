@@ -7,3 +7,5 @@ The three hypotheses as SVG files, 200 × 200, each in colour, `-ink` (one colou
 - `fibonacci-swirl` · D · Fibonacci Swirl.
 
 Use the files where the bundle cannot run (documents, email, print). Never trace, redraw or recolour them.
+
+`mark.svg` is the colour mark the landing page uses today (top bar, footer, favicon); it is copied from `site/assets/mark.svg`. Use it as the default mark in apps.
