@@ -212,7 +212,7 @@ Every figure on the site carries its state: Proposal, Example, Not measured yet,
 
 ## Optional
 
-- [The experience](./): the scroll-driven page. It needs WebGL. Its scenes quote the manifesto and add previews (Open Economy, Tactu, participants, Proof of Progress) that are not in the files above.
+- [The experience](./): the scroll-driven page. It needs WebGL. Its scenes quote the manifesto and add previews (Open Economy, participants, Proof of Progress) that are not in the files above.
 `;
 const llmsFull = `# we unfold — Open Intelligence
 
@@ -234,13 +234,14 @@ const SHELL = {
   "site/initiatives/index.html": { root: "../", current: "index" },
   "site/initiatives/alexandria/index.html": { root: "../../", current: "alexandria" },
   "site/bench/index.html": { root: "../", current: "bench" },
+  "site/initiatives/tactu/index.html": { root: "../../", current: "tactu" },
 };
 const partial = (name) => readFileSync(join(ROOT, "content/partials", name), "utf8").replace(/^<!--[\s\S]*?-->\n/, "");
 const HEADER = { html: partial("header.html"), css: partial("header.css"), head: partial("head.js"), js: partial("header.js"), footer: partial("footer.html"), capacity: partial("capacity.js") };
 function stampShell(html, rel) {
   const p = SHELL[rel], home = p.landing ? "" : p.root, cur = (k) => (p.current === k ? ' aria-current="page"' : "");
   const fill = (s) => s.replace(/\{BRAND_HREF\}/g, p.landing ? "#top" : p.root).replace(/\{HOME\}/g, home).replace(/\{ROOT\}/g, p.root)
-    .replace(/\{READ\}/g, p.landing ? " data-read" : "").replace(/\{CUR_INDEX\}/g, cur("index")).replace(/\{CUR_ALEXANDRIA\}/g, cur("alexandria")).replace(/\{VERSION\}/g, esc(meta.version));
+    .replace(/\{READ\}/g, p.landing ? " data-read" : "").replace(/\{CUR_INDEX\}/g, cur("index")).replace(/\{CUR_ALEXANDRIA\}/g, cur("alexandria")).replace(/\{CUR_TACTU\}/g, cur("tactu")).replace(/\{VERSION\}/g, esc(meta.version));
   const swap = (re, repl, what) => { if (!re.test(html)) throw new Error(`${rel}: missing ${what} marker`); html = html.replace(re, () => repl); };
   swap(/<!-- build:header -->[\s\S]*?<!-- \/build:header -->/, `<!-- build:header -->\n${fill(HEADER.html)}  <!-- /build:header -->`, "build:header");
   swap(/<style data-build="header">[\s\S]*?<\/style>/, `<style data-build="header">\n${HEADER.css}</style>`, 'style data-build="header"');
