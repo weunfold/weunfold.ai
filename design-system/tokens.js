@@ -69,7 +69,7 @@ export const tokens = {
         "name": "text-faint",
         "value": {
           "night": "#8a8f9e",
-          "day": "#866a50"
+          "day": "#6e5742"
         },
         "usage": "Labels and captions on ground and surface."
       },
