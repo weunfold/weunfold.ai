@@ -1,5 +1,5 @@
 ---
-version: Draft 0.14
+version: Draft 0.15
 date: 2026-10-25
 status: Proposed, for review. A preview, not launched.
 ---
