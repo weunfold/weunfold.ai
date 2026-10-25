@@ -112,7 +112,15 @@ a.card.featured:hover { border-color: var(--gold); }
 
 /* the night/day switch: a small warm sun */
 .theme-sw { display: inline-flex; align-items: center; gap: var(--space-8); min-height: 40px; padding: 0 var(--space-13); background: none; border: 1px solid var(--line); border-radius: var(--radius-pill); color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-button); letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; }
+.theme-sw { transition: color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease); }
+.theme-sw:hover { color: var(--text); border-color: var(--text-faint); }
 .ts-ico { width: 12px; height: 12px; border-radius: var(--radius-circle); background: radial-gradient(circle at 35% 35%, #ffe2a8, #d9a35a 70%); box-shadow: 0 0 8px rgba(255, 190, 110, 0.6); }
+/* in day the icon is a cool crescent: set data-mode-now="day" on the switch (the landing does, and its label then reads "Night") */
+.theme-sw[data-mode-now="day"] .ts-ico { background: radial-gradient(circle at 70% 30%, transparent 40%, var(--moon) 42%); box-shadow: none; }
+/* optional fade-in, as on the landing (shown once the sun is up): add data-reveal, then toggle .is-shown */
+.theme-sw[data-reveal] { opacity: 0; transform: translateY(-4px); transition: opacity 500ms var(--ease), transform 500ms var(--ease), color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease); }
+.theme-sw[data-reveal].is-shown { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .theme-sw { transition: none; } }
 
 /* inputs: square hairline fields on the card ground */
 .field { display: flex; flex-direction: column; gap: var(--space-8); }

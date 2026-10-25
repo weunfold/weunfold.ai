@@ -137,6 +137,11 @@ export const tokens = {
         "usage": "Focus ring: 2px solid, 3px offset, on every interactive element."
       },
       {
+        "name": "moon",
+        "value": "#cfd6e6",
+        "usage": "The night/day switch's crescent, shown while the page is in day (the switch offers night). Icon only, never text."
+      },
+      {
         "name": "status-done",
         "value": "#33d6a8",
         "usage": "Done / available. Same hue as spectrum-sea. Shown as a filled 10px dot."

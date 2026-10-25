@@ -108,11 +108,11 @@
 </main>
 <script>
   var root = document.documentElement, sw = document.getElementById("sw");
-  if (location.hash === "#day") { root.setAttribute("data-theme", "day"); sw.lastElementChild.textContent = "Night"; }
+  if (location.hash === "#day") { root.setAttribute("data-theme", "day"); sw.setAttribute("data-mode-now", "day"); sw.lastElementChild.textContent = "Night"; }
   sw.addEventListener("click", function () {
     var day = root.getAttribute("data-theme") !== "day";
     if (day) root.setAttribute("data-theme", "day"); else root.removeAttribute("data-theme");
-    sw.lastElementChild.textContent = day ? "Night" : "Day";
+    sw.setAttribute("data-mode-now", day ? "day" : "night"); sw.lastElementChild.textContent = day ? "Night" : "Day";
     paint();
   });
   var NAMES = ["ground", "surface", "surface-raised", "line", "text", "text-muted", "text-faint", "fill", "card", "gold", "focus", "status-done", "status-road", "status-open", "ivory", "ink"];
