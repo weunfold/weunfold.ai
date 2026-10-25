@@ -233,6 +233,7 @@ const SHELL = {
   "private/artifact-version.html": { root: "", landing: true },
   "site/initiatives/index.html": { root: "../", current: "index" },
   "site/initiatives/alexandria/index.html": { root: "../../", current: "alexandria" },
+  "site/bench/index.html": { root: "../", current: "bench" },
 };
 const partial = (name) => readFileSync(join(ROOT, "content/partials", name), "utf8").replace(/^<!--[\s\S]*?-->\n/, "");
 const HEADER = { html: partial("header.html"), css: partial("header.css"), head: partial("head.js"), js: partial("header.js"), footer: partial("footer.html"), capacity: partial("capacity.js") };

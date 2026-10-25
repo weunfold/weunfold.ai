@@ -1,5 +1,9 @@
+// Continuity check of the opening's particle paths. Exits 1 if any identity is off by more than TOL, if a path jumps
+// (its largest step must halve when the step halves), or if the page logs an error.
+// Usage: R=$(npm root -g) [URL=http://localhost:3000/] [CHROME=/path/to/chrome-headless-shell] node tools/chk2.js
 const { chromium } = require(process.env.R+'/playwright');
-(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
+const TOL = 1e-5, HALVE = 0.6; // fine step / coarse step: 0.5 for a continuous path, 1 for a jump
+(async()=>{const b=await chromium.launch({executablePath:process.env.CHROME||undefined,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
 const p=await b.newPage({viewport:{width:1440,height:900}});const errs=[];p.on('pageerror',e=>errs.push(String(e)));p.on('console',m=>{if(m.type()==='error')errs.push(m.text())});
 await p.goto(process.env.URL||'http://localhost:3000/');await p.waitForTimeout(3000);
 const r=await p.evaluate(()=>{const W=window.__wu;if(!W)return 'nohook';const N=W.N;const md=(a,b)=>{let m=0;for(let i=0;i<a.length;i++)m=Math.max(m,Math.abs(a[i]-b[i]));return m;};
@@ -8,4 +12,13 @@ const r=await p.evaluate(()=>{const W=window.__wu;if(!W)return 'nohook';const N=
  out.field_step=[steps(W.fieldAt,0.004),steps(W.fieldAt,0.002)];
  out.commit_step=[steps(Q=>W.commitAt(Q*5),0.004),steps(Q=>W.commitAt(Q*5),0.002)];
  return out;});
-console.log(JSON.stringify(r),errs);await b.close();})();
+console.log(JSON.stringify(r),errs);await b.close();
+const fail=[];
+if(typeof r!=='object')fail.push('no window.__wu hook');
+else{
+ for(const k of ['field1_vs_web','scene0_vs_web','scene1_vs_mark','commit0_vs_mark','commit5_vs_cq'])if(!(r[k]<=TOL))fail.push(`${k} = ${r[k]} > ${TOL}`);
+ for(const k of ['field_step','commit_step']){const [c,f]=r[k];if(c[0]>0&&!(f[0]/c[0]<=HALVE))fail.push(`${k}: step ${f[0]} at dP 0.002 vs ${c[0]} at 0.004 does not halve (a jump near P ${f[1]})`);}
+}
+for(const e of errs)fail.push('page error: '+e);
+if(fail.length){console.error('FAIL\n  '+fail.join('\n  '));process.exit(1);}
+console.log('PASS: identities under '+TOL+', paths continuous');})().catch(e=>{console.error(e);process.exit(1);});
