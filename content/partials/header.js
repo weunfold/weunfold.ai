@@ -15,7 +15,7 @@
   }
 
   // where you are: a subpage names its section on <body data-section>; the landing follows the section on screen
-  var SECTIONS = { manifesto: ["top", "today", "oi"], econ: ["econ", "tactu"], initiatives: ["initiatives"], people: ["people"], progress: ["progress"] };
+  var SECTIONS = { manifesto: ["top", "today", "oi"], econ: ["econ"], initiatives: ["initiatives"], people: ["people"], progress: ["progress"] };
   var fixed = document.body.getAttribute("data-section"), current = null;
   function place() {
     var el = current && items.filter(function (i) { return i.getAttribute("data-nav") === current; })[0], t = el && (el.querySelector(".nav-drop-btn") || el);
