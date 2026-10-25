@@ -50,7 +50,7 @@ These come from the landing page (`site/index.html`), which is the source of tru
 | `tokens.css` | Generated. CSS custom properties; night on `:root`, day on `[data-theme="day"]`, reader themes on `.reader[data-theme]`. |
 | `tokens.js` | Generated. ES module: `tokens`, `colors(theme)`, `palettes`. |
 | `components.css` | The landing's pure-CSS parts: base type, `.pill` / `.pill.ghost`, `.toggle`, `.seg`, `.state`, `.dot` / `.legend`, `.card`, `.panel`, `.pledge`, `.creases`, `.fold`, `.crumbs`, `.topbar` / `.nav-ind`, `.menu`, `.theme-sw`, `.field` / `.input`. Class names match the site; the primary pill fills with `--fill` where the landing writes `--ivory` (same colour, themed). |
-| `fonts.css` | Google Fonts import (Spectral, IBM Plex Mono). Bundle the fonts locally in an app. |
+| `fonts.css` + `fonts/` | Spectral and IBM Plex Mono bundled as woff2 (latin and latin-ext, 232 KB), so apps work offline. SIL OFL 1.1; licences in `fonts/`. |
 | `preview.html` | Specimen of everything above. Open it in a browser; add `#day` for the day theme. |
 | `assets/Marks/` | The mark files; `mark.svg` is the one in use. |
 | `components/` | The v1 React mark components (`Mark`, `MarkSweep`, `Stamp`, `Badge` …) from the claude.ai export. The Stamp still uses the old ringed seal. |
@@ -60,7 +60,7 @@ Edit `tokens.json`, then run `node design-system/build.mjs` (`--check` exits 1 i
 ## Use it in another repo (the unfold desktop app)
 
 1. Copy or submodule this folder, or point at it: `../weunfold/design-system`.
-2. Load `fonts.css` (or your bundled fonts), then `tokens.css`, then `components.css`.
+2. Load `fonts.css`, then `tokens.css`, then `components.css`. Keep `fonts/` next to `fonts.css`: its paths are relative.
 3. Put `data-theme="day"` on `<html>` to switch to day; remove it for night.
 4. In JS/TS, `import { colors, palettes } from "./design-system/tokens.js"` for canvas, WebGL or native theming.
 
