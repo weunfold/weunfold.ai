@@ -285,6 +285,34 @@ ol.versions .faint { font-family: var(--font-mono); font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .ring .arc { transition: none; } }
 
+/* voice expression: Pareto charts. Provider hues follow the provider, never its rank; validated on both surfaces */
+:root { --pv-1: #3987e5; --pv-2: #d95926; --pv-3: #199e70; --pv-4: #c98500; }
+:root[data-mode="day"] { --pv-1: #2a6bc4; --pv-2: #c4501f; --pv-3: #14875d; --pv-4: #a06a00; }
+.pareto-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 21px; margin-top: 21px; }
+@media (min-width: 1180px) { .pareto-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+figure.pareto { margin: 0; border: 1px solid var(--line); background: var(--panel); padding: 13px 13px 8px; min-width: 0; }
+figure.pareto figcaption { font-size: 15px; color: var(--text); margin-bottom: 6px; }
+figure.pareto figcaption .faint { display: block; font-size: 12.5px; margin-top: 2px; }
+figure.pareto svg { display: block; width: 100%; height: auto; overflow: visible; }
+.pareto .grid line { stroke: var(--line); stroke-width: 1; }
+.pareto .axis text, .pareto .ref text { fill: var(--text-faint); font-family: var(--font-mono); font-size: 11px; }
+.pareto .axis .ttl { fill: var(--text-muted); font-size: 11.5px; }
+.pareto .ref line { stroke: var(--text-faint); stroke-width: 1; stroke-dasharray: 1 3; opacity: 0.8; }
+.pareto .zone { fill: color-mix(in oklab, var(--ok) 12%, transparent); }
+.pareto .zone-t { fill: var(--ok); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; }
+.pareto .lane { fill: color-mix(in oklab, var(--text-faint) 8%, transparent); }
+.pareto .front { fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-dasharray: 2 5; stroke-linecap: round; }
+.pareto .pt { stroke-width: 2.5; }
+.pareto .pt.local { stroke: var(--surface); stroke-width: 2; }
+.pareto .pt.cloud { fill: var(--surface); }
+.pareto .lbl { fill: var(--text); font-size: 12px; }
+.pareto .lbl tspan { fill: var(--text-faint); font-family: var(--font-mono); font-size: 11px; }
+.pareto g.mk:hover .pt, .pareto g.mk:focus .pt { stroke-width: 3.5; }
+.pareto g.mk:focus { outline: none; }
+.pv-legend { display: flex; flex-wrap: wrap; gap: 8px 21px; margin-top: 13px; font-size: 14px; color: var(--text-muted); align-items: center; }
+.pv-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.pv-legend svg { flex: none; }
+
 /* phones: each row becomes a small card; labels come from data-l */
 @media (max-width: 760px) {
   .only-s { display: inline-flex; }
@@ -355,6 +383,7 @@ ol.versions .faint { font-family: var(--font-mono); font-size: 12px; }
         <div class="tabs" role="tablist" aria-label="Bench views" id="tabs"></div>
         <div class="panel" role="tabpanel" id="p-progress" aria-labelledby="t-progress" hidden></div>
         <div class="panel" role="tabpanel" id="p-memory" aria-labelledby="t-memory" hidden></div>
+        <div class="panel" role="tabpanel" id="p-voice-expression" aria-labelledby="t-voice-expression" hidden></div>
         <div class="panel" role="tabpanel" id="p-categories" aria-labelledby="t-categories" hidden></div>
         <div class="panel" role="tabpanel" id="p-candidates" aria-labelledby="t-candidates" hidden></div>
         <div class="panel" role="tabpanel" id="p-history" aria-labelledby="t-history" hidden></div>
@@ -564,7 +593,7 @@ ol.versions .faint { font-family: var(--font-mono); font-size: 12px; }
     var bestPerEntry = function (rs) { var seen = {}, out = []; rs.slice().sort(rankKey).forEach(function (r) { var k = entryOf(r); if (!seen[k]) { seen[k] = 1; out.push(r); } }); return out; };
 
     // ---- tabs ----
-    var TABS = [["progress", "Progress"], ["memory", "Memory decision"], ["categories", "By task category"], ["candidates", "Candidates"], ["history", "History"]];
+    var TABS = [["progress", "Progress"], ["memory", "Memory decision"]].concat(D.voice_expression ? [["voice-expression", "Voice expression"]] : []).concat([["categories", "By task category"], ["candidates", "Candidates"], ["history", "History"]]);
     var tabsEl = document.getElementById("tabs");
     tabsEl.innerHTML = TABS.map(function (t) { return '<button type="button" role="tab" id="t-' + t[0] + '" aria-controls="p-' + t[0] + '" data-t="' + t[0] + '">' + esc(t[1]) + "</button>"; }).join("");
     var drawn = {};
@@ -691,6 +720,9 @@ ol.versions .faint { font-family: var(--font-mono); font-size: 12px; }
       // versions
       if (Array.isArray(P.versions) && P.versions.length) h += '<div class="prog-sec"><h3>Versions</h3><ol class="versions">' +
         P.versions.slice().reverse().map(function (v) { return '<li><span class="vchip">' + esc(v.version) + '</span><span class="faint">' + esc(v.date) + " · " + esc(v.skills) + " skills · " + esc(v.domains) + " domains</span><span>" + esc(v.changes) + "</span></li>"; }).join("") + "</ol></div>";
+      // what changed, dated
+      if (Array.isArray(P.history) && P.history.length) h += '<div class="prog-sec"><h3>Changes</h3><ol class="versions">' +
+        P.history.slice().reverse().map(function (c) { return '<li><span class="vchip">' + esc(c.version) + '</span><span class="faint">' + esc(c.date) + "</span><span>" + esc(c.changes) + "</span></li>"; }).join("") + "</ol></div>";
       // how the map is built, and what it may build on
       h += '<div class="prog-sec">' + absorbHtml(M) + "</div>";
       el.innerHTML = h;
@@ -715,6 +747,91 @@ ol.versions .faint { font-family: var(--font-mono); font-size: 12px; }
         box.innerHTML = "<h4>" + esc(s.title) + ' <span class="small mono">' + esc(s.id) + '</span></h4><dl class="kv">' + kv.join("") + "</dl>";
         box.hidden = false; t.setAttribute("aria-expanded", "true");
       });
+    };
+
+    // ---- voice expression: score against latency and against cost, with the Pareto frontier ----
+    PANELS["voice-expression"] = function (el) {
+      var V = D.voice_expression || {}, all = Array.isArray(V.rows) ? V.rows : [];
+      var models = all.filter(function (r) { return r.where === "local" || r.where === "cloud"; }), base = all.filter(function (r) { return r.where === "baseline"; });
+      // a provider keeps its hue whatever is shown; unknown providers stay neutral
+      var HUE = { Celeris: 1, DeepSeek: 2, IBM: 3, IFM: 4 };
+      var hue = function (p) { return HUE[p] ? "var(--pv-" + HUE[p] + ")" : "var(--text-faint)"; };
+      var fmtMs = function (v) { return v == null ? "–" : v >= 1000 ? (v / 1000).toFixed(v >= 10000 ? 0 : 1) + " s" : Math.round(v) + " ms"; };
+      var fmtUsd = function (v) { return v == null ? "–" : v === 0 ? "$0" : "$" + (v < 0.1 ? v.toFixed(3) : v.toFixed(2)); };
+      var median = function (xs) { var a = xs.slice().sort(function (p, q) { return p - q; }), m = a.length >> 1; return a.length ? (a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2) : null; };
+      var logTicks = function (lo, hi) { var t = [], d; for (d = Math.pow(10, Math.floor(Math.log10(lo))); d <= hi * 1.0001; d *= 10) [1, 2, 5].forEach(function (k) { var v = d * k; if (v >= lo && v <= hi) t.push(v); }); return t; };
+      var W = Math.max(300, Math.min(720, (el.clientWidth || 720) - (window.innerWidth >= 1180 ? el.clientWidth / 2 + 40 : 28)));
+
+      // pts: {r, x (null = the $0 lane), y}; opt: {xTitle, fmt, lane}
+      function chart(pts, opt) {
+        var H = Math.round(W * 0.62), m = { l: 40, r: 14, t: 14, b: 46 }, lane = opt.lane ? 58 : 0;
+        var xs = pts.filter(function (p) { return p.x != null; }).map(function (p) { return p.x; });
+        var lo = Math.min.apply(null, xs) / 1.7, hi = Math.max.apply(null, xs) * 1.7;
+        var X = function (v) { return v == null ? m.l + lane / 2 : m.l + lane + (Math.log(v / lo) / Math.log(hi / lo)) * (W - m.l - m.r - lane); };
+        var Y = function (v) { return m.t + (100 - v) / 70 * (H - m.t - m.b); };
+        var s = '<svg viewBox="0 0 ' + W + " " + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="' + esc(opt.aria) + '">';
+        // the attractive quadrant: at least the median score, at most the median x
+        var mx = median(pts.map(function (p) { return p.x == null ? 0 : p.x; })), my = median(pts.map(function (p) { return p.y; }));
+        var zx = mx === 0 ? X(null) + lane / 2 : X(mx);
+        s += '<rect class="zone" x="' + m.l + '" y="' + m.t + '" width="' + Math.max(0, zx - m.l) + '" height="' + (Y(my) - m.t) + '"/>';
+        s += '<text class="zone-t" x="' + (m.l + 6) + '" y="' + (m.t + 14) + '">MORE ATTRACTIVE</text>';
+        if (lane) s += '<rect class="lane" x="' + m.l + '" y="' + m.t + '" width="' + lane + '" height="' + (H - m.t - m.b) + '"/>';
+        s += '<g class="grid">' + [40, 60, 80, 100].map(function (v) { return '<line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/>'; }).join("") + "</g>";
+        s += '<g class="axis">' + [40, 60, 80, 100].map(function (v) { return '<text x="' + (m.l - 7) + '" y="' + (Y(v) + 4) + '" text-anchor="end">' + v + "</text>"; }).join("") +
+          logTicks(lo, hi).map(function (v) { return '<text x="' + X(v) + '" y="' + (H - m.b + 17) + '" text-anchor="middle">' + esc(opt.fmt(v)) + "</text>"; }).join("") +
+          (lane ? '<text x="' + X(null) + '" y="' + (H - m.b + 17) + '" text-anchor="middle">$0 local</text>' : "") +
+          '<text class="ttl" x="' + (m.l + lane + (W - m.l - m.r - lane) / 2) + '" y="' + (H - 8) + '" text-anchor="middle">' + esc(opt.xTitle) + "</text>" +
+          '<text class="ttl" x="' + m.l + '" y="' + (m.t - 3) + '" text-anchor="start" dy="-1">Expression score</text></g>';
+        // baselines as reference lines
+        s += base.map(function (b) { return b.expression >= 30 ? '<g class="ref"><line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + Y(b.expression) + '" y2="' + Y(b.expression) + '"/><text x="' + (W - m.r) + '" y="' + (Y(b.expression) + (b.expression > 95 ? 13 : -5)) + '" text-anchor="end">' + esc(b.name.split(":")[0].toLowerCase() + " " + b.expression) + "</text></g>" : ""; }).join("");
+        // the frontier: lowest x first; a point is on it when nothing cheaper or faster scores as high
+        var best = -1, front = pts.slice().sort(function (p, q) { return (p.x || 0) - (q.x || 0) || q.y - p.y; }).filter(function (p) { if (p.y > best) { best = p.y; return true; } return false; });
+        if (front.length > 1) s += '<path class="front" d="M' + front.map(function (p, i) { return (i ? "H" + X(p.x) + "V" : "") + (i ? Y(p.y) : X(p.x) + " " + Y(p.y)); }).join("") + '"/>';
+        // points, then their labels
+        s += pts.map(function (p) {
+          var cx = X(p.x), cy = Y(p.y), right = cx < W * 0.66, local = p.r.where === "local";
+          var tip = p.r.name + " · " + p.r.provider + " · " + (local ? "local" : "cloud") + " · score " + p.r.expression + " · p50 " + fmtMs(p.r.latency_p50_ms) + " · " + fmtUsd(p.r.usd_per_100) + " per 100 tasks" + (p.r.cost_basis ? " (" + p.r.cost_basis + ")" : "");
+          return '<g class="mk" tabindex="0"><title>' + esc(tip) + "</title>" +
+            '<circle cx="' + cx + '" cy="' + cy + '" r="14" fill="transparent"/>' +
+            '<circle class="pt ' + (local ? "local" : "cloud") + '" cx="' + cx + '" cy="' + cy + '" r="6" style="' + (local ? "fill:" : "stroke:") + hue(p.r.provider) + '"/>' +
+            '<text class="lbl" x="' + (cx + (right ? 11 : -11)) + '" y="' + (cy + 4) + '" text-anchor="' + (right ? "start" : "end") + '">' + esc(p.r.name.replace(", thinking off", "")) + " <tspan>" + esc(p.y) + "</tspan></text></g>";
+        }).join("");
+        return s + "</svg>";
+      }
+      var timed = models.filter(function (r) { return r.latency_p50_ms != null; }).map(function (r) { return { r: r, x: r.latency_p50_ms, y: r.expression }; });
+      var priced = models.filter(function (r) { return r.usd_per_100 != null; }).map(function (r) { return { r: r, x: r.usd_per_100 || null, y: r.expression }; });
+      var unpriced = models.filter(function (r) { return r.usd_per_100 == null; });
+
+      var provs = Object.keys(HUE).filter(function (p) { return models.some(function (r) { return r.provider === p; }); });
+      var dot = function (fill, stroke) { return '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" style="fill:' + fill + ";stroke:" + stroke + ';stroke-width:2"/></svg>'; };
+      var legend = '<div class="pv-legend" aria-label="Legend">' + provs.map(function (p) { return "<span>" + dot(hue(p), hue(p)) + esc(p) + "</span>"; }).join("") +
+        "<span>" + dot("var(--text-muted)", "var(--text-muted)") + "filled: local</span><span>" + dot("var(--surface)", "var(--text-muted)") + "hollow: cloud</span>" +
+        '<span><svg width="26" height="8" aria-hidden="true"><line x1="1" y1="4" x2="25" y2="4" style="stroke:var(--text-muted);stroke-width:2;stroke-dasharray:2 5;stroke-linecap:round"/></svg>Pareto frontier</span></div>';
+
+      var h = phead("Voice expression", DEV + chip("cloud rows are labelled cloud", "Cloud rows ran on the providers' servers, not on the device."),
+        "<p>Each case is one turn: what the person said and the facts of the moment (channel, voice mode, mute, whether they are at the Mac). The model decides how its reply is delivered: as text, as speech, or as a spoken one-line summary with the full answer on screen; which mood the voice takes, from the moods that voice has; and which nonverbal sounds it makes.</p>" +
+        "<p>The expression score weighs the delivery decision 0.40, the mood 0.25, the sounds 0.20 and clean format 0.15. An oracle that follows the gold labels scores 100; always answering in text scores " + esc((base.filter(function (b) { return /^Always/.test(b.name); })[0] || {}).expression) + ".</p>" +
+        "<p>The frontier joins the rows nothing beats: no other row is both faster (or cheaper) and better. The shaded corner is at least the median score at no more than the median latency or cost of the rows shown.</p>");
+      h += '<p class="small" style="max-width:760px">' + esc(V.cases || "") + ". " + esc(V.note || "") + "</p>" + legend;
+      h += '<div class="pareto-grid">';
+      if (timed.length) h += '<figure class="pareto"><figcaption>Score against latency<span class="faint">median wall time per reply, log scale; lower is better</span></figcaption>' +
+        chart(timed, { xTitle: "latency p50 (log)", fmt: fmtMs, aria: "Expression score against median latency for " + timed.length + " models" }) + "</figure>";
+      if (priced.length) h += '<figure class="pareto"><figcaption>Score against cost per 100 tasks<span class="faint">public list price × each reply’s usage tokens, log scale; local rows are $0 marginal, energy not priced' +
+        (unpriced.length ? "; not shown, price not known: " + esc(unpriced.map(function (r) { return r.name; }).join(", ")) : "") + "</span></figcaption>" +
+        chart(priced, { xTitle: "USD per 100 tasks (log)", fmt: fmtUsd, lane: true, aria: "Expression score against cost per 100 tasks for " + priced.length + " models" }) + "</figure>";
+      h += "</div>";
+      // the same numbers as a table
+      h += '<div class="table-wrap"><table class="data stack"><thead><tr><th>Model</th><th>Provider</th><th>Where</th><th>Score</th><th>Say<span class="t">% right</span></th><th>p50</th><th>$ / 100 tasks<span class="t">list price</span></th><th>Billed<span class="t">via our proxy</span></th><th>Evidence</th></tr></thead><tbody>' +
+        models.concat(base).map(function (r) {
+          return '<tr><td class="full" data-l="Model"><span style="color:var(--text)">' + esc(r.name) + '</span><div class="small">' + esc(r.runtime || "") + "</div></td>" +
+            '<td data-l="Provider">' + (r.provider ? dot(r.where === "local" ? hue(r.provider) : "var(--surface)", hue(r.provider)) + " " + esc(r.provider) : '<span class="faint">–</span>') + "</td>" +
+            '<td data-l="Where">' + esc(r.where) + '</td><td data-l="Score"><b>' + esc(r.expression) + '</b></td><td data-l="Say">' + esc(r.say_acc) + "</td>" +
+            '<td data-l="p50">' + fmtMs(r.latency_p50_ms) + '</td><td class="wrap-t sm" data-l="$ / 100 tasks">' + fmtUsd(r.usd_per_100) + (r.cost_basis ? '<div class="small">' + esc(r.cost_basis) + "</div>" : "") + "</td>" +
+            '<td data-l="Billed">' + (r.billed_usd_per_100 != null ? fmtUsd(r.billed_usd_per_100) : '<span class="faint">–</span>') + "</td>" +
+            '<td class="wrap-t sm" data-l="Evidence"><code class="mono">' + esc(r.score || "") + "</code></td></tr>";
+        }).join("") + "</tbody></table></div>";
+      if (Array.isArray(V.pending) && V.pending.length) h += '<div class="prog-sec" style="margin-top:21px"><h3>Pending</h3><ul class="small">' + V.pending.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul></div>";
+      el.innerHTML = h;
     };
 
     // ---- memory decision ----
