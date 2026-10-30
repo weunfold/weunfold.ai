@@ -4,7 +4,7 @@
 
 SHA-256 of the reader text: `25583653ab507d892f096d87ebce6014f1ade65206a79aac76eb1cf0e61cba15`. Not anchored yet.
 
-Not included: participants, initiatives and Proof of Progress. They are previews on the page and nothing about them has been confirmed for publication.
+Not included: participants, initiatives and Proof of Progress. Nothing about them has been confirmed for publication.
 
 ## The manifesto
 

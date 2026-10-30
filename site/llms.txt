@@ -12,4 +12,4 @@ Every figure on the site carries its state: Proposal, Example, Not measured yet,
 
 ## Optional
 
-- [The experience](./): the scroll-driven page. It needs WebGL. Its scenes quote the manifesto and add previews (Open Economy, participants, Proof of Progress) that are not in the files above.
+- [The experience](./): the scroll-driven page. It needs WebGL. Its scenes quote the manifesto and add an Open Economy preview that is not in the files above.
