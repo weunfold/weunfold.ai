@@ -212,7 +212,7 @@ Every figure on the site carries its state: Proposal, Example, Not measured yet,
 
 ## Optional
 
-- [The experience](./): the scroll-driven page. It needs WebGL. Its scenes quote the manifesto and add previews (Open Economy, participants, Proof of Progress) that are not in the files above.
+- [The experience](./): the scroll-driven page. It needs WebGL. Its scenes quote the manifesto and add an Open Economy preview that is not in the files above.
 `;
 const llmsFull = `# we unfold — Open Intelligence
 
@@ -220,7 +220,7 @@ const llmsFull = `# we unfold — Open Intelligence
 
 SHA-256 of the reader text: \`${sha}\`. Not anchored yet.
 
-Not included: participants, initiatives and Proof of Progress. They are previews on the page and nothing about them has been confirmed for publication.
+Not included: participants, initiatives and Proof of Progress. Nothing about them has been confirmed for publication.
 
 ${partsMd(2)}
 `;
