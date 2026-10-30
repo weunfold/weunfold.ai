@@ -114,6 +114,18 @@ body { margin: 0; background: var(--ground); color: var(--text); font-family: va
 .pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ground) !important; background: var(--ivory); border: 0; border-radius: 9999px; padding: 12px 21px; min-height: 44px; text-decoration: none; cursor: pointer; }
 .pill.ghost { background: transparent; color: var(--text) !important; border: 1px solid var(--line); }
 .pill.ghost:hover { border-color: var(--text-faint); }
+#invite:focus { outline: none; }
+/* Fixed chrome (the top bar, the story player, its choice, the end card and the cue) sits over the sky, not over the page's
+   own ground. During the sunrise the page text and ground blend from night to day; blended, the chrome's text and its ground
+   pass through the same mid tone and the words vanish. So the chrome flips from its night colours to its day colours at the
+   middle of the sunrise instead (same tokens as :root, with a stepped mix). */
+.topbar, .story-bar, .story-choice, .story-end, .keep-cue {
+  --mix: clamp(0%, (var(--day) - 0.5) * 100000%, 100%); /* 0% up to the middle, 100% just past it: never a blend */
+  --ground: color-mix(in oklab, color-mix(in oklab, #0b0d12, #e6d3b3 var(--mix)), #efe2c9 calc(var(--glow) * 100%));
+  --surface-raised: color-mix(in oklab, #12151d, #f0e2c8 var(--mix)); --line: color-mix(in oklab, #222632, #cdb38c var(--mix));
+  --text: color-mix(in oklab, #ebe6da, #2a1d12 var(--mix)); --text-muted: color-mix(in oklab, #a7abb9, #5c4532 var(--mix)); --text-faint: color-mix(in oklab, #8a8f9e, #6e5742 var(--mix));
+  --ivory: color-mix(in oklab, #ebe6da, #2a1d12 var(--mix));
+}
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 .counter { position: fixed; left: max(21px, env(safe-area-inset-left, 0px)); bottom: calc(21px + env(safe-area-inset-bottom, 0px)); z-index: 6; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; color: var(--text-faint); text-transform: uppercase; transition: opacity 600ms ease; }
 .folds { position: fixed; right: max(21px, env(safe-area-inset-right, 0px)); bottom: calc(21px + env(safe-area-inset-bottom, 0px)); z-index: 6; display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-faint); background: rgba(11, 13, 18, 0.72); border: 1px solid var(--line); border-radius: 9999px; padding: 8px 14px; text-decoration: none; transition: opacity 400ms ease; }
@@ -131,7 +143,7 @@ section[hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .aura, .arc li { transition: none; } }
 /* sunrise: each line takes the sky's light. Ivory where the sky behind it is still dark, warm ink where the sun has brightened it;
    the band between them rises with the sun (--ink-a / --ink-b, set from the sky), so text always contrasts with what is behind it */
-html.sunlit .scene-pin .beat p, html.sunlit .scene-pin .beat h1, html.sunlit .oi-head h2, html.sunlit .oi-head .lead, html.sunlit .oi-head .tag, html.sunlit .commit li {
+html.sunlit .scene-pin .beat p, html.sunlit .scene-pin .beat h1, html.sunlit .oi-head h2, html.sunlit .oi-head .lead, html.sunlit .oi-head .tag, html.sunlit .commit li, html.sunlit #oi .quiet-link {
   background-image: linear-gradient(to bottom, color-mix(in oklab, #ebe6da, #2a1d12 var(--mix)) 0%, color-mix(in oklab, #ebe6da, #2a1d12 var(--mix)) var(--ink-a, 100%), #2a1d12 var(--ink-b, 120%), #2a1d12 100%);
   background-attachment: fixed; -webkit-background-clip: text; background-clip: text; color: transparent !important; -webkit-text-fill-color: transparent;
 }
@@ -443,6 +455,11 @@ section.wip { padding-block: 0 89px; }
 .sc-time rect { x: 1.5px; y: 1.5px; width: calc(100% - 3px); height: calc(100% - 3px); rx: 25px; fill: none; stroke-width: 2; }
 .sc-time .sc-track { stroke: var(--line); }
 #scRing { stroke: #d9b45a; }
+.keep-cue { position: fixed; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 31; padding: 10px 18px; border-radius: 9999px; background: var(--surface-raised); border: 1px solid var(--line); color: var(--text); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; white-space: nowrap; animation: cue-blink 0.9s ease-in-out 0.6s 3 both; transition: opacity 600ms ease; }
+.keep-cue[hidden] { display: none; }
+.keep-cue.out { opacity: 0; }
+@keyframes cue-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+@media (prefers-reduced-motion: reduce) { .keep-cue { animation: none; transition: none; } }
 .story-end { position: fixed; left: 50%; bottom: calc(21px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 31; display: flex; flex-direction: column; align-items: center; gap: 13px; width: max-content; max-width: calc(100vw - 32px); padding: 18px 21px; text-align: center; background: var(--surface-raised); border: 1px solid var(--line); border-radius: 14px; animation: story-in 1.4s ease 0.4s both; }
 @keyframes story-in { from { opacity: 0; transform: translate(-50%, 8px); } }
 .story-end p { margin: 0; font-family: var(--font-display); font-size: 19px; color: var(--text); }
@@ -741,6 +758,7 @@ a.ep:hover .ep-thumb, a.ep:focus-visible .ep-thumb { transform: translateY(-3px)
     <div class="se-next"><img src="assets/unfold/f1.jpg" alt="" width="128" height="72"><div><span class="se-up">Chapter 1 watched · Up next</span><p>Chapter 2 · Unfold</p><span class="se-up">Animatic</span></div></div>
     <div class="row"><button type="button" class="pill" id="sePlay" data-play><svg class="se-ring" viewBox="0 0 16 16" aria-hidden="true"><circle class="bg" cx="8" cy="8" r="6"/><circle id="seRing" cx="8" cy="8" r="6" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg>Play Chapter 2</button><button type="button" class="pill ghost" id="seKeep">Keep scrolling</button><a class="pill ghost" href="#invite" id="seInvite">Go to the invitation</a></div>
   </div>
+  <div class="keep-cue" id="keepCue" role="status" hidden>Keep scrolling <span aria-hidden="true">↓</span></div>
   <!-- story:end -->
   <div class="ch-player" id="chPlayer" role="group" aria-label="Chapter player" hidden><span id="chNow">Playing Chapter 2</span><button type="button" id="chStop">Stop</button></div>
   <!-- 3–4 · the concentration, and the first reconnection -->
@@ -1839,7 +1857,7 @@ function makeGeometry() {
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
   var secTop = document.getElementById("top"), secToday = document.getElementById("today"), secOi = document.getElementById("oi"), secEcon = document.getElementById("econ"), secClose = document.getElementById("closing"), secMark = document.getElementById("mark"), secKit = document.getElementById("kit");
   function pinP(el) { var r = el.getBoundingClientRect(); return clamp(-r.top / Math.max(1, r.height - window.innerHeight), 0, 1); }
-  function enterP(el) { if (!el || el.hidden) return 0; var r = el.getBoundingClientRect(); return clamp(1 - r.top / window.innerHeight, 0, 1); }
+  function enterP(el) { if (!el || !el.getClientRects().length) return 0; var r = el.getBoundingClientRect(); return clamp(1 - r.top / window.innerHeight, 0, 1); }
   function scrollState() {
     var mk = enterP(secMark); if (mk > 0) return 5 + mk;
     var z = enterP(secClose); if (z > 0) return 4 + z;
@@ -1865,6 +1883,7 @@ function makeGeometry() {
     if (hint) hint.style.opacity = pinP(secTop) > 0.03 ? 0 : 1;
   }
   var cur = scrollState(), mx = 0, my = 0, t0 = performance.now(), spin = 0, last = t0;
+  window.__wuSnap = function () { cur = scrollState(); };
   window.addEventListener("pointermove", function (e) { mx = e.clientX / window.innerWidth - 0.5; my = e.clientY / window.innerHeight - 0.5; });
   function frame(now) {
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
@@ -2071,9 +2090,9 @@ function makeGeometry() {
     var COL = ["#ff6f61", "#ff8a5c", "#d9b45a", "#62e07a", "#4fb8ff", "#9a85ff", "#d07cff"];
     var dots = Array.prototype.slice.call(document.querySelectorAll(".arc li")), aura = document.querySelector(".aura"); if (!dots.length || !aura) return;
     dots.forEach(function (d, i) { d.style.setProperty("--c", COL[i]); });
-    function y(id, p) { var el = document.getElementById(id); if (!el) return Infinity; var r = el.getBoundingClientRect(); return r.top + window.scrollY + p * Math.max(0, r.height - window.innerHeight); }
+    function y(id, p) { var el = document.getElementById(id); if (!el || !el.getClientRects().length) return Infinity; var r = el.getBoundingClientRect(); return r.top + window.scrollY + p * Math.max(0, r.height - window.innerHeight); }
     // where each step begins, as a page position: the first scene's two beats, capture and reconnection, the commitment, the economy, the initiatives
-    function marks() { return [0, y("top", 0.62), y("today", 0), y("today", 0.68), y("oi", 0), y("econ", 0), y("initiatives", 0) - window.innerHeight * 0.5]; }
+    function marks() { return [0, y("top", 0.62), y("today", 0), y("today", 0.68), y("oi", 0), y("econ", 0), Math.min(y("initiatives", 0), y("invite", 0)) - window.innerHeight * 0.5]; }
     function hex(c) { return [1, 3, 5].map(function (k) { return parseInt(c.substr(k, 2), 16); }); }
     function update() {
       var m = marks(), s = window.scrollY, i = 0;
@@ -2096,8 +2115,10 @@ function makeGeometry() {
     window.__wuSky = S;
     function cl(x) { return Math.max(0, Math.min(1, x)); }
     function sm(x) { x = cl(x); return x * x * (3 - 2 * x); }
-    function prog(id) { var el = document.getElementById(id); if (!el) return 0; var r = el.getBoundingClientRect(); return cl(-r.top / Math.max(1, r.height - innerHeight)); }
-    function enter(id) { var el = document.getElementById(id); if (!el) return 0; var r = el.getBoundingClientRect(); return cl(1 - r.top / innerHeight); }
+    // a section that is not rendered (hidden) reads as not reached: its rect is all zeros, which would read as fully entered
+    function shown(el) { return !!el && el.getClientRects().length > 0; }
+    function prog(id) { var el = document.getElementById(id); if (!shown(el)) return 0; var r = el.getBoundingClientRect(); return cl(-r.top / Math.max(1, r.height - innerHeight)); }
+    function enter(id) { var el = document.getElementById(id); if (!shown(el)) return 0; var r = el.getBoundingClientRect(); return cl(1 - r.top / innerHeight); }
     function state() {
       var t = prog("today"), o = prog("oi"), oTop = document.getElementById("oi").getBoundingClientRect().top;
       S.night = sm(t / 0.5) * (1 - sm((t - 0.6) / 0.1));
@@ -2105,7 +2126,7 @@ function makeGeometry() {
       var rise = sm((t - 0.62) / 0.38), climb = oTop < 0 ? sm(o / 0.8) : 0;
       S.sun = -0.2 - 0.12 * S.night + rise * 0.3 + climb * 0.95;
       S.day = sm((climb - 0.12) / 0.55);
-      S.glow = sm(enter("progress") * 0.5 + enter("closing") * 0.5);
+      S.glow = S.day * sm(enter("progress") * 0.5 + enter("closing") * 0.5); // lightens the day only, never the night
       var L = cl(0.35 * rise + 0.65 * climb), mid = 108 - L * 125;
       root.classList.toggle("sunlit", L > 0.001 && S.day < 0.999 && (window.__wuMode || "auto") === "auto");
       root.style.setProperty("--ink-a", (mid - 7).toFixed(1) + "%"); root.style.setProperty("--ink-b", (mid + 7).toFixed(1) + "%");
@@ -2229,51 +2250,89 @@ function makeGeometry() {
   })();
 
   // ---- night / day: a switch in the top bar, shown once the sun is up; each switch looks "generated" for half a second ----
-  // A diffusion-style reveal: coarse noise in the target palette resolves in steps into the page, the theme flipping underneath.
+  // ---- grains: the design's dissolve and reassemble ----
+  // The same fine grains the universe is made of. A switch dissolves the page into a dense field of them, changes what is
+  // underneath (the theme, or where on the page you are), then the grains clear in a few denoising steps and the page
+  // reassembles. Ivory and spectrum grains over the night, ink and sand grains over the day. Reduced motion: just the change.
+  var grains = (function () {
+    var cv = document.createElement("canvas"), g = cv.getContext("2d"), busy = false;
+    cv.className = "diffuse"; cv.setAttribute("aria-hidden", "true"); document.body.appendChild(cv);
+    var hues = [[255, 111, 97], [255, 138, 92], [217, 180, 90], [98, 224, 122], [79, 184, 255], [154, 133, 255], [208, 124, 255]];
+    // palette: "day" or "night"; flip: the change; cover: ms to dissolve into grains first (0: start dense, as the theme switch does)
+    function run(palette, flip, cover) {
+      if (reduce || !g) { flip(); return true; }
+      if (busy) return false;
+      busy = true; var w = cv.width = Math.ceil(innerWidth), h = cv.height = Math.ceil(innerHeight);
+      var img = g.createImageData(w, h), buf = new Uint32Array(img.data.buffer), t0 = performance.now(), flipped = false, shown = -1;
+      var STEPS = 8, DUR = 640, IN_STEPS = 4, peak = cover ? 0.97 : 0.55;
+      var base = palette === "day" ? [[42, 29, 18], [92, 69, 50], [230, 211, 179]] : [[235, 230, 218], [167, 171, 185], [11, 13, 18]];
+      function paint(dens, amp, floor) {
+        for (var p = 0; p < buf.length; p++) {
+          if (Math.random() > dens) { buf[p] = 0; continue; }
+          var c = Math.random() < 0.22 ? hues[(Math.random() * 7) | 0] : base[(Math.random() * 3) | 0], al = (amp * (floor + (1 - floor) * Math.random()) * 255) | 0;
+          buf[p] = (al << 24) | (c[2] << 16) | (c[1] << 8) | c[0];
+        }
+        g.putImageData(img, 0, 0);
+      }
+      (function step(tm) {
+        var e = tm - t0;
+        if (cover && e < cover) { // dissolve: the grains thicken until the page is gone
+          var j = Math.min(IN_STEPS - 1, Math.floor(e / cover * IN_STEPS));
+          if (j !== shown) { shown = j; var q = (j + 1) / IN_STEPS; paint(peak * q * q, 0.9 + 0.1 * q, 0.35 + 0.5 * q); }
+          requestAnimationFrame(step); return;
+        }
+        if (cover && !flipped) { flipped = true; shown = -1; flip(); }
+        var k = Math.min(1, (e - cover) / DUR), i = Math.min(STEPS - 1, Math.floor(k * STEPS));
+        if (!flipped && k > 0.3) { flipped = true; flip(); }
+        if (k >= 1) { g.clearRect(0, 0, w, h); busy = false; return; }
+        if (i !== shown) { shown = i; var left = 1 - i / STEPS; paint(peak * left * left, 0.9 * left + (cover ? 0.1 * left : 0), cover ? 0.35 + 0.5 * left : 0.35); } // reassemble: fewer, fainter grains each step
+        requestAnimationFrame(step);
+      })(t0);
+      return true;
+    }
+    return { run: run, busy: function () { return busy; } };
+  })();
+  function palette() { return window.__wuSky && window.__wuSky.day > 0.5 ? "day" : "night"; }
+
+  // night / day: shown once the sun is up; switching runs the grains with the theme flipping underneath
   (function themeSwitch() {
     var b = document.querySelector("[data-theme-switch]"); if (!b) return;
-    var label = b.querySelector(".ts-t"), cv = document.createElement("canvas"), g = cv.getContext("2d"), busy = false;
-    cv.className = "diffuse"; cv.setAttribute("aria-hidden", "true"); document.body.appendChild(cv); b.hidden = false;
+    var label = b.querySelector(".ts-t"); b.hidden = false;
     try { var saved = localStorage.getItem("wu-mode"); if (saved === "night" || saved === "day") window.__wuMode = saved; } catch (e) {}
-    function now() { return window.__wuSky && window.__wuSky.day > 0.5 ? "day" : "night"; }
     function sync() {
-      var S = window.__wuSky || {}, n = now();
+      var S = window.__wuSky || {}, n = palette();
       b.classList.toggle("is-shown", (S.sun || -1) > -0.06 || (window.__wuMode || "auto") !== "auto");
       b.setAttribute("data-mode-now", n); label.textContent = n === "day" ? "Night" : "Day";
       b.setAttribute("aria-label", n === "day" ? "Switch to night" : "Switch to day");
       requestAnimationFrame(sync);
     }
-    // the same fine grains the universe is made of: a dense field of them dissolves in a few denoising steps,
-    // ivory and spectrum grains over the night, ink and sand grains over the day
-    function diffuse(target, flip) {
-      if (reduce) { flip(); return; }
-      busy = true; var d = 1, w = cv.width = Math.ceil(innerWidth * d), h = cv.height = Math.ceil(innerHeight * d);
-      var img = g.createImageData(w, h), buf = new Uint32Array(img.data.buffer), t0 = performance.now(), flipped = false, shown = -1, STEPS = 8, DUR = 640;
-      var base = target === "day" ? [[42, 29, 18], [92, 69, 50], [230, 211, 179]] : [[235, 230, 218], [167, 171, 185], [11, 13, 18]];
-      var hues = [[255, 111, 97], [255, 138, 92], [217, 180, 90], [98, 224, 122], [79, 184, 255], [154, 133, 255], [208, 124, 255]];
-      (function step(tm) {
-        var k = Math.min(1, (tm - t0) / DUR), i = Math.min(STEPS - 1, Math.floor(k * STEPS));
-        if (!flipped && k > 0.3) { flipped = true; flip(); }
-        if (k >= 1) { g.clearRect(0, 0, w, h); busy = false; return; }
-        if (i !== shown) { // one denoising step: fewer, fainter grains each time
-          shown = i; var left = 1 - i / STEPS, dens = 0.55 * left * left, amp = 0.9 * left;
-          for (var p = 0; p < buf.length; p++) {
-            if (Math.random() > dens) { buf[p] = 0; continue; }
-            var c = Math.random() < 0.22 ? hues[(Math.random() * 7) | 0] : base[(Math.random() * 3) | 0], al = (amp * (0.35 + 0.65 * Math.random()) * 255) | 0;
-            buf[p] = (al << 24) | (c[2] << 16) | (c[1] << 8) | c[0];
-          }
-          g.putImageData(img, 0, 0);
-        }
-        requestAnimationFrame(step);
-      })(t0);
-    }
     b.addEventListener("click", function () {
-      if (busy) return;
-      var target = now() === "day" ? "night" : "day", auto = window.__wuSky ? (window.__wuSky.autoDay > 0.5 ? "day" : "night") : "night";
-      diffuse(target, function () { window.__wuMode = target === auto ? "auto" : target; try { localStorage.setItem("wu-mode", window.__wuMode); } catch (e) {} });
+      if (grains.busy()) return;
+      var target = palette() === "day" ? "night" : "day", auto = window.__wuSky ? (window.__wuSky.autoDay > 0.5 ? "day" : "night") : "night";
+      grains.run(target, function () { window.__wuMode = target === auto ? "auto" : target; try { localStorage.setItem("wu-mode", window.__wuMode); } catch (e) {} }, 0);
     });
     requestAnimationFrame(sync);
   })();
+
+  // ---- a switch, not a scroll: "Stay close" dissolves the page and it reassembles at the invitation ----
+  // Scrolling there would play every scene above it in fast forward. The jump happens under the grains, the field lands on
+  // its new state at once, and focus moves to the section. Reduced motion: the jump alone.
+  function goTo(id) {
+    var el = document.getElementById(id); if (!el || !el.getClientRects().length) return;
+    grains.run(palette(), function () {
+      var root = document.documentElement, was = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto"; el.scrollIntoView({ block: "start" }); root.style.scrollBehavior = was;
+      if (window.__wuSnap) window.__wuSnap();
+      if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+      el.focus({ preventScroll: true });
+    }, 300);
+  }
+  window.__wuGoTo = goTo;
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href="#invite"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault(); goTo("invite");
+  });
 
 
   // ---- 8–9 · the participants, drawn in the same language as the field ----
@@ -2575,7 +2634,7 @@ function makeGeometry() {
     head.innerHTML = '<div class="ch-n"></div><h2></h2>'; head.querySelector(".ch-n").textContent = CH[i].part + " · " + ROMAN[partNo(i) - 1]; head.querySelector("h2").textContent = CH[i].title;
     flow.appendChild(head);
     Array.prototype.forEach.call(CH[i].node.childNodes, function (n) { flow.appendChild(n.cloneNode(true)); });
-    flow.querySelectorAll("[data-join]").forEach(function (b) { b.addEventListener("click", function () { close(); var j = document.getElementById("invite"); if (j) j.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); }); });
+    flow.querySelectorAll("[data-join]").forEach(function (b) { b.addEventListener("click", function () { close(); if (window.__wuGoTo) window.__wuGoTo("invite"); else { var j = document.getElementById("invite"); if (j) j.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); } }); });
     flow.querySelectorAll("[data-next]").forEach(function (b) { b.addEventListener("click", function () { go(i + 1, 0); }); });
   }
   function layout() {
@@ -2813,11 +2872,22 @@ function makeGeometry() {
     st.playing = false; st.pausedY = lastY !== null ? lastY : window.scrollY; lastY = null; // where the player left the page: any move since is the visitor's
     stopVoice(); all(function (a) { if (a !== A.voice) a.pause(); }); styles(false); unsplit(); ui();
   }
+  // after the film, while Chapter 2 is hidden: a short blinking "Keep scrolling", shown once; it goes when you scroll or after a while
+  var cueShown = false;
+  function keepCue() {
+    var c = document.getElementById("keepCue"); if (!c || cueShown) return;
+    cueShown = true; c.hidden = false; c.classList.remove("out");
+    var y0 = window.scrollY, gone = false;
+    function hide() { if (gone) return; gone = true; window.removeEventListener("scroll", moved); c.classList.add("out"); setTimeout(function () { c.hidden = true; }, reduce ? 0 : 600); }
+    function moved() { if (Math.abs(window.scrollY - y0) > 40) hide(); }
+    window.addEventListener("scroll", moved, { passive: true }); setTimeout(hide, 7000);
+  }
   function finish(why) { // the film ends: the bed fades out slowly under the name, then the end card (it fades in) or the reader
     st.playing = false; st.on = false; st.picked = why; lastY = null; styles(false);
     stopVoice(); A.bang.pause(); A.doors.pause(); fadeBed(why === "shape" ? 6000 : 2500); choice.hidden = true; unsplit(); ui();
     var ch2 = document.getElementById("unfold");
     if (why === "shape" && ch2 && !ch2.hidden) { endCard.hidden = false; document.getElementById("seKeep").focus({ preventScroll: true }); }
+    else if (why === "shape") keepCue();
     if (why === "read" && window.__wuReader) {
       var secs = document.getElementById("book").content.querySelectorAll("section"), at = 0;
       for (var i = 0; i < secs.length; i++) if (secs[i].getAttribute("data-title") === "How we work") at = i;
