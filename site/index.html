@@ -147,6 +147,8 @@ html.sunlit .scene-pin .beat p, html.sunlit .scene-pin .beat h1, html.sunlit .oi
   background-image: linear-gradient(to bottom, color-mix(in oklab, #ebe6da, #2a1d12 var(--mix)) 0%, color-mix(in oklab, #ebe6da, #2a1d12 var(--mix)) var(--ink-a, 100%), #2a1d12 var(--ink-b, 120%), #2a1d12 100%);
   background-attachment: fixed; -webkit-background-clip: text; background-clip: text; color: transparent !important; -webkit-text-fill-color: transparent;
 }
+/* text-clipped ink paints only inside the box: give tight display lines room for descenders and italic overhang */
+html.sunlit .scene-pin .beat h1, html.sunlit .oi-head h2 { padding: 0 0.1em 0.2em 0; margin: 0 -0.1em -0.2em 0; }
 /* the first scene starts at the very top, under the transparent bar, so the first pixel of scroll already moves it */
 #top { margin-top: calc(-1 * var(--topbar-h)); }
 .col { max-width: 560px; display: flex; flex-direction: column; gap: 21px; }
