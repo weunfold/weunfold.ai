@@ -1,6 +1,6 @@
 # Open Intelligence
 
-> The manifesto and charter of the Open Intelligence movement. Draft 0.17, 2026-10-30. Proposed, for review. A preview, not launched.
+> The manifesto and charter of the Open Intelligence movement. Draft 0.18, 2026-10-30. Proposed, for review. A preview, not launched.
 
 SHA-256 of the reader text: `25583653ab507d892f096d87ebce6014f1ade65206a79aac76eb1cf0e61cba15`. This fingerprint is not anchored anywhere yet.
 
