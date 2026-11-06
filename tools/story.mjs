@@ -10,11 +10,14 @@
 //        node tools/story.mjs --placeholder   synthetic tones instead of ElevenLabs (needs ffmpeg), for building the player
 //        node tools/story.mjs --chorus-only   make the chorus again (20 short takes), keep the lines
 //        node tools/story.mjs --resheet       rebuild pilot.json's cue sheet from its own voice timings (after a hold change), call nothing
+//        node tools/story.mjs --line <key> [--takes N]  save N single-line takes (default 3), keep voice.mp3
+//        node tools/story.mjs --line <key> --placeholder  save synthetic takes offline
+//        node tools/story.mjs --line <key> --take K       splice saved take K, then resheet offline
 //        node tools/story.mjs --plan          print the cue sheet with estimated speech, call nothing, write nothing
 // Key and voices: ELEVENLABS_API_KEY and ELEVENLABS_CAST (role:voice_id,..., saved by the picker at /__voices on
 // tools/dev.mjs) from the environment or an ignored .env at the repo root. ELEVENLABS_VOICE_ID alone gives every line one voice.
 // The key is only sent to api.elevenlabs.io; this tool never writes or prints it.
-import { readFile, writeFile, mkdir, mkdtemp, rm } from "node:fs/promises";
+import { readFile, writeFile, mkdir, mkdtemp, rm, rename } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { dirname, join } from "node:path";
@@ -22,7 +25,9 @@ import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import { ROLES, PLACES, LINES, CHORUS, SPEECH, parseCast, lines, spoken } from "./story-cast.mjs";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+import { letters, spread, r3, shiftCues, replaceLine, takeBounds, segmentBounds, ffmpegPlan } from "./story-line.mjs";
+
+const ROOT = process.env.STORY_ROOT || join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "site/assets/story");
 const API = "https://api.elevenlabs.io/v1";
 const FORMAT = "mp3_44100_192"; // constant bitrate, so seeking to a line's start is exact
@@ -103,19 +108,6 @@ function sheet(script, speech, chorus) {
   hold(ENDING, pos, ENDING.min);
   return { cues, film: +film.toFixed(2) };
 }
-
-// ---- timing: when each letter is spoken ----
-// the start of every non-space letter of `text`, found in a dialogue alignment at or after `from`; null if it is not there
-function letters(al, text, from) {
-  if (!al) return null;
-  const said = al.characters.join(""), at = said.indexOf(text, from);
-  if (at < 0) return null;
-  const t = []; for (let i = 0; i < text.length; i++) if (!/\s/.test(text[i])) t.push(al.character_start_times_seconds[at + i]);
-  return { t, at, next: at + text.length, end: al.character_end_times_seconds[at + text.length - 1] };
-}
-// no alignment for a line: spread its letters evenly over its time
-function spread(text, start, end) { const n = text.replace(/\s/g, "").length; return Array.from({ length: n }, (_, i) => start + (end - start - 0.1) * i / Math.max(1, n)); }
-const r3 = (x) => +x.toFixed(3);
 
 // ---- ElevenLabs ----
 async function env() {
@@ -246,12 +238,12 @@ async function assemble(linesWav, phrases, dir) {
 }
 
 // ---- placeholder audio: synthetic tones, so the player can be built before the voice exists ----
-async function mp3(name, samples) {
+async function mp3(name, samples, destination = join(OUT, name)) {
   const pcm = Buffer.alloc(samples.length * 2);
   samples.forEach((v, i) => pcm.writeInt16LE(Math.round(Math.max(-1, Math.min(1, v)) * 32767), i * 2));
   const raw = join(tmpdir(), `story-${process.pid}-${name}.raw`);
   await writeFile(raw, pcm);
-  await ff(["-f", "s16le", "-ar", String(RATE), "-ac", "1", "-i", raw, "-codec:a", "libmp3lame", "-b:a", "192k", join(OUT, name)]);
+  await ff(["-f", "s16le", "-ar", String(RATE), "-ac", "1", "-i", raw, "-codec:a", "libmp3lame", "-b:a", "192k", destination]);
   await rm(raw);
 }
 function synth(seconds, f) { const a = new Float32Array(Math.round(seconds * RATE)); for (let i = 0; i < a.length; i++) a[i] = f(i / RATE); return a; }
@@ -276,11 +268,86 @@ async function placeholder(script) {
   } };
 }
 
+// ---- single-line takes and offline splice ----
+function option(flag, fallback) {
+  const at = process.argv.indexOf(flag);
+  if (at < 0) return fallback;
+  const value = process.argv[at + 1];
+  if (!value || value.startsWith("--")) throw new Error(`${flag} needs a value`);
+  return value;
+}
+function positive(flag, fallback) {
+  const n = Number(option(flag, fallback));
+  if (!Number.isSafeInteger(n) || n < 1) throw new Error(`${flag} needs a positive integer`);
+  return n;
+}
+function validateLineArgs() {
+  if (!args.has("--line")) {
+    if (args.has("--take") || args.has("--takes")) throw new Error("--take/--takes requires --line");
+    return;
+  }
+  option("--line");
+  if (["--chorus-only", "--voice-only", "--resheet", "--plan"].some((f) => args.has(f))) throw new Error("--line must run on its own");
+  if (args.has("--take") && (args.has("--takes") || args.has("--placeholder"))) throw new Error("select --take or generate takes, separately");
+  if (args.has("--take")) positive("--take");
+  if (args.has("--takes")) positive("--takes");
+}
+async function lineMode(script) {
+  const k = option("--line"), old = JSON.parse(await readFile(join(OUT, "pilot.json"), "utf8"));
+  const l = script.find((l) => key(l) === k), cue = old.cues.find((c) => c.kind === "line" && c.key === k);
+  if (!l || !cue || !LINES[k]) throw new Error(`line ${k} must exist in the page, pilot.json and cast`);
+  const folder = join(OUT, ".takes", k);
+  if (!args.has("--take")) {
+    const n = positive("--takes", 3), synthetic = args.has("--placeholder"), cred = synthetic ? null : await env();
+    await mkdir(folder, { recursive: true });
+    for (let i = 1; i <= n; i++) {
+      let take;
+      if (synthetic) {
+        const start = 0.3, dur = r3(l.text.split(/\s+/).length / 2.4 + 0.35), end = start + dur;
+        const starts = Array.from(l.text, (_, j) => start + dur * j / l.text.length);
+        take = { alignment: { characters: Array.from(l.text), character_start_times_seconds: starts, character_end_times_seconds: starts.map((t) => t + dur / l.text.length) }, voice_segments: [{ dialogue_input_index: 0, start_time_seconds: start, end_time_seconds: end }] };
+        await mp3("take.mp3", synth(end + 0.3, (s) => s < start || s >= end ? 0 : 0.18 * Math.min(1, (s - start) / 0.04, (end - s) / 0.08) * Math.sin(2 * Math.PI * 330 * s) * (0.75 + 0.25 * Math.sin(2 * Math.PI * 3 * (s - start)))), join(folder, `${i}.mp3`));
+      } else {
+        const response = await dialogue([{ text: spoken(LINES[k], k, l.text), voice_id: cred.voiceOf(LINES[k]) }], cred);
+        const { audio_base64, ...timing } = response;
+        take = timing;
+        takeBounds(take, l.text); // reject a response that cannot be spliced
+        await writeFile(join(folder, `${i}.mp3`), Buffer.from(audio_base64, "base64"));
+      }
+      await writeFile(join(folder, `${i}.json`), JSON.stringify({ ...take, key: k, text: l.text, placeholder: synthetic }, null, 1) + "\n");
+    }
+    console.log(`saved ${n} ${synthetic ? "synthetic " : ""}takes in site/assets/story/.takes/${k}/; select with --line ${k} --take K`);
+    process.exit(0);
+  }
+  const n = positive("--take"), take = JSON.parse(await readFile(join(folder, `${n}.json`), "utf8"));
+  if (take.key !== k || take.text !== l.text) throw new Error("take does not match the page: generate new takes");
+  const voice = join(OUT, old.files.voice), bounds = segmentBounds(old.cues, k, await seconds(voice));
+  const replacement = replaceLine(cue, take, l.text), delta = r3(replacement.dur - cue.dur);
+  const dir = await mkdtemp(join(tmpdir(), "story-line-"));
+  try {
+    const files = { voice, take: join(folder, `${n}.mp3`), decoded: join(dir, "voice.wav"), trimmed: join(dir, "take.wav"), output: join(dir, "voice.mp3") };
+    let plan = ffmpegPlan(bounds, take, files);
+    await ff(plan.decode);
+    const { stderr } = await run("ffmpeg", ["-hide_banner", ...plan.measure]);
+    const measured = JSON.parse(stderr.slice(stderr.lastIndexOf("{"), stderr.lastIndexOf("}") + 1));
+    plan = ffmpegPlan(bounds, take, files, +measured.input_i);
+    await ff(plan.trim); await ff(plan.concat);
+    // Copy beside the destination first: the system temp directory may be on another device.
+    const pending = join(OUT, `.voice-${process.pid}.mp3`);
+    try { await writeFile(pending, await readFile(files.output)); await rename(pending, voice); }
+    finally { await rm(pending, { force: true }); }
+  } finally { await rm(dir, { recursive: true, force: true }); }
+  console.log(`spliced ${k} take ${n}: ${delta >= 0 ? "+" : ""}${delta} s`);
+  return { ...old, cues: shiftCues(old.cues, k, delta).map((c) => c.key === k ? replacement : c) };
+}
+
 // ---- main ----
 const html = await readFile(join(ROOT, "site/index.html"), "utf8");
 const script = [...lines(html, "top"), ...lines(html, "today")];
 const words = script.reduce((a, l) => a + l.text.split(/\s+/).length, 0);
 console.log(`script: ${script.length} lines, ${words} words, ${script.reduce((a, l) => a + l.text.length, 0)} characters; then the chorus: ${CHORUS.map((c) => c.text).join(" · ")}`);
+
+validateLineArgs();
 
 if (args.has("--plan")) {
   const est = (l) => { const dur = l.text.split(/\s+/).length / 2.4 + 0.35; return { start: 0, end: dur, dur, t: [] }; };
@@ -291,7 +358,8 @@ if (args.has("--plan")) {
 }
 
 await mkdir(OUT, { recursive: true });
-let chorusNew = null;
+let chorusNew = null, linePilot = null;
+if (args.has("--line")) linePilot = await lineMode(script);
 if (args.has("--chorus-only")) { // the lines stay as they are; the chorus is made again and voice.mp3 put back together
   const old = JSON.parse(await readFile(join(OUT, "pilot.json"), "utf8")), cred = await env(), dir = await mkdtemp(join(tmpdir(), "story-"));
   const lastEnd = old.cues.filter((c) => c.kind === "line" && c.voice !== "all").pop().end, linesWav = join(dir, "lines.wav");
@@ -299,8 +367,8 @@ if (args.has("--chorus-only")) { // the lines stay as they are; the chorus is ma
   chorusNew = await assemble(linesWav, await chorus(cred, dir), dir);
   await rm(dir, { recursive: true, force: true });
 }
-if (args.has("--resheet") || chorusNew) { // the voice stays as it is: its line timings come back out of pilot.json
-  const old = JSON.parse(await readFile(join(OUT, "pilot.json"), "utf8")), said = old.cues.filter((c) => c.kind === "line");
+if (args.has("--resheet") || chorusNew || linePilot) { // the voice stays as it is: its line timings come back out of pilot.json
+  const old = linePilot || JSON.parse(await readFile(join(OUT, "pilot.json"), "utf8")), said = old.cues.filter((c) => c.kind === "line");
   const of = (k) => { const c = said.find((x) => x.key === k); if (!c) throw new Error(`pilot.json has no line ${k}: regenerate the voice`); return { start: c.start, end: c.end, dur: c.dur, t: c.t }; };
   const said2 = realign(script.map((l) => of(key(l))), await pauses(join(OUT, old.files.voice), said.filter((c) => c.voice !== "all").pop().end + 1.5));
   console.log(`${realign.moved} of ${said2.length} lines moved to the audio's own pauses`);
@@ -308,7 +376,7 @@ if (args.has("--resheet") || chorusNew) { // the voice stays as it is: its line 
   const { cues, film } = sheet(script, said2, fitChorus(chorusNew || CHORUS.map((c) => of(c.key)), voiceSil));
   const total = cues.reduce((a, c) => a + c.dur, 0);
   const env = await envelope(join(OUT, old.files.voice));
-  await writeFile(join(OUT, "pilot.json"), JSON.stringify({ ...old, film, env, places: PLACES, cues }, null, 1).replace(/\[\n\s+([-\d.,\s]+?)\n\s+\]/g, (m, x) => `[${x.replace(/\s+/g, " ")}]`) + "\n");
+  await writeFile(join(OUT, "pilot.json"), JSON.stringify({ ...old, generated: new Date().toISOString().slice(0, 10), film, env, places: PLACES, cues }, null, 1).replace(/\[\n\s+([-\d.,\s]+?)\n\s+\]/g, (m, x) => `[${x.replace(/\s+/g, " ")}]`) + "\n");
   console.log(`rebuilt the cue sheet · film to the choice ${film} s · with the choice, Shape it and the name ${total.toFixed(1)} s`);
   process.exit(0);
 }
