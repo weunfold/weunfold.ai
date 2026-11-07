@@ -134,6 +134,7 @@ Open projects have been captured before. We write the protections down now, whil
 - **Terms, not thrones.** Stewards serve for limited terms and can be replaced. The people who started it serve provisionally until the first election. Its date is not set yet; it will be published.
 - **The right to fork.** Every project can continue without our permission. If we fail the pledge, anyone can carry it forward.
 - **No closing what was opened.** What enters the commons stays open, even when contributors, funders or stewards change.
+- **Free hosting shares; open code doesn't oblige.** *Proposal, not settled.* What weunfold hosts for free on its own compute shares conversations with the commons by default, cleaned of personal details, and says so before anyone starts. Anyone who runs the open-source code themselves owes nothing, and paid hosted use stays private.
 - **Copies everywhere.** Code, records and this manifesto will be mirrored, so no single server or person can make them disappear.
 - **Written once, owned by no one.** From v1.0, each final version of this manifesto will be anchored in a public blockchain, so anyone can check it word for word and no one, the people who started it included, can rewrite or erase it. Nothing is anchored yet.
 - **No hype as evidence.** We won't claim progress we can't show, or promise AGI on a timeline.

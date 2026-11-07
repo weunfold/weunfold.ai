@@ -6,7 +6,7 @@ Every figure on the site carries its state: Proposal, Example, Not measured yet,
 
 ## Manifesto
 
-- [Manifesto and charter (Markdown)](manifesto.md): the full text, Draft 0.19. SHA-256 `04a96707dc3db3a39b0858ab13bd1dcb6279f246254f2dd020e266e297c17b36`, not anchored yet.
+- [Manifesto and charter (Markdown)](manifesto.md): the full text, Draft 0.19. SHA-256 `c3aba635715e293e8a9c1d2c65d3fc9cd8c7d4bc09465185c925ad61e5d35a95`, not anchored yet.
 - [Manifesto and charter (plain page)](manifesto.html): the same text as an accessible HTML page with a contents list.
 - [Everything in one file](llms-full.txt): the manifesto and charter in a single Markdown file.
 

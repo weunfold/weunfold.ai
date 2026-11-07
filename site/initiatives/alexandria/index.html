@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>New Alexandria — a free gateway to open models — we unfold</title>
-<meta name="description" content="A proposed free gateway to open models, and a library of open data that can't burn: conversations people choose to share are cleaned, refined into open datasets, and used to train new open models.">
+<meta name="description" content="A proposed free gateway to open models, and a library of open data that can't burn: conversations on the free gateway are shared by default, cleaned of personal details, refined into open datasets, and used to train new open models.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap">
 <link rel="stylesheet" href="../../assets/sub.css">
@@ -130,7 +130,7 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
         <div class="stage"><span class="state proposal">Proposal</span><span class="state">Not open yet</span></div>
       </div>
       <div class="prose">
-        <p>Use open-weight models for free. If you choose to, give a conversation to the commons: personal data is removed, the result is refined into open datasets, and those datasets train the next open models, which come back to everyone, free.</p>
+        <p>Use open-weight models for free. The one condition is said before you start: free conversations go to the commons, cleaned of personal details. They are refined into open datasets, and those datasets train the next open models, which come back to everyone, free. To share nothing, run the open-source code yourself, or use the paid private lane.</p>
         <div class="actions"><a class="pill" href="#interest">Register interest</a><a class="pill ghost" href="#loop">How it works</a></div>
       </div>
     </section>
@@ -144,7 +144,7 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
       <div class="prose">
         <p>Ancient accounts say that in Alexandria, books arriving on ships in the harbour were copied for the library. For a few centuries, a large share of what people knew was gathered in one place. Then, over time, it was lost.</p>
         <p>Today, what people learn by talking to machines is gathering again, in a few private places. Each question, correction and answer teaches the next model, and almost none of it comes back to the people who gave it.</p>
-        <p class="lead">New Alexandria is a library of the conversations people choose to share, cleaned of what is personal, copied everywhere so it can't burn, and open to anyone who wants to learn from it.</p>
+        <p class="lead">New Alexandria is a library of the conversations held on its free gateway, cleaned of what is personal, copied everywhere so it can't burn, and open to anyone who wants to learn from it.</p>
       </div>
     </section>
 
@@ -153,11 +153,11 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
       <div class="sec-head">
         <div class="eyebrow">How it works</div>
         <h2 id="loopTitle">Ask. Share. Clean. Refine. <i>Publish. Train.</i></h2>
-        <p>One loop. What people choose to give back becomes the material for the next open models, which are served free again.</p>
+        <p>One loop. What free use gives back becomes the material for the next open models, which are served free again.</p>
       </div>
       <ol class="steps">
         <li><b>Ask, for free</b><p>Open-weight models through one gateway, at no cost, running on donated and sponsored compute.</p></li>
-        <li><b>Choose to share</b><p>Nothing you say is used unless you give that conversation to the commons. You decide, one conversation at a time.</p></li>
+        <li><b>Share, by default</b><p>Conversations on the free gateway go to the commons. You're told before your first message, not in the small print. To keep everything to yourself, run the open-source code on your own machine, or use the paid private lane.</p></li>
         <li><b>Clean</b><p>Names, contacts, identifiers and other personal details are removed before anything is stored, and every removal is logged so it can be checked.</p></li>
         <li><b>Refine</b><p>Shared conversations are sorted, deduplicated and labelled into datasets, each with a datasheet and a manifest of exactly what went in.</p></li>
         <li><b>Publish</b><p>Datasets are released openly and mirrored in many places, so no single server or company can take them away.</p></li>
@@ -165,16 +165,17 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
       </ol>
     </section>
 
-    <!-- two lanes -->
+    <!-- three lanes -->
     <section id="lanes" aria-labelledby="lanesTitle">
       <div class="sec-head">
-        <div class="eyebrow">Two lanes</div>
-        <h2 id="lanesTitle">Private when you want it. <i>Shared when you choose.</i></h2>
+        <div class="eyebrow">Three lanes</div>
+        <h2 id="lanesTitle">Free here means shared. <i>Private if you run it yourself or pay.</i></h2>
         <div class="stage"><span class="state proposal">Proposal</span></div>
       </div>
-      <div class="grid two">
-        <article class="card"><span class="k">Private lane</span><h3>Just use it</h3><p>Free access to the same models. Your conversations are not kept for datasets or training.</p></article>
-        <article class="card"><span class="k">Contribute lane</span><h3>Give it to the commons</h3><p>Choose a conversation to share. It's cleaned, reviewed and, if it passes, refined into an open dataset. You can withdraw it at any point before it's published.</p></article>
+      <div class="grid">
+        <article class="card"><span class="k">Free gateway</span><h3>Use it free, give back.</h3><p>Free access to open models on donated compute. Your conversations are cleaned of personal details, reviewed and, if they pass, refined into an open dataset. You can withdraw a conversation at any point before it's published.</p></article>
+        <article class="card"><span class="k">Self-hosted</span><h3>Run it yourself.</h3><p>The code is open source. Run it on your own computer or server and nothing comes to us. You owe nothing.</p></article>
+        <article class="card"><span class="k">Paid lane</span><h3>Keep it private.</h3><p>Hosted by us and paid for by you. Your conversations are not kept for datasets or training.</p></article>
       </div>
     </section>
 
@@ -186,9 +187,9 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
       </div>
       <dl class="panels">
         <div><dt>Removal is logged</dt><dd>Every dataset ships with a manifest: which records went in, what was removed from each, and the consent each one carries. Anyone can check it.</dd></div>
-        <div><dt>Unclear means excluded</dt><dd>A record whose consent is unclear is left out, not "cleaned" and kept.</dd></div>
+        <div><dt>Unclear means excluded</dt><dd>A record whose terms are unclear, such as one from before the rule was stated, is left out, not "cleaned" and kept.</dd></div>
         <div><dt>Other people stay out</dt><dd>Details about people who didn't consent, the friend you mention, the colleague in a screenshot, are excluded by default.</dd></div>
-        <div><dt>Not a promise of anonymity</dt><dd>Removing personal details is necessary, but it doesn't prove nobody could ever be recognised. That's why sharing is a choice, review comes before publishing, and you can withdraw until then.</dd></div>
+        <div><dt>Not a promise of anonymity</dt><dd>Shared conversations are cleaned of personal details, not a promise of anonymity: removing them is necessary, but it doesn't prove nobody could ever be recognised. That's why the rule is said before you start, review comes before publishing, you can withdraw until then, and a private lane is always open.</dd></div>
         <div><dt>Published means copied</dt><dd>Once a dataset is public, copies exist everywhere. Nothing is published until it passes review.</dd></div>
       </dl>
     </section>
@@ -213,11 +214,11 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
       <div class="sec-head">
         <div class="eyebrow">Who makes it possible</div>
         <h2 id="waysTitle">Free to use, <i>because people give.</i></h2>
-        <p>The gateway runs on donated and sponsored compute. The library grows from conversations people choose to share, and from the people who review, label and train on them.</p>
+        <p>The gateway runs on donated and sponsored compute. The library grows from the conversations held on it, and from the people who review, label and train on them.</p>
       </div>
       <ol class="steps">
         <li><b>Donate or sponsor compute</b><p>GPUs, hosting or credits that keep access free.</p></li>
-        <li><b>Share conversations</b><p>Through the contribute lane, one at a time.</p></li>
+        <li><b>Use the free gateway</b><p>Every conversation, once cleaned and reviewed, adds to the library.</p></li>
         <li><b>Review and label</b><p>Check what cleaning missed, sort and label the datasets.</p></li>
         <li><b>Train and evaluate</b><p>Train open models on the datasets and publish the results, including what didn't work.</p></li>
       </ol>
@@ -243,7 +244,6 @@ if (location.hash) document.documentElement.style.scrollBehavior = "auto";
           <select id="interestPath">
             <option value="use">Use it, free</option>
             <option value="compute">Donate or sponsor compute</option>
-            <option value="share">Share conversations</option>
             <option value="review">Review and label data</option>
             <option value="train">Train and evaluate models</option>
             <option value="follow">Just keep me updated</option>
