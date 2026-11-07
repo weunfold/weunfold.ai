@@ -2,7 +2,7 @@
 
 > The manifesto and charter of the Open Intelligence movement. Draft 0.19, 2026-10-30. Proposed, for review. A preview, not launched.
 
-SHA-256 of the reader text: `25583653ab507d892f096d87ebce6014f1ade65206a79aac76eb1cf0e61cba15`. This fingerprint is not anchored anywhere yet.
+SHA-256 of the reader text: `c3aba635715e293e8a9c1d2c65d3fc9cd8c7d4bc09465185c925ad61e5d35a95`. This fingerprint is not anchored anywhere yet.
 
 ## The manifesto
 
@@ -74,7 +74,9 @@ Let’s give others something they can understand, question, and carry forward.
 
 The manifesto says what we want. The charter says how we hold ourselves to it.
 
-Everyone who takes the pledge votes from day one. Responsibility for proposals and stewardship is earned by contributing.
+*Proposal, not in force.* None of this runs yet: no votes have been held, no stewards elected, and there is no budget or ledger. The charter says how it is meant to work.
+
+Everyone who signs the manifesto, the pledge, will vote from day one. Responsibility for proposals and stewardship is earned by contributing.
 
 | You are | How you join | Your voice |
 | --- | --- | --- |
@@ -83,43 +85,44 @@ Everyone who takes the pledge votes from day one. Responsibility for proposals a
 | Member project | Publish your maintainers, license, governance and evidence for the pledge. | Keep your independence and take part in project representation. |
 | Steward | Be elected for a term. | Care for one defined function, report publicly, be replaceable. |
 
-Confirming you are one person prevents fake accounts. It never requires publishing your legal identity.
+Confirming you are one person is there to stop fake accounts. It never requires publishing your legal identity.
 
 #### How contributions are accepted
 
 Propose → review → evidence → acceptance → publication → maintenance.
 
-Every contribution gets a public record: authors, license, origin, purpose, results, limits and reviewers. A rejection comes with a reason and a right to appeal. Acceptance, funding and installation are separate decisions: being accepted doesn't mean being paid, and being approved never means being installed on anyone's machine automatically.
+Every contribution gets a public record: authors, license, origin, purpose, results, limits and reviewers. A rejection comes with a reason and a right to appeal. Acceptance, funding and installation are separate decisions. Accepted doesn't mean paid. Approved never means installed on anyone's machine automatically.
 
 #### How decisions are made
 
 - **Technical decisions** stay with each project, through its own public process.
 - **Shared resources** go through open proposals, published criteria and approval by elected stewards.
-- **Changes to this manifesto** need a qualified majority of both contributors and member projects.
+- **Changes to this manifesto** need a qualified majority of both contributors and member projects. The threshold is not set yet.
 - **Conflicts of interest** are declared, and whoever benefits directly from a decision doesn't approve it.
-- **Money never buys votes.** Several projects under the same control don't get extra voices.
-- **Initiatives don't govern the movement.** *Proposal, not settled.* An initiative's operating entity, such as a shared compute initiative, may give its own participants usage, governance or economic rights in that initiative. Those rights never carry a vote in the movement or a say over this charter.
+- **Money never buys votes.** Several projects under the same control count as one voice.
+- **Initiatives don't govern the movement.** *Proposal, not settled.* An initiative's operating entity may give its own participants usage, governance or economic rights in that initiative. Those rights never carry a vote in the movement or a say over this charter.
 - **People stay accountable.** Agents can help review and evaluate, but responsibility for decisions stays human.
 
 ### Open finance
 
-The institution is transparent. People have the right to privacy.
+The movement's money is open to inspection. People's private lives are not.
 
-Budgets, income, spending, grants and their criteria are public. Every payment points to what was approved, by whom, for what, and what was delivered. Personal bank details and protected information never are.
+Budgets, income, spending, grants and their criteria will be public. Every payment will point to what was approved, by whom, for what, and what was delivered. Personal bank details and protected information never will be.
 
-We use a public ledger to record what must be verifiable: approvals, treasury movements, versions of this manifesto, and the publication of contributions. **There is no tradable token.** Contributing earns credit and voice, not a financial asset. No one needs to buy crypto or manage a wallet to take part.
+We will use a public ledger to record what must be verifiable: approvals, treasury movements, versions of this manifesto, and the publication of contributions. None of it is in use yet. **There is no tradable token.** Contributing earns credit and voice, not a financial asset. No one needs to buy crypto or manage a wallet to take part.
 
 ### What protects the commons
 
 Open projects have been captured before. We write the protections down now, while it's easy.
 
-- **No owner.** No company, product, model, funder or founder controls this movement, including the people who started it.
-- **Terms, not thrones.** Stewards serve for limited terms and can be replaced. The founders serve provisionally until the first election, on a published date.
+- **No owner.** No company, product, model or funder controls this movement, and neither do the people who started it.
+- **Terms, not thrones.** Stewards serve for limited terms and can be replaced. The people who started it serve provisionally until the first election. Its date is not set yet; it will be published.
 - **The right to fork.** Every project can continue without our permission. If we fail the pledge, anyone can carry it forward.
 - **No closing what was opened.** What enters the commons stays open, even when contributors, funders or stewards change.
-- **Copies everywhere.** Code, records and this manifesto are mirrored, so no single server or person can make them disappear.
-- **Written once, owned by no one.** Each final version of this manifesto is anchored in a public blockchain, so anyone can check it word for word and no one, the people who started it included, can rewrite or erase it.
+- **Free hosting shares; open code doesn't oblige.** *Proposal, not settled.* What weunfold hosts for free on its own compute shares conversations with the commons by default, cleaned of personal details, and says so before anyone starts. Anyone who runs the open-source code themselves owes nothing, and paid hosted use stays private.
+- **Copies everywhere.** Code, records and this manifesto will be mirrored, so no single server or person can make them disappear.
+- **Written once, owned by no one.** From v1.0, each final version of this manifesto will be anchored in a public blockchain, so anyone can check it word for word and no one, the people who started it included, can rewrite or erase it. Nothing is anchored yet.
 - **No hype as evidence.** We won't claim progress we can't show, or promise AGI on a timeline.
 - **Safety is part of openness.** Opening something isn't the same as ignoring its risks. We publish dangers and limits with the same honesty as results.
 
-*Open intelligence. Built together. For everyone.*
+*Open Intelligence. Built together. For everyone.*
